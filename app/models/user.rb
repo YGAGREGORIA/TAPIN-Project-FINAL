@@ -1,6 +1,6 @@
 class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
-  :recoverable, :rememberable, :validatable
+         :recoverable, :rememberable, :validatable
 
   has_many :studios, dependent: :destroy
   has_many :chats, dependent: :destroy
@@ -12,4 +12,34 @@ class User < ApplicationRecord
 
   has_many :deals, through: :deal_claims
   has_many :rewards, through: :reward_redemptions
+
+  validates :email, presence: true
+
+  def visits_count_for(studio)
+    visits.where(studio: studio).count
+  end
+
+  def reward_redemptions_count_for(studio)
+    reward_redemptions.where(studio: studio).count
+  end
+
+  def reward_milestones_reached_for(studio)
+    visits_count_for(studio) / 10
+  end
+
+  def free_class_reward_available_for?(studio)
+    reward_milestones_reached_for(studio) > reward_redemptions_count_for(studio)
+  end
+
+  def current_visit_progress_for(studio)
+    visits_count_for(studio) % 10
+  end
+
+  def visits_remaining_for_next_reward(studio)
+    count = visits_count_for(studio)
+    return 10 if count.zero?
+
+    remainder = count % 10
+    remainder.zero? ? 10 : 10 - remainder
+  end
 end

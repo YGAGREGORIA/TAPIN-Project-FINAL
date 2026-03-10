@@ -3,19 +3,19 @@
 one:
   user: one
   reward: one
-  code: MyString
+  code: FREE-FIXTURE01
   point_spent: 1
   status: false
   redeemed_at: 2026-03-10 13:05:42
   expiry_days: 1
-  stuido: one
+  studio: one
 
 two:
   user: two
   reward: two
-  code: MyString
+  code: FREE-FIXTURE02
   point_spent: 1
   status: false
   redeemed_at: 2026-03-10 13:05:42
   expiry_days: 1
-  stuido: two
+  studio: two

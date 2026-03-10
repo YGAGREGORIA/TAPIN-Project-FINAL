@@ -1,0 +1,39 @@
+<h1>My Reward Redemptions</h1>
+
+<p>
+  Studio: <%= @studio.name %>
+</p>
+
+<% if @reward_redemptions.any? %>
+  <ul>
+    <% @reward_redemptions.each do |reward_redemption| %>
+      <li style="margin-bottom: 20px;">
+        <p>
+          Reward:
+          <%= reward_redemption.reward.name %>
+        </p>
+
+        <p>
+          Code:
+          <%= reward_redemption.code %>
+        </p>
+
+        <p>
+          Redeemed at:
+          <%= reward_redemption.redeemed_at&.strftime("%d.%m.%Y %H:%M") %>
+        </p>
+
+        <p>
+          <%= link_to "View details",
+            reward_redemption_path(studio_slug: @studio.slug, id: reward_redemption.id) %>
+        </p>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>You have not redeemed any rewards yet.</p>
+<% end %>
+
+<p>
+  <%= link_to "Back to rewards", rewards_path(studio_slug: @studio.slug) %>
+</p>

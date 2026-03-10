@@ -1,0 +1,23 @@
+<h1>Reward Redemption</h1>
+
+<p>Studio: <%= @studio.name %></p>
+
+<p>Reward: <%= @reward_redemption.reward.name %></p>
+
+<p>Code: <%= @reward_redemption.code %></p>
+
+<p>Redeemed at: <%= @reward_redemption.redeemed_at&.strftime("%d.%m.%Y %H:%M") %></p>
+
+<% if @reward_redemption.expires_at.present? %>
+  <p>Expires at: <%= @reward_redemption.expires_at.strftime("%d.%m.%Y %H:%M") %></p>
+<% end %>
+
+<% if @reward_redemption.expired? %>
+  <p>This reward has expired.</p>
+<% else %>
+  <p>Show this code at reception to claim your reward.</p>
+<% end %>
+
+<p>
+  <%= link_to "Back to reward history", reward_redemptions_path(studio_slug: @studio.slug) %>
+</p>

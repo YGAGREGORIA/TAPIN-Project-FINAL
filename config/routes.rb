@@ -1,6 +1,22 @@
 Rails.application.routes.draw do
   devise_for :users
   root to: "pages#home"
+
+  scope "/s/:studio_slug" do
+    resources :rewards, only: [ :index ] do
+      post :redeem, to: "reward_redemptions#create", on: :member
+    end
+
+    resources :reward_redemptions, only: [ :index, :show ]
+
+    resources :deals, only: [ :index ] do
+      post :claim, to: "deal_claims#create", on: :member
+    end
+
+    resources :deal_claims, only: [ :show ]
+  end
+
+  resources :visits, only: [:create]
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.

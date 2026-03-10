@@ -18,30 +18,37 @@ User.destroy_all
 
 puts "Creating users..."
 
+# alice: 10 visits → reward available (10/10, 1 milestone, 0 redemptions)
 alice = User.create!(
   email: "alice@example.com",
   password: "password",
   first_name: "Alice",
   last_name: "Martin",
   phone: 611234567,
-  total_points: 320,
-  available_points: 150,
-  total_visits: 12,
   referred_by: nil,
-  last_visit_at: 3.days.ago
+  last_visit_at: 1.day.ago
 )
 
+# bob: 9 visits → almost there (9/10)
 bob = User.create!(
   email: "bob@example.com",
   password: "password",
   first_name: "Bob",
   last_name: "Chen",
   phone: 619876543,
-  total_points: 80,
-  available_points: 80,
-  total_visits: 4,
   referred_by: "alice@example.com",
-  last_visit_at: 1.week.ago
+  last_visit_at: 2.days.ago
+)
+
+# carol: 0 visits → fresh user (0/10)
+carol = User.create!(
+  email: "carol@example.com",
+  password: "password",
+  first_name: "Carol",
+  last_name: "Park",
+  phone: 612345678,
+  referred_by: nil,
+  last_visit_at: nil
 )
 
 owner = User.create!(
@@ -50,9 +57,6 @@ owner = User.create!(
   first_name: "Sara",
   last_name: "Lopez",
   phone: 610001111,
-  total_points: 0,
-  available_points: 0,
-  total_visits: 0,
   referred_by: nil,
   last_visit_at: nil
 )
@@ -123,7 +127,7 @@ deal1 = Deal.create!(
   active: true
 )
 
-deal2 = Deal.create!(
+Deal.create!(
   studio: studio,
   name: "10% Off Next Class",
   deal_type: "discount",
@@ -136,23 +140,43 @@ deal2 = Deal.create!(
 
 puts "Creating rewards..."
 
-reward1 = Reward.create!(
+free_class_reward = Reward.create!(
   studio: studio,
-  name: "Free Water Bottle",
-  points_cost: 100,
-  image_url: "https://example.com/water-bottle.png",
-  description: "A branded TAPIN water bottle.",
+  name: "Free Class",
+  reward_type: :free_class,
+  points_cost: 0,
+  image_url: "https://example.com/free-class.png",
+  description: "Unlock one free class after 10 visits.",
   active: true
 )
 
-reward2 = Reward.create!(
-  studio: studio,
-  name: "One Free Class",
-  points_cost: 200,
-  image_url: "https://example.com/free-class.png",
-  description: "Redeem for any standard class.",
-  active: true
-)
+puts "Creating visits..."
+
+# alice: 10 visits → 1 milestone reached, reward available
+configs = [ yoga, hiit, pilates, yoga, hiit, pilates, yoga, hiit, pilates, yoga ]
+10.times do |i|
+  Visit.create!(
+    user: alice,
+    studio: studio,
+    class_config: configs[i],
+    points_earned: configs[i].point_value,
+    visited_at: (10 - i).weeks.ago
+  )
+end
+
+# bob: 9 visits → 9/10 progress
+configs9 = [ yoga, hiit, pilates, yoga, hiit, pilates, yoga, hiit, pilates ]
+9.times do |i|
+  Visit.create!(
+    user: bob,
+    studio: studio,
+    class_config: configs9[i],
+    points_earned: configs9[i].point_value,
+    visited_at: (9 - i).weeks.ago
+  )
+end
+
+# carol: 0 visits — nothing to create
 
 puts "Creating bookings..."
 
@@ -176,32 +200,6 @@ Booking.create!(
   booked_at: Time.current
 )
 
-puts "Creating visits..."
-
-visit1 = Visit.create!(
-  user: alice,
-  studio: studio,
-  class_config: yoga,
-  points_earned: 10,
-  visited_at: 2.weeks.ago
-)
-
-visit2 = Visit.create!(
-  user: alice,
-  studio: studio,
-  class_config: hiit,
-  points_earned: 20,
-  visited_at: 1.week.ago
-)
-
-Visit.create!(
-  user: bob,
-  studio: studio,
-  class_config: pilates,
-  points_earned: 15,
-  visited_at: 5.days.ago
-)
-
 puts "Creating deal claims..."
 
 DealClaim.create!(
@@ -210,7 +208,7 @@ DealClaim.create!(
   studio: studio,
   code: "FIRST-ALICE-001",
   status: true,
-  claimed_at: 3.weeks.ago
+  claimed_at: 10.weeks.ago
 )
 
 DealClaim.create!(
@@ -219,20 +217,22 @@ DealClaim.create!(
   studio: studio,
   code: "FIRST-BOB-001",
   status: true,
-  claimed_at: 2.weeks.ago
+  claimed_at: 9.weeks.ago
 )
 
 puts "Creating reward redemptions..."
 
+# No active redemptions for alice so she can test the redeem flow.
+# One expired redemption to test the expired state on the show page.
 RewardRedemption.create!(
   user: alice,
-  reward: reward1,
+  reward: free_class_reward,
   studio: studio,
-  code: "RR-ALICE-001",
-  point_spent: 100,
-  status: true,
-  redeemed_at: 1.week.ago,
-  expiry_days: 30
+  code: "FREE-EXPIRED01",
+  redeemed_at: 45.days.ago,
+  expiry_days: 30,
+  point_spent: 0,
+  status: false
 )
 
 puts "Creating chats..."
@@ -274,8 +274,8 @@ Message.create!(
   role: "user",
   tag: "inquiry",
   sentiment: "positive",
-  content: "How many points do I have?",
-  summary: "User asking about points balance"
+  content: "How many more visits until I get a free class?",
+  summary: "User asking about reward progress"
 )
 
 Message.create!(
@@ -283,8 +283,13 @@ Message.create!(
   role: "assistant",
   tag: "response",
   sentiment: "neutral",
-  content: "You currently have 80 points. Keep going — you're close to a free reward!",
-  summary: "Assistant shared points balance"
+  content: "You have 9 visits — just 1 more to unlock your free class!",
+  summary: "Assistant shared reward progress"
 )
 
 puts "Done! Seed data created successfully."
+puts ""
+puts "Test scenarios:"
+puts "  alice@example.com  — 10 visits, reward available (+ 1 expired redemption)"
+puts "  bob@example.com    — 9 visits, 1 visit remaining"
+puts "  carol@example.com  — 0 visits, fresh user"

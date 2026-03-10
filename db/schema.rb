@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_10_124529) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_10_225601) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -112,6 +112,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_10_124529) do
     t.string "image_url"
     t.string "name"
     t.integer "points_cost"
+    t.integer "reward_type", default: 0, null: false
     t.bigint "studio_id", null: false
     t.datetime "updated_at", null: false
     t.index ["studio_id"], name: "index_rewards_on_studio_id"

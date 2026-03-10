@@ -10,9 +10,16 @@ class Studio < ApplicationRecord
   has_many :deal_claims, dependent: :destroy
 
   has_many :rewards, dependent: :destroy
-  has_many :reward_redemptions, through: :rewards
+  has_many :reward_redemptions, dependent: :destroy
 
   has_many :class_configs, dependent: :destroy
   has_many :visits, dependent: :destroy
   has_many :bookings, dependent: :destroy
+
+  validates :name, presence: true
+  validates :slug, presence: true, uniqueness: true
+
+  def free_class_reward
+    rewards.find_by(reward_type: :free_class)
+  end
 end

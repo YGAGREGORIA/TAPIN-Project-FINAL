@@ -1,21 +1,15 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
+  email: fixture_one@example.com
+  encrypted_password: "$2a$12$placeholder_one_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
   phone: 1
   first_name: MyString
   last_name: MyString
-  total_points: 1
-  available_points: 1
-  total_visits: 1
-  referred_by: MyString
-  last_visit_at: 2026-03-10 12:40:33
 
 two:
-  phone: 1
+  email: fixture_two@example.com
+  encrypted_password: "$2a$12$placeholder_two_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  phone: 2
   first_name: MyString
   last_name: MyString
-  total_points: 1
-  available_points: 1
-  total_visits: 1
-  referred_by: MyString
-  last_visit_at: 2026-03-10 12:40:33
