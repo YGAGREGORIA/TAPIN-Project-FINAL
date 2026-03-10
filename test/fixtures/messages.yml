@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  chat: one
+  tag: MyString
+  role: MyString
+  sentiment: MyString
+  content: MyString
+  summary: MyString
+
+two:
+  chat: two
+  tag: MyString
+  role: MyString
+  sentiment: MyString
+  content: MyString
+  summary: MyString

@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  studio: one
+  mindbody_class_id: 1
+  class_name: MyString
+  point_value: 1
+  is_premium: false
+
+two:
+  studio: two
+  mindbody_class_id: 1
+  class_name: MyString
+  point_value: 1
+  is_premium: false

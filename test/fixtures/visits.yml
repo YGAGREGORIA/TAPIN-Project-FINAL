@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  studio: one
+  class_config: one
+  points_earned: 1
+  visited_at: 2026-03-10 12:57:47
+
+two:
+  user: two
+  studio: two
+  class_config: two
+  points_earned: 1
+  visited_at: 2026-03-10 12:57:47

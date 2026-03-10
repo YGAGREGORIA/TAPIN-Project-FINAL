@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  studio: one
+  name: MyString
+  points_cost: 1
+  image_url: MyString
+  description: MyText
+  active: false
+
+two:
+  studio: two
+  name: MyString
+  points_cost: 1
+  image_url: MyString
+  description: MyText
+  active: false

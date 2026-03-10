@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  studio: one
+  mindbody_booking_id: 1
+  class_name: MyString
+  class_time: 2026-03-10 13:10:53
+  status: false
+  booked_at: 2026-03-10 13:10:53
+
+two:
+  user: two
+  studio: two
+  mindbody_booking_id: 1
+  class_name: MyString
+  class_time: 2026-03-10 13:10:53
+  status: false
+  booked_at: 2026-03-10 13:10:53
