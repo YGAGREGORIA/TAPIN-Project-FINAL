@@ -8,8 +8,8 @@ class ClassesController < ApplicationController
                       .by_teacher(params[:teacher])
                       .by_day(params[:day])
 
-    @class_types = @studio.studio_classes.upcoming.distinct.pluck(:class_type).compact.sort
-    @teachers    = @studio.studio_classes.upcoming.distinct.pluck(:teacher_name).compact.sort
+    @class_types = @studio.studio_classes.upcoming.reorder(nil).distinct.pluck(:class_type).compact.sort
+    @teachers    = @studio.studio_classes.upcoming.reorder(nil).distinct.pluck(:teacher_name).compact.sort
   end
 
   def show

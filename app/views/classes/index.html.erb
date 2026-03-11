@@ -10,24 +10,29 @@
 
   <%# ── Filters ── %>
   <div class="schedule-filters">
-    <%# Day filter %>
-    <div class="filter-scroll">
-      <%= link_to "All Days",
-            classes_path(studio_slug: @studio.slug, class_type: params[:class_type], teacher: params[:teacher]),
-            class: "filter-chip #{params[:day].blank? ? 'filter-chip--active' : ''}" %>
+
+    <%# Day filter — always scrollable row %>
+    <div class="filter-days">
+      <%= link_to classes_path(studio_slug: @studio.slug, class_type: params[:class_type], teacher: params[:teacher]),
+                  class: "filter-day-chip #{'filter-day-chip--active' if params[:day].blank?}" do %>
+        <span class="day-abbr">All</span>
+        <span class="day-num">Days</span>
+      <% end %>
+
       <% 7.times do |i| %>
         <% day = Date.today + i %>
-        <% day_label = i == 0 ? "Today" : i == 1 ? "Tomorrow" : day.strftime("%a %-d") %>
-        <%= link_to day_label,
-              classes_path(studio_slug: @studio.slug, day: day.iso8601, class_type: params[:class_type], teacher: params[:teacher]),
-              class: "filter-chip #{params[:day] == day.iso8601 ? 'filter-chip--active' : ''}" %>
+        <%= link_to classes_path(studio_slug: @studio.slug, day: day.iso8601, class_type: params[:class_type], teacher: params[:teacher]),
+                    class: "filter-day-chip #{'filter-day-chip--today' if i == 0} #{'filter-day-chip--active' if params[:day] == day.iso8601}" do %>
+          <span class="day-abbr"><%= i == 0 ? "Today" : i == 1 ? "Tmrw" : day.strftime("%a") %></span>
+          <span class="day-num"><%= day.strftime("%-d") %></span>
+        <% end %>
       <% end %>
     </div>
 
-    <%# Type filter %>
+    <%# Type filter — wraps naturally %>
     <% if @class_types.any? %>
-      <div class="filter-scroll mt-2">
-        <%= link_to "All Types",
+      <div class="filter-types">
+        <%= link_to "All Classes",
               classes_path(studio_slug: @studio.slug, day: params[:day], teacher: params[:teacher]),
               class: "filter-chip filter-chip--sm #{params[:class_type].blank? ? 'filter-chip--active' : ''}" %>
         <% @class_types.each do |type| %>
@@ -37,59 +42,53 @@
         <% end %>
       </div>
     <% end %>
+
   </div>
 
   <%# ── Class List ── %>
   <div class="schedule-list">
     <% if @classes.any? %>
-      <% current_day = nil %>
-      <% @classes.each do |studio_class| %>
-        <% class_day = studio_class.scheduled_at.to_date %>
-        <% if class_day != current_day %>
-          <% current_day = class_day %>
-          <div class="schedule-day-label">
-            <% if class_day == Date.today %>
-              Today &middot; <%= class_day.strftime("%A, %B %-d") %>
-            <% elsif class_day == Date.today + 1 %>
-              Tomorrow &middot; <%= class_day.strftime("%A, %B %-d") %>
-            <% else %>
-              <%= class_day.strftime("%A, %B %-d") %>
-            <% end %>
-          </div>
-        <% end %>
+      <% @classes.group_by { |c| c.scheduled_at.to_date }.each do |day, day_classes| %>
+        <div class="schedule-day-label">
+          <% if day == Date.today %>
+            Today &middot; <%= day.strftime("%A, %B %-d") %>
+          <% elsif day == Date.today + 1 %>
+            Tomorrow &middot; <%= day.strftime("%A, %B %-d") %>
+          <% else %>
+            <%= day.strftime("%A, %B %-d") %>
+          <% end %>
+        </div>
 
-        <div class="class-card <%= studio_class.full? ? 'class-card--full' : '' %>">
-          <div class="class-card-time">
-            <div class="class-time-hour"><%= studio_class.scheduled_at.strftime("%-I:%M") %></div>
-            <div class="class-time-period"><%= studio_class.scheduled_at.strftime("%p") %></div>
-          </div>
-
-          <div class="class-card-body">
-            <div class="class-card-name"><%= studio_class.name %></div>
-            <div class="class-card-meta">
-              <span><i class="fa fa-user"></i> <%= studio_class.teacher_name %></span>
-              <span><i class="fa fa-clock-o"></i> <%= studio_class.duration_minutes %> min</span>
-              <% if studio_class.class_config&.is_premium %>
-                <span class="premium-badge">Premium</span>
-              <% end %>
-            </div>
-            <div class="class-spots-remaining">
-              <% if studio_class.full? %>
-                <span class="spots-full">Class full</span>
-              <% elsif studio_class.spots_available <= 5 %>
-                <span class="spots-low"><%= studio_class.spots_available %> spots left</span>
-              <% else %>
-                <span class="spots-ok"><%= studio_class.spots_available %> spots</span>
-              <% end %>
-            </div>
-          </div>
-
-          <div class="class-card-action">
+        <div class="class-cards-grid">
+          <% day_classes.each do |studio_class| %>
             <%= link_to class_path(studio_slug: @studio.slug, id: studio_class.id),
-                        class: "btn-view-class" do %>
-              <i class="fa fa-chevron-right"></i>
+                        class: "class-card #{studio_class.full? ? 'class-card--full' : ''}" do %>
+              <div class="class-card-time">
+                <div class="class-time-hour"><%= studio_class.scheduled_at.strftime("%-I:%M") %></div>
+                <div class="class-time-period"><%= studio_class.scheduled_at.strftime("%p") %></div>
+              </div>
+
+              <div class="class-card-body">
+                <div class="class-card-name"><%= studio_class.name %></div>
+                <div class="class-card-meta">
+                  <span><i class="fa fa-user"></i> <%= studio_class.teacher_name %></span>
+                  <span><i class="fa fa-clock-o"></i> <%= studio_class.duration_minutes %> min</span>
+                  <% if studio_class.class_config&.is_premium %>
+                    <span class="premium-badge">Premium</span>
+                  <% end %>
+                </div>
+                <div class="class-spots-remaining">
+                  <% if studio_class.full? %>
+                    <span class="spots-full">Class full</span>
+                  <% elsif studio_class.spots_available <= 5 %>
+                    <span class="spots-low"><%= studio_class.spots_available %> spots left</span>
+                  <% else %>
+                    <span class="spots-ok"><%= studio_class.spots_available %> spots</span>
+                  <% end %>
+                </div>
+              </div>
             <% end %>
-          </div>
+          <% end %>
         </div>
       <% end %>
     <% else %>
