@@ -12,6 +12,7 @@ Deal.destroy_all
 Visit.destroy_all
 ClassConfig.destroy_all
 Booking.destroy_all
+StudioClass.destroy_all
 StudioBrand.destroy_all
 Studio.destroy_all
 User.destroy_all
@@ -114,6 +115,60 @@ pilates = ClassConfig.create!(
   is_premium: false
 )
 
+puts "Creating studio classes (schedule)..."
+
+teachers = {
+  yoga:    [ "Sarah Chen", "Maya Patel" ],
+  hiit:    [ "Jordan Blake", "Marcus Lee" ],
+  pilates: [ "Emma Torres" ]
+}
+
+yoga_desc    = "Flow through a series of gentle postures designed to build strength and flexibility. Perfect for all levels."
+hiit_desc    = "High-intensity interval training that torches calories and builds endurance. Get ready to sweat!"
+pilates_desc = "Core-focused movements to improve posture, stability, and total-body strength. Low impact, high reward."
+
+# Spread classes across the next 7 days
+[
+  { day: 0, hour: 7,  type: "yoga",    teacher: teachers[:yoga][0],    config: yoga,    name: "Morning Yoga" },
+  { day: 0, hour: 12, type: "pilates", teacher: teachers[:pilates][0],  config: pilates, name: "Pilates Core" },
+  { day: 0, hour: 18, type: "hiit",    teacher: teachers[:hiit][0],     config: hiit,    name: "HIIT Blast" },
+  { day: 1, hour: 6,  type: "hiit",    teacher: teachers[:hiit][1],     config: hiit,    name: "HIIT Blast" },
+  { day: 1, hour: 9,  type: "yoga",    teacher: teachers[:yoga][1],     config: yoga,    name: "Morning Yoga" },
+  { day: 1, hour: 17, type: "pilates", teacher: teachers[:pilates][0],  config: pilates, name: "Pilates Core" },
+  { day: 2, hour: 7,  type: "yoga",    teacher: teachers[:yoga][0],     config: yoga,    name: "Morning Yoga" },
+  { day: 2, hour: 19, type: "hiit",    teacher: teachers[:hiit][0],     config: hiit,    name: "HIIT Blast" },
+  { day: 3, hour: 8,  type: "pilates", teacher: teachers[:pilates][0],  config: pilates, name: "Pilates Core" },
+  { day: 3, hour: 12, type: "yoga",    teacher: teachers[:yoga][1],     config: yoga,    name: "Morning Yoga" },
+  { day: 3, hour: 18, type: "hiit",    teacher: teachers[:hiit][1],     config: hiit,    name: "HIIT Blast" },
+  { day: 4, hour: 7,  type: "yoga",    teacher: teachers[:yoga][0],     config: yoga,    name: "Morning Yoga" },
+  { day: 4, hour: 10, type: "hiit",    teacher: teachers[:hiit][0],     config: hiit,    name: "HIIT Blast" },
+  { day: 5, hour: 9,  type: "yoga",    teacher: teachers[:yoga][1],     config: yoga,    name: "Morning Yoga" },
+  { day: 5, hour: 11, type: "pilates", teacher: teachers[:pilates][0],  config: pilates, name: "Pilates Core" },
+  { day: 5, hour: 17, type: "hiit",    teacher: teachers[:hiit][1],     config: hiit,    name: "HIIT Blast" },
+  { day: 6, hour: 8,  type: "yoga",    teacher: teachers[:yoga][0],     config: yoga,    name: "Morning Yoga" },
+  { day: 6, hour: 10, type: "pilates", teacher: teachers[:pilates][0],  config: pilates, name: "Pilates Core" }
+].each do |c|
+  desc = case c[:type]
+         when "yoga"    then yoga_desc
+         when "hiit"    then hiit_desc
+         when "pilates" then pilates_desc
+         end
+  capacity = c[:type] == "hiit" ? 15 : 20
+
+  StudioClass.create!(
+    studio:           studio,
+    class_config:     c[:config],
+    name:             c[:name],
+    teacher_name:     c[:teacher],
+    description:      desc,
+    class_type:       c[:type],
+    scheduled_at:     Date.today.advance(days: c[:day]).change(hour: c[:hour], min: 0),
+    duration_minutes: c[:type] == "hiit" ? 45 : 60,
+    capacity:         capacity,
+    spots_taken:      rand(0..capacity - 2)
+  )
+end
+
 puts "Creating deals..."
 
 deal1 = Deal.create!(
@@ -212,9 +267,18 @@ end
 
 puts "Creating bookings..."
 
+# Link bookings to studio classes where possible
+alice_yoga_class  = StudioClass.find_by(studio: studio, class_type: "yoga",
+                                         scheduled_at: Date.today.advance(days: 2).change(hour: 7, min: 0))
+bob_hiit_class    = StudioClass.find_by(studio: studio, class_type: "hiit",
+                                         scheduled_at: Date.today.advance(days: 3).change(hour: 18, min: 0))
+carol_hiit_class  = StudioClass.find_by(studio: studio, class_type: "hiit",
+                                         scheduled_at: Date.today.advance(days: 4).change(hour: 10, min: 0))
+
 Booking.create!(
   user: alice,
   studio: studio,
+  studio_class: alice_yoga_class,
   mindbody_booking_id: 9001,
   class_name: "Morning Yoga",
   class_time: 2.days.from_now.change(hour: 8),
@@ -225,6 +289,7 @@ Booking.create!(
 Booking.create!(
   user: bob,
   studio: studio,
+  studio_class: bob_hiit_class,
   mindbody_booking_id: 9002,
   class_name: "HIIT Blast",
   class_time: 3.days.from_now.change(hour: 18),
@@ -245,6 +310,7 @@ Booking.create!(
 Booking.create!(
   user: carol,
   studio: studio,
+  studio_class: carol_hiit_class,
   mindbody_booking_id: 9004,
   class_name: "HIIT Blast",
   class_time: 5.days.from_now.change(hour: 18),

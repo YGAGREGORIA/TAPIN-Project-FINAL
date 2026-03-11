@@ -1,0 +1,55 @@
+<% content_for :title, "Link Your Account — #{@studio.name}" %>
+
+<div class="mindbody-link-page">
+
+  <div class="mb-link-header">
+    <div class="mb-link-icon">
+      <i class="fa fa-link"></i>
+    </div>
+    <h1 class="mb-link-title">Link Your Account</h1>
+    <p class="mb-link-subtitle">
+      To book classes at <strong><%= @studio.name %></strong>, connect your Mindbody account.
+    </p>
+  </div>
+
+  <div class="mb-link-body">
+    <div class="mb-link-card">
+      <p class="mb-link-desc">
+        Linking your Mindbody account lets you book classes, manage your schedule, and sync your visit history — all in one place.
+      </p>
+
+      <div class="mb-link-steps">
+        <div class="mb-step">
+          <div class="mb-step-num">1</div>
+          <div class="mb-step-text">Sign in with your Mindbody credentials</div>
+        </div>
+        <div class="mb-step">
+          <div class="mb-step-num">2</div>
+          <div class="mb-step-text">Authorize TAPIN to access your bookings</div>
+        </div>
+        <div class="mb-step">
+          <div class="mb-step-num">3</div>
+          <div class="mb-step-text">Book and manage classes seamlessly</div>
+        </div>
+      </div>
+
+      <div class="mb-link-actions">
+        <button class="btn-book" disabled>
+          <i class="fa fa-external-link"></i> Connect Mindbody
+        </button>
+        <p class="mb-link-coming-soon">Mindbody integration coming soon</p>
+      </div>
+    </div>
+
+    <% if @redirect_back_to.present? %>
+      <%= link_to "Skip for now",
+            @redirect_back_to,
+            class: "btn-secondary-action" %>
+    <% else %>
+      <%= link_to "Back to Schedule",
+            classes_path(studio_slug: @studio.slug),
+            class: "btn-secondary-action" %>
+    <% end %>
+  </div>
+
+</div>

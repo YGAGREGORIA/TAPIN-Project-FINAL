@@ -14,6 +14,14 @@ Rails.application.routes.draw do
     end
 
     resources :deal_claims, only: [ :show ]
+
+    resources :classes, only: [ :index, :show ] do
+      post :book, to: "bookings#create", on: :member
+    end
+
+    resources :bookings, only: [ :index, :show, :destroy ]
+
+    resources :mindbody_links, only: [ :new ]
   end
 
   resource :dashboard, only: [:show]

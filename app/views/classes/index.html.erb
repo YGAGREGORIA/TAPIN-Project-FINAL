@@ -1,0 +1,108 @@
+<% content_for :title, "Class Schedule — #{@studio.name}" %>
+
+<div class="schedule-page">
+
+  <%# ── Header ── %>
+  <div class="schedule-header">
+    <p class="schedule-studio-name"><%= @studio.name %></p>
+    <h1 class="schedule-title">Class Schedule</h1>
+  </div>
+
+  <%# ── Filters ── %>
+  <div class="schedule-filters">
+    <%# Day filter %>
+    <div class="filter-scroll">
+      <%= link_to "All Days",
+            classes_path(studio_slug: @studio.slug, class_type: params[:class_type], teacher: params[:teacher]),
+            class: "filter-chip #{params[:day].blank? ? 'filter-chip--active' : ''}" %>
+      <% 7.times do |i| %>
+        <% day = Date.today + i %>
+        <% day_label = i == 0 ? "Today" : i == 1 ? "Tomorrow" : day.strftime("%a %-d") %>
+        <%= link_to day_label,
+              classes_path(studio_slug: @studio.slug, day: day.iso8601, class_type: params[:class_type], teacher: params[:teacher]),
+              class: "filter-chip #{params[:day] == day.iso8601 ? 'filter-chip--active' : ''}" %>
+      <% end %>
+    </div>
+
+    <%# Type filter %>
+    <% if @class_types.any? %>
+      <div class="filter-scroll mt-2">
+        <%= link_to "All Types",
+              classes_path(studio_slug: @studio.slug, day: params[:day], teacher: params[:teacher]),
+              class: "filter-chip filter-chip--sm #{params[:class_type].blank? ? 'filter-chip--active' : ''}" %>
+        <% @class_types.each do |type| %>
+          <%= link_to type.capitalize,
+                classes_path(studio_slug: @studio.slug, day: params[:day], class_type: type, teacher: params[:teacher]),
+                class: "filter-chip filter-chip--sm #{params[:class_type] == type ? 'filter-chip--active' : ''}" %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+  <%# ── Class List ── %>
+  <div class="schedule-list">
+    <% if @classes.any? %>
+      <% current_day = nil %>
+      <% @classes.each do |studio_class| %>
+        <% class_day = studio_class.scheduled_at.to_date %>
+        <% if class_day != current_day %>
+          <% current_day = class_day %>
+          <div class="schedule-day-label">
+            <% if class_day == Date.today %>
+              Today &middot; <%= class_day.strftime("%A, %B %-d") %>
+            <% elsif class_day == Date.today + 1 %>
+              Tomorrow &middot; <%= class_day.strftime("%A, %B %-d") %>
+            <% else %>
+              <%= class_day.strftime("%A, %B %-d") %>
+            <% end %>
+          </div>
+        <% end %>
+
+        <div class="class-card <%= studio_class.full? ? 'class-card--full' : '' %>">
+          <div class="class-card-time">
+            <div class="class-time-hour"><%= studio_class.scheduled_at.strftime("%-I:%M") %></div>
+            <div class="class-time-period"><%= studio_class.scheduled_at.strftime("%p") %></div>
+          </div>
+
+          <div class="class-card-body">
+            <div class="class-card-name"><%= studio_class.name %></div>
+            <div class="class-card-meta">
+              <span><i class="fa fa-user"></i> <%= studio_class.teacher_name %></span>
+              <span><i class="fa fa-clock-o"></i> <%= studio_class.duration_minutes %> min</span>
+              <% if studio_class.class_config&.is_premium %>
+                <span class="premium-badge">Premium</span>
+              <% end %>
+            </div>
+            <div class="class-spots-remaining">
+              <% if studio_class.full? %>
+                <span class="spots-full">Class full</span>
+              <% elsif studio_class.spots_available <= 5 %>
+                <span class="spots-low"><%= studio_class.spots_available %> spots left</span>
+              <% else %>
+                <span class="spots-ok"><%= studio_class.spots_available %> spots</span>
+              <% end %>
+            </div>
+          </div>
+
+          <div class="class-card-action">
+            <%= link_to class_path(studio_slug: @studio.slug, id: studio_class.id),
+                        class: "btn-view-class" do %>
+              <i class="fa fa-chevron-right"></i>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    <% else %>
+      <div class="schedule-empty">
+        <i class="fa fa-calendar-o"></i>
+        <p>No classes found</p>
+        <% if params[:day].present? || params[:class_type].present? || params[:teacher].present? %>
+          <%= link_to "Clear filters",
+                classes_path(studio_slug: @studio.slug),
+                class: "clear-filters-link" %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+</div>

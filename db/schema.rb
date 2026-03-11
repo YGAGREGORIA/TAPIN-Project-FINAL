@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_10_225601) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_11_181158) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -21,9 +21,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_10_225601) do
     t.datetime "created_at", null: false
     t.integer "mindbody_booking_id"
     t.boolean "status"
+    t.bigint "studio_class_id"
     t.bigint "studio_id", null: false
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
+    t.index ["studio_class_id"], name: "index_bookings_on_studio_class_id"
     t.index ["studio_id"], name: "index_bookings_on_studio_id"
     t.index ["user_id"], name: "index_bookings_on_user_id"
   end
@@ -135,6 +137,23 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_10_225601) do
     t.index ["studio_id"], name: "index_studio_brands_on_studio_id"
   end
 
+  create_table "studio_classes", force: :cascade do |t|
+    t.integer "capacity", default: 20
+    t.bigint "class_config_id"
+    t.string "class_type"
+    t.datetime "created_at", null: false
+    t.text "description"
+    t.integer "duration_minutes", default: 60
+    t.string "name"
+    t.datetime "scheduled_at"
+    t.integer "spots_taken", default: 0
+    t.bigint "studio_id", null: false
+    t.string "teacher_name"
+    t.datetime "updated_at", null: false
+    t.index ["class_config_id"], name: "index_studio_classes_on_class_config_id"
+    t.index ["studio_id"], name: "index_studio_classes_on_studio_id"
+  end
+
   create_table "studios", force: :cascade do |t|
     t.boolean "active"
     t.datetime "created_at", null: false
@@ -180,6 +199,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_10_225601) do
     t.index ["user_id"], name: "index_visits_on_user_id"
   end
 
+  add_foreign_key "bookings", "studio_classes"
   add_foreign_key "bookings", "studios"
   add_foreign_key "bookings", "users"
   add_foreign_key "chats", "studios"
@@ -195,6 +215,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_10_225601) do
   add_foreign_key "reward_redemptions", "users"
   add_foreign_key "rewards", "studios"
   add_foreign_key "studio_brands", "studios"
+  add_foreign_key "studio_classes", "class_configs"
+  add_foreign_key "studio_classes", "studios"
   add_foreign_key "studios", "users"
   add_foreign_key "visits", "class_configs"
   add_foreign_key "visits", "studios"
