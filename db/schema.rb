@@ -91,6 +91,30 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_11_181158) do
     t.index ["chat_id"], name: "index_messages_on_chat_id"
   end
 
+  create_table "mindbody_links", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "linked_at"
+    t.json "match_data"
+    t.string "mindbody_client_id"
+    t.string "status", default: "pending"
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["user_id"], name: "index_mindbody_links_on_user_id"
+  end
+
+  create_table "referrals", force: :cascade do |t|
+    t.datetime "completed_at"
+    t.datetime "created_at", null: false
+    t.string "referral_code", null: false
+    t.bigint "referred_id"
+    t.bigint "referrer_id", null: false
+    t.string "status", default: "pending"
+    t.datetime "updated_at", null: false
+    t.index ["referral_code"], name: "index_referrals_on_referral_code", unique: true
+    t.index ["referred_id"], name: "index_referrals_on_referred_id"
+    t.index ["referrer_id"], name: "index_referrals_on_referrer_id"
+  end
+
   create_table "reward_redemptions", force: :cascade do |t|
     t.string "code"
     t.datetime "created_at", null: false
@@ -210,6 +234,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_11_181158) do
   add_foreign_key "deal_claims", "users"
   add_foreign_key "deals", "studios"
   add_foreign_key "messages", "chats"
+  add_foreign_key "mindbody_links", "users"
+  add_foreign_key "referrals", "users", column: "referred_id"
+  add_foreign_key "referrals", "users", column: "referrer_id"
   add_foreign_key "reward_redemptions", "rewards"
   add_foreign_key "reward_redemptions", "studios"
   add_foreign_key "reward_redemptions", "users"
