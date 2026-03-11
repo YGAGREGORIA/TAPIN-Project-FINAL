@@ -25,6 +25,12 @@ Rails.application.routes.draw do
     resources :bookings, only: [ :index, :show, :destroy ]
 
     resources :mindbody_links, only: [ :new ]
+
+    # Referral system — Rajesh
+    resources :referrals, only: [:create] do
+      get :share, on: :member
+    end
+    get "ref/:code", to: "referrals#landing", as: :referral_landing
   end
 
   resource :dashboard, only: [:show]
