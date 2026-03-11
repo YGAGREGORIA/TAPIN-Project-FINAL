@@ -7,12 +7,9 @@
     <p class="hero-greeting">
       Hi, <%= current_user.first_name.presence || current_user.email.split("@").first %>!
     </p>
-
-    <div class="points-hero-card">
-      <div class="points-label">Available Points</div>
-      <div class="points-value"><%= current_user.available_points || 0 %></div>
-      <div class="points-unit">pts</div>
-    </div>
+    <p class="hero-points">
+      <span class="hero-points-value"><%= current_user.available_points || 0 %> pts</span> available
+    </p>
   </div>
 
   <%# ── Progress toward next reward (per studio) ── %>
@@ -28,13 +25,26 @@
             <% end %>
           </div>
 
-          <div class="progress-text">
-            <%= current_user.current_visit_progress_for(studio) %> / 10 visits
-          </div>
+          <% progress = current_user.current_visit_progress_for(studio) %>
 
-          <div class="progress dashboard-progress">
-            <div class="progress-bar"
-                 style="width: <%= (current_user.current_visit_progress_for(studio) / 10.0 * 100).round %>%">
+          <div class="stamp-card">
+            <div class="stamp-grid">
+              <% 10.times do |i| %>
+                <div class="stamp <%= i < progress ? 'stamp--done' : '' %>">
+                  <% if i < progress %>
+                    <i class="fa fa-check"></i>
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
+
+            <div class="stamp-card-footer">
+              <div class="progress dashboard-progress">
+                <div class="progress-bar"
+                     style="width: <%= (progress / 10.0 * 100).round %>%">
+                </div>
+              </div>
+              <span class="stamp-count"><%= progress %> / 10</span>
             </div>
           </div>
 
@@ -56,13 +66,8 @@
     <% if @available_rewards.any? %>
       <% @available_rewards.each do |reward| %>
         <div class="reward-card">
-          <div class="reward-card-top">
-            <div>
-              <div class="reward-name"><%= reward.name %></div>
-              <div class="reward-studio-name"><%= reward.studio.name %></div>
-            </div>
-            <span class="reward-ready-tag">Ready to redeem</span>
-          </div>
+          <div class="reward-name"><%= reward.name %></div>
+          <div class="reward-studio-name"><%= reward.studio.name %></div>
           <% if reward.description.present? %>
             <p class="reward-description"><%= reward.description %></p>
           <% end %>

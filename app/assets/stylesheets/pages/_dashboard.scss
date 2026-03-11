@@ -10,44 +10,26 @@
   background: $espresso-brown;
   color: $oat;
   padding: 2rem 1.25rem 1.5rem;
+  text-align: center;
 
   .hero-greeting {
     font-family: 'Space Grotesk', sans-serif;
     font-size: 1.375rem;
     font-weight: 600;
-    margin-bottom: 1.25rem;
+    margin-bottom: 0.5rem;
   }
 }
 
-.points-hero-card {
-  background: $accent-gold;
-  color: $espresso-brown;
-  border-radius: 1rem;
-  padding: 1.25rem 1.5rem;
-  display: flex;
-  align-items: baseline;
-  gap: 0.5rem;
+.hero-points {
+  font-size: 0.875rem;
+  color: rgba($oat, 0.65);
+  margin: 0;
 
-  .points-label {
-    font-size: 0.8125rem;
-    font-weight: 500;
-    opacity: 0.75;
-    flex-shrink: 0;
-    margin-right: auto;
-  }
-
-  .points-value {
+  .hero-points-value {
     font-family: 'Space Grotesk', sans-serif;
     font-weight: 700;
-    font-size: 2.25rem;
-    line-height: 1;
-  }
-
-  .points-unit {
-    font-family: 'Space Grotesk', sans-serif;
-    font-weight: 600;
-    font-size: 1rem;
-    opacity: 0.8;
+    font-size: 1.0625rem;
+    color: $accent-gold;
   }
 }
 
@@ -115,17 +97,65 @@
     color: $espresso-brown;
   }
 
-  .progress-text {
-    font-size: 0.8125rem;
-    color: rgba($espresso-brown, 0.6);
-    margin-bottom: 0.5rem;
-  }
-
   .visits-remaining-text {
     font-size: 0.75rem;
     color: $clay-red;
     font-weight: 500;
-    margin-top: 0.4rem;
+    margin-top: 0.75rem;
+  }
+}
+
+// ── Stamp card ────────────────────────────────────────────────────
+.stamp-card {
+  margin-top: 0.5rem;
+}
+
+.stamp-grid {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: clamp(0.15rem, 1.2vw, 0.4rem);
+  width: 100%;
+}
+
+.stamp {
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 2px solid $espresso-brown;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: transparent;
+  background: transparent;
+  width: 100%;
+  overflow: hidden;
+
+  i {
+    font-size: 55%;
+    line-height: 1;
+  }
+
+  &--done {
+    background: $accent-gold;
+    border-color: $accent-gold;
+    color: white;
+  }
+}
+
+.stamp-card-footer {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 0.6rem;
+
+  .dashboard-progress {
+    flex: 1;
+  }
+
+  .stamp-count {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: rgba($espresso-brown, 0.6);
+    white-space: nowrap;
   }
 }
 
@@ -159,14 +189,7 @@
   padding: 1.25rem;
   box-shadow: 0 2px 8px rgba($espresso-brown, 0.2);
   margin-bottom: 0.75rem;
-
-  .reward-card-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 0.75rem;
-    margin-bottom: 0.75rem;
-  }
+  text-align: center;
 
   .reward-name {
     font-family: 'Space Grotesk', sans-serif;
@@ -180,23 +203,18 @@
     opacity: 0.6;
   }
 
-  .reward-ready-tag {
-    background: $accent-gold;
-    color: $espresso-brown;
-    font-size: 0.6875rem;
-    font-weight: 700;
-    padding: 0.25rem 0.625rem;
-    border-radius: 2rem;
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
-
   .reward-description {
     font-size: 0.875rem;
     opacity: 0.8;
     margin-bottom: 1rem;
     line-height: 1.5;
   }
+}
+
+.reward-card form {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
 }
 
 .btn-redeem {

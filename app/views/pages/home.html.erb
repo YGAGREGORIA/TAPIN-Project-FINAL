@@ -1,0 +1,17 @@
+<% content_for :title, "Welcome to Tapin" %>
+
+<div class="home-page">
+  <div class="home-hero">
+    <h1 class="home-title">Welcome to Tapin</h1>
+    <p class="home-subtitle">Track your classes, earn rewards, and discover deals at your favourite studios.</p>
+
+    <div class="home-actions">
+      <% if user_signed_in? %>
+        <%= link_to "Go to Dashboard", dashboard_path, class: "btn-primary" %>
+      <% else %>
+        <%= link_to "Sign In", new_user_session_path, class: "btn-primary" %>
+        <%= link_to "Sign Up", new_user_registration_path, class: "btn-secondary" %>
+      <% end %>
+    </div>
+  </div>
+</div>
