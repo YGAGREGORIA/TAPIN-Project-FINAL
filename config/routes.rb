@@ -3,6 +3,9 @@ Rails.application.routes.draw do
   root to: "pages#home"
 
   scope "/s/:studio_slug" do
+    # NFC/QR landing page — Rajesh
+    get "/", to: "studios#show", as: :studio_landing
+
     resources :rewards, only: [ :index ] do
       post :redeem, to: "reward_redemptions#create", on: :member
     end
