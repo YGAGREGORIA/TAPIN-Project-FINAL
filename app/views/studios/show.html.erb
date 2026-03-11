@@ -1,0 +1,90 @@
+<% content_for(:title) { @studio.name } %>
+
+<div class="studio-landing" data-controller="nfc"
+     data-nfc-studio-slug-value="<%= @studio.slug %>">
+
+  <div class="studio-landing__header">
+    <% if @brand&.logo_url.present? %>
+      <img src="<%= @brand.logo_url %>" alt="<%= @studio.name %> logo" class="studio-landing__logo">
+    <% end %>
+    <h1 class="studio-landing__name"><%= @studio.name %></h1>
+    <% if @brand&.tagline.present? %>
+      <p class="studio-landing__tagline"><%= @brand.tagline %></p>
+    <% end %>
+  </div>
+
+  <div class="studio-landing__actions">
+    <!-- TODO: Navid's phone entry form will go here -->
+    <p>Welcome! Enter your phone number to check in.</p>
+    <p class="studio-landing__hint">
+      Tap your phone on the NFC tag or scan the QR code at reception.
+    </p>
+  </div>
+
+  <div class="studio-landing__nfc-status" data-nfc-target="status" style="display: none;">
+  </div>
+</div>
+
+<% if @brand %>
+<style>
+  :root {
+    --studio-primary: <%= @brand.primary_color || '#FF5733' %>;
+    --studio-secondary: <%= @brand.secondary_color || '#33C1FF' %>;
+    --studio-bg: <%= @brand.background_color || '#F5F5F5' %>;
+    --studio-text: <%= @brand.text_color || '#222222' %>;
+  }
+
+  .studio-landing {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    background-color: var(--studio-bg);
+    color: var(--studio-text);
+    font-family: <%= @brand.font_body || 'system-ui, sans-serif' %>;
+  }
+
+  .studio-landing__header {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .studio-landing__logo {
+    max-width: 120px;
+    margin-bottom: 1rem;
+  }
+
+  .studio-landing__name {
+    font-family: <%= @brand.font_heading || 'system-ui, sans-serif' %>;
+    font-size: 2rem;
+    color: var(--studio-primary);
+    margin: 0;
+  }
+
+  .studio-landing__tagline {
+    color: var(--studio-secondary);
+    font-size: 1.1rem;
+    margin-top: 0.5rem;
+  }
+
+  .studio-landing__actions {
+    text-align: center;
+    max-width: 400px;
+  }
+
+  .studio-landing__hint {
+    font-size: 0.875rem;
+    opacity: 0.7;
+    margin-top: 1rem;
+  }
+
+  .studio-landing__nfc-status {
+    margin-top: 1rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-size: 0.875rem;
+  }
+</style>
+<% end %>
