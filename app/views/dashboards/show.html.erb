@@ -1,6 +1,6 @@
 <% content_for :title, "My Dashboard" %>
 
-<div class="dashboard">
+<div class="dashboard" data-controller="dashboard">
 
   <%# ── Hero: greeting + points ── %>
   <div class="dashboard-hero">
@@ -8,7 +8,9 @@
       Hi, <%= current_user.first_name.presence || current_user.email.split("@").first %>!
     </p>
     <p class="hero-points">
-      <span class="hero-points-value"><%= current_user.available_points || 0 %> pts</span> available
+      <span class="hero-points-value"
+            data-dashboard-target="pointsValue"
+            data-points="<%= current_user.available_points || 0 %>"><%= current_user.available_points || 0 %> pts</span> available
     </p>
   </div>
 

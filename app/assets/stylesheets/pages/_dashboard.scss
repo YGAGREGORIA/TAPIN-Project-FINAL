@@ -1,3 +1,22 @@
+// ── Keyframes ─────────────────────────────────────────────────────
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes stampPop {
+  from { opacity: 0; transform: scale(0.4); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.animate-fade-up {
+  animation: fadeSlideUp 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.animate-stamp {
+  animation: stampPop 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+}
+
 // ── Dashboard layout ────────────────────────────────────────────
 .dashboard {
   background-color: $oat;
@@ -62,6 +81,7 @@
   padding: 1.125rem 1.25rem;
   box-shadow: 0 1px 4px rgba($espresso-brown, 0.07);
   margin-bottom: 0.75rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 // ── Empty state ───────────────────────────────────────────────────
@@ -89,6 +109,7 @@
   padding: 1.125rem 1.25rem;
   box-shadow: 0 1px 4px rgba($espresso-brown, 0.07);
   margin-bottom: 0.75rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 
   .studio-progress-name {
     font-family: 'Space Grotesk', sans-serif;
@@ -190,6 +211,7 @@
   box-shadow: 0 2px 8px rgba($espresso-brown, 0.2);
   margin-bottom: 0.75rem;
   text-align: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 
   .reward-name {
     font-family: 'Space Grotesk', sans-serif;
@@ -313,6 +335,7 @@
   box-shadow: 0 1px 4px rgba($espresso-brown, 0.07);
   border-left: 3px solid $clay-red;
   margin-bottom: 0.75rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 
   .deal-card-name {
     font-family: 'Space Grotesk', sans-serif;
@@ -475,5 +498,30 @@
     font-weight: 700;
     font-size: 0.9375rem;
     color: darken($accent-gold, 10%);
+  }
+}
+
+// ── Card hover lift ────────────────────────────────────────────────
+@media (hover: hover) {
+  .dashboard-card:hover,
+  .studio-progress-card:hover,
+  .deal-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba($espresso-brown, 0.11);
+  }
+
+  .reward-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba($espresso-brown, 0.28);
+  }
+}
+
+// ── Button transitions ─────────────────────────────────────────────
+.btn-redeem,
+.btn-claim {
+  transition: background 0.18s ease, color 0.18s ease, transform 0.15s ease;
+
+  &:active {
+    transform: scale(0.96);
   }
 }
