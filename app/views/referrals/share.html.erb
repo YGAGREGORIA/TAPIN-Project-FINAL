@@ -1,0 +1,77 @@
+<% content_for(:title) { "Share Referral — #{@studio.name}" } %>
+
+<div class="referral-share" data-controller="share"
+     data-share-url-value="<%= @referral_url %>"
+     data-share-title-value="Join me at <%= @studio.name %>!"
+     data-share-text-value="<%= @referrer_name = current_user.first_name || 'Your friend' %> invited you to <%= @studio.name %>. Sign up and you both get 50%% off!">
+
+  <h1>Invite a Friend</h1>
+  <p>Share this link and you'll <strong>both get 50%% off</strong> when your friend completes their first visit.</p>
+
+  <div class="referral-share__code-box">
+    <input type="text" value="<%= @referral_url %>" readonly class="referral-share__url"
+           data-share-target="urlField">
+    <button data-action="click->share#copy" class="referral-share__copy-btn">
+      Copy
+    </button>
+  </div>
+
+  <button data-action="click->share#nativeShare" class="referral-share__share-btn">
+    Share via...
+  </button>
+
+  <p class="referral-share__info">
+    You have <%= current_user.referrals.active.count %> / 5 active referral links.
+  </p>
+
+  <p><%= link_to "Back to studio", studio_landing_path(studio_slug: @studio.slug) %></p>
+</div>
+
+<style>
+  .referral-share {
+    max-width: 480px;
+    margin: 2rem auto;
+    padding: 2rem;
+    text-align: center;
+  }
+
+  .referral-share__code-box {
+    display: flex;
+    gap: 0.5rem;
+    margin: 1.5rem 0;
+  }
+
+  .referral-share__url {
+    flex: 1;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 0.875rem;
+  }
+
+  .referral-share__copy-btn,
+  .referral-share__share-btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+  }
+
+  .referral-share__copy-btn {
+    background: #eee;
+  }
+
+  .referral-share__share-btn {
+    width: 100%;
+    background: <%= @brand&.primary_color || '#FF5733' %>;
+    color: white;
+    font-size: 1rem;
+  }
+
+  .referral-share__info {
+    margin-top: 1rem;
+    font-size: 0.875rem;
+    opacity: 0.7;
+  }
+</style>
