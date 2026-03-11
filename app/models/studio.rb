@@ -16,6 +16,7 @@ class Studio < ApplicationRecord
   has_many :studio_classes, dependent: :destroy
   has_many :visits, dependent: :destroy
   has_many :bookings, dependent: :destroy
+  has_many :mindbody_clients, dependent: :destroy
 
   validates :name, presence: true
   validates :slug, presence: true, uniqueness: true
