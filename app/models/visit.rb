@@ -1,5 +1,6 @@
 class Visit < ApplicationRecord
   include ReferralCompletable
+  include MindbodyMatchable
 
   belongs_to :user
   belongs_to :studio
