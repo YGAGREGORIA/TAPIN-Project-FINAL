@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_12_115205) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_12_115821) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -28,6 +28,22 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_12_115205) do
     t.index ["studio_class_id"], name: "index_bookings_on_studio_class_id"
     t.index ["studio_id"], name: "index_bookings_on_studio_id"
     t.index ["user_id"], name: "index_bookings_on_user_id"
+  end
+
+  create_table "broadcasts", force: :cascade do |t|
+    t.string "audience_filter"
+    t.text "body"
+    t.string "channel"
+    t.datetime "created_at", null: false
+    t.datetime "scheduled_at"
+    t.datetime "sent_at"
+    t.bigint "studio_id", null: false
+    t.string "subject"
+    t.integer "total_delivered"
+    t.integer "total_failed"
+    t.integer "total_sent"
+    t.datetime "updated_at", null: false
+    t.index ["studio_id"], name: "index_broadcasts_on_studio_id"
   end
 
   create_table "chats", force: :cascade do |t|
@@ -115,6 +131,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_12_115205) do
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
     t.index ["user_id"], name: "index_mindbody_links_on_user_id"
+  end
+
+  create_table "notification_templates", force: :cascade do |t|
+    t.string "body_template"
+    t.datetime "created_at", null: false
+    t.boolean "enabled"
+    t.string "event_type"
+    t.bigint "studio_id", null: false
+    t.string "title_template"
+    t.datetime "updated_at", null: false
+    t.index ["studio_id"], name: "index_notification_templates_on_studio_id"
   end
 
   create_table "notifications", force: :cascade do |t|
@@ -267,6 +294,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_12_115205) do
   add_foreign_key "bookings", "studio_classes"
   add_foreign_key "bookings", "studios"
   add_foreign_key "bookings", "users"
+  add_foreign_key "broadcasts", "studios"
   add_foreign_key "chats", "studios"
   add_foreign_key "chats", "users"
   add_foreign_key "class_configs", "studios"
@@ -277,6 +305,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_12_115205) do
   add_foreign_key "messages", "chats"
   add_foreign_key "mindbody_clients", "studios"
   add_foreign_key "mindbody_links", "users"
+  add_foreign_key "notification_templates", "studios"
   add_foreign_key "notifications", "studios"
   add_foreign_key "notifications", "users"
   add_foreign_key "push_subscriptions", "users"
