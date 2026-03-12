@@ -27,7 +27,40 @@ Rails.application.routes.draw do
   resource :dashboard, only: [:show]
 
   resources :visits, only: [:create]
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+
+  # === Admin namespace ===
+  namespace :admin do
+    # Navid's areas
+    resource :dashboard, only: [:show]
+    resources :rewards
+    resources :class_configs, only: [:index, :update]
+    resources :deals do
+      patch :update_referral, on: :collection
+    end
+    resources :members, only: [:index, :show, :export] do
+      post :points, to: "member_points#create", on: :member
+      post :rewards, to: "member_rewards#create", on: :member
+      get :export, on: :collection
+    end
+
+    # Raj's areas
+    resource :checkin_settings, only: [:show, :update] do
+      get :nfc_guide
+      post :test
+    end
+    resources :mindbody_matches, only: [:index] do
+      member do
+        post :confirm
+        post :reject
+      end
+    end
+    resources :mindbody_conflicts, only: [:show]
+    resources :notification_templates, only: [:index, :update]
+    resources :broadcasts, only: [:index, :create]
+    resource :assistant, only: [:show], controller: "assistant" do
+      post :respond
+    end
+  end
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.

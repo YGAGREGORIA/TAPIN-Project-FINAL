@@ -2,6 +2,8 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
+  enum :role, { customer: 0, admin: 1 }
+
   has_many :studios, dependent: :destroy
   has_many :chats, dependent: :destroy
   has_many :messages, through: :chats
