@@ -91,6 +91,20 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_11_181158) do
     t.index ["chat_id"], name: "index_messages_on_chat_id"
   end
 
+  create_table "mindbody_clients", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "email"
+    t.string "first_name"
+    t.string "last_name"
+    t.string "mindbody_client_id"
+    t.string "phone"
+    t.bigint "studio_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["studio_id", "mindbody_client_id"], name: "index_mindbody_clients_on_studio_id_and_mindbody_client_id", unique: true
+    t.index ["studio_id", "phone"], name: "index_mindbody_clients_on_studio_id_and_phone"
+    t.index ["studio_id"], name: "index_mindbody_clients_on_studio_id"
+  end
+
   create_table "mindbody_links", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "linked_at"
@@ -234,6 +248,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_11_181158) do
   add_foreign_key "deal_claims", "users"
   add_foreign_key "deals", "studios"
   add_foreign_key "messages", "chats"
+  add_foreign_key "mindbody_clients", "studios"
   add_foreign_key "mindbody_links", "users"
   add_foreign_key "referrals", "users", column: "referred_id"
   add_foreign_key "referrals", "users", column: "referrer_id"
