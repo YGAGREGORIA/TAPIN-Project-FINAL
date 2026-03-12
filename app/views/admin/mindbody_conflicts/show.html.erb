@@ -1,0 +1,73 @@
+<% content_for(:title) { "Resolve Conflict" } %>
+
+<h2 class="mb-4">Resolve Match Conflict</h2>
+
+<%= link_to "Back to Matches", admin_mindbody_matches_path, class: "btn btn-outline-secondary mb-4" %>
+
+<div class="row">
+  <!-- TapIn User -->
+  <div class="col-md-5">
+    <div class="card border-primary">
+      <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">TapIn Record</h5>
+      </div>
+      <div class="card-body">
+        <dl>
+          <dt>Name</dt>
+          <dd><%= @user.first_name %> <%= @user.last_name %></dd>
+          <dt>Phone</dt>
+          <dd><%= @user.phone %></dd>
+          <dt>Email</dt>
+          <dd><%= @user.email %></dd>
+          <dt>Total Visits</dt>
+          <dd><%= @user.total_visits || 0 %></dd>
+          <dt>Total Points</dt>
+          <dd><%= @user.total_points || 0 %></dd>
+        </dl>
+      </div>
+    </div>
+  </div>
+
+  <!-- VS -->
+  <div class="col-md-2 d-flex align-items-center justify-content-center">
+    <h3 class="text-muted">VS</h3>
+  </div>
+
+  <!-- Mindbody Clients -->
+  <div class="col-md-5">
+    <% @mindbody_clients.each do |client| %>
+      <div class="card border-warning mb-3">
+        <div class="card-header bg-warning bg-opacity-25">
+          <h5 class="mb-0">Mindbody Client — <%= client.mindbody_client_id %></h5>
+        </div>
+        <div class="card-body">
+          <dl>
+            <dt>Name</dt>
+            <dd><%= client.first_name %> <%= client.last_name %></dd>
+            <dt>Phone</dt>
+            <dd><%= client.phone %></dd>
+            <dt>Email</dt>
+            <dd><%= client.email %></dd>
+          </dl>
+          <div class="d-flex gap-2">
+            <%= button_to "Link to this client",
+                confirm_admin_mindbody_match_path(@link),
+                method: :post,
+                class: "btn btn-success btn-sm" %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+
+    <% if @mindbody_clients.empty? %>
+      <div class="alert alert-info">No conflicting Mindbody clients found.</div>
+    <% end %>
+  </div>
+</div>
+
+<div class="mt-4">
+  <%= button_to "Keep as Standalone (no link)",
+      reject_admin_mindbody_match_path(@link),
+      method: :post,
+      class: "btn btn-outline-secondary" %>
+</div>
