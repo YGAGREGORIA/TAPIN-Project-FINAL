@@ -1,0 +1,23 @@
+<h1>Deal Claim</h1>
+
+<p>Studio: <%= @studio.name %></p>
+
+<p>Deal: <%= @deal_claim.deal.name %></p>
+
+<p>Code: <%= @deal_claim.code %></p>
+
+<p>Claimed at: <%= @deal_claim.claimed_at&.strftime("%d.%m.%Y %H:%M") %></p>
+
+<% if @deal_claim.expires_at.present? %>
+  <p>Expires at: <%= @deal_claim.expires_at.strftime("%d.%m.%Y %H:%M") %></p>
+<% end %>
+
+<% if @deal_claim.expired? %>
+  <p>This deal has expired.</p>
+<% else %>
+  <p>Show this code when booking or at reception to apply your discount.</p>
+<% end %>
+
+<p>
+  <%= link_to "Back to deals", deals_path(studio_slug: @studio.slug) %>
+</p>

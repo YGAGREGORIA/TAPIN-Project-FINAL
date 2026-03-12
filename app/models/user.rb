@@ -42,4 +42,8 @@ class User < ApplicationRecord
     remainder = count % 10
     remainder.zero? ? 10 : 10 - remainder
   end
+
+  def has_claimed_deal?(deal)
+    deal_claims.exists?(deal: deal)
+  end
 end

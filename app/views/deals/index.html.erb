@@ -1,0 +1,36 @@
+<h1>Deals</h1>
+
+<p>Studio: <%= @studio.name %></p>
+
+<% if @deals.any? %>
+  <ul>
+    <% @deals.each do |deal| %>
+      <li style="margin-bottom: 20px;">
+        <h2><%= deal.name %></h2>
+
+        <p>Discount: <%= deal.discount_percent %>%</p>
+        <p>Trigger: <%= deal.trigger_condition %></p>
+
+        <% case deal.eligibility_status_for(current_user) %>
+        <% when :eligible %>
+          <p>This deal is available for you.</p>
+
+          <%= button_to "Claim deal",
+            claim_deal_path(studio_slug: @studio.slug, id: deal.id),
+            method: :post %>
+
+        <% when :already_claimed %>
+          <p>You already claimed this deal.</p>
+
+        <% when :not_unlocked_yet %>
+          <p>This deal will unlock after your first visit.</p>
+
+        <% else %>
+          <p>This deal is not available for you.</p>
+        <% end %>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>No deals available yet.</p>
+<% end %>
