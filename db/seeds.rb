@@ -40,7 +40,7 @@ bob = User.create!(
   last_visit_at: 2.days.ago
 )
 
-# carol: 0 visits → fresh user (0/10)
+# carol: 20 visits → 2 milestones, 1 redemption used, 1 available reward, 2 deals claimed, 2 upcoming bookings
 carol = User.create!(
   email: "carol@example.com",
   password: "password",
@@ -48,7 +48,7 @@ carol = User.create!(
   last_name: "Park",
   phone: 612345678,
   referred_by: nil,
-  last_visit_at: nil
+  last_visit_at: 1.week.ago
 )
 
 owner = User.create!(
@@ -127,7 +127,7 @@ deal1 = Deal.create!(
   active: true
 )
 
-Deal.create!(
+deal2 = Deal.create!(
   studio: studio,
   name: "10% Off Next Class",
   deal_type: "discount",
@@ -147,6 +147,26 @@ free_class_reward = Reward.create!(
   points_cost: 0,
   image_url: "https://example.com/free-class.png",
   description: "Unlock one free class after 10 visits.",
+  active: true
+)
+
+Reward.create!(
+  studio: studio,
+  name: "Guest Pass",
+  reward_type: :free_class,
+  points_cost: 0,
+  image_url: "https://example.com/guest-pass.png",
+  description: "Bring a friend for free — one guest pass on us.",
+  active: true
+)
+
+Reward.create!(
+  studio: studio,
+  name: "Merchandise Discount",
+  reward_type: :free_class,
+  points_cost: 0,
+  image_url: "https://example.com/merch.png",
+  description: "20% off any item in our studio shop.",
   active: true
 )
 
@@ -176,7 +196,19 @@ configs9 = [ yoga, hiit, pilates, yoga, hiit, pilates, yoga, hiit, pilates ]
   )
 end
 
-# carol: 0 visits — nothing to create
+# carol: 23 visits → 2 milestones reached, 3/10 progress, 1 redemption used → 1 available reward
+carol_configs = [ yoga, pilates, hiit, yoga, pilates, yoga, hiit, pilates, yoga, hiit,
+                  pilates, yoga, hiit, pilates, yoga, hiit, pilates, yoga, pilates, hiit,
+                  yoga, pilates, hiit ]
+23.times do |i|
+  Visit.create!(
+    user: carol,
+    studio: studio,
+    class_config: carol_configs[i],
+    points_earned: carol_configs[i].point_value,
+    visited_at: (23 - i).weeks.ago
+  )
+end
 
 puts "Creating bookings..."
 
@@ -196,6 +228,26 @@ Booking.create!(
   mindbody_booking_id: 9002,
   class_name: "HIIT Blast",
   class_time: 3.days.from_now.change(hour: 18),
+  status: true,
+  booked_at: Time.current
+)
+
+Booking.create!(
+  user: carol,
+  studio: studio,
+  mindbody_booking_id: 9003,
+  class_name: "Pilates Core",
+  class_time: 1.day.from_now.change(hour: 10),
+  status: true,
+  booked_at: Time.current
+)
+
+Booking.create!(
+  user: carol,
+  studio: studio,
+  mindbody_booking_id: 9004,
+  class_name: "HIIT Blast",
+  class_time: 5.days.from_now.change(hour: 18),
   status: true,
   booked_at: Time.current
 )
@@ -220,6 +272,24 @@ DealClaim.create!(
   claimed_at: 9.weeks.ago
 )
 
+DealClaim.create!(
+  user: carol,
+  deal: deal1,
+  studio: studio,
+  code: "FIRST-CAROL-001",
+  status: true,
+  claimed_at: 5.weeks.ago
+)
+
+DealClaim.create!(
+  user: carol,
+  deal: deal2,
+  studio: studio,
+  code: "10OFF-CAROL-001",
+  status: true,
+  claimed_at: 1.week.ago
+)
+
 puts "Creating reward redemptions..."
 
 # No active redemptions for alice so she can test the redeem flow.
@@ -233,6 +303,18 @@ RewardRedemption.create!(
   expiry_days: 30,
   point_spent: 0,
   status: false
+)
+
+# Carol: active redemption she can use at her next class
+RewardRedemption.create!(
+  user: carol,
+  reward: free_class_reward,
+  studio: studio,
+  code: "FREE-CAROL-001",
+  redeemed_at: 3.days.ago,
+  expiry_days: 30,
+  point_spent: 0,
+  status: true
 )
 
 puts "Creating chats..."
@@ -292,4 +374,4 @@ puts ""
 puts "Test scenarios:"
 puts "  alice@example.com  — 10 visits, reward available (+ 1 expired redemption)"
 puts "  bob@example.com    — 9 visits, 1 visit remaining"
-puts "  carol@example.com  — 0 visits, fresh user"
+puts "  carol@example.com  — 20 visits, 1 available reward, 2 upcoming bookings, 2 deal claims, active reward redemption"

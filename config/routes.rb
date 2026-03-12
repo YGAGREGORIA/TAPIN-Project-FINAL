@@ -16,6 +16,8 @@ Rails.application.routes.draw do
     resources :deal_claims, only: [ :show ]
   end
 
+  resource :dashboard, only: [:show]
+
   resources :visits, only: [:create]
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
