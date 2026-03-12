@@ -34,6 +34,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_11_181158) do
     t.datetime "created_at", null: false
     t.boolean "status"
     t.bigint "studio_id", null: false
+    t.string "title"
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
     t.index ["studio_id"], name: "index_chats_on_studio_id"
