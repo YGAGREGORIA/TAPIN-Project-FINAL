@@ -34,6 +34,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_11_181158) do
     t.datetime "created_at", null: false
     t.boolean "status"
     t.bigint "studio_id", null: false
+    t.string "title"
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
     t.index ["studio_id"], name: "index_chats_on_studio_id"
@@ -114,6 +115,31 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_11_181158) do
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
     t.index ["user_id"], name: "index_mindbody_links_on_user_id"
+  end
+
+  create_table "notifications", force: :cascade do |t|
+    t.string "body"
+    t.datetime "created_at", null: false
+    t.string "notification_type"
+    t.string "path"
+    t.datetime "read_at"
+    t.datetime "sent_at"
+    t.bigint "studio_id", null: false
+    t.string "title"
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["studio_id"], name: "index_notifications_on_studio_id"
+    t.index ["user_id"], name: "index_notifications_on_user_id"
+  end
+
+  create_table "push_subscriptions", force: :cascade do |t|
+    t.string "auth_key"
+    t.datetime "created_at", null: false
+    t.string "endpoint"
+    t.string "p256dh_key"
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["user_id"], name: "index_push_subscriptions_on_user_id"
   end
 
   create_table "referrals", force: :cascade do |t|
@@ -250,6 +276,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_11_181158) do
   add_foreign_key "messages", "chats"
   add_foreign_key "mindbody_clients", "studios"
   add_foreign_key "mindbody_links", "users"
+  add_foreign_key "notifications", "studios"
+  add_foreign_key "notifications", "users"
+  add_foreign_key "push_subscriptions", "users"
   add_foreign_key "referrals", "users", column: "referred_id"
   add_foreign_key "referrals", "users", column: "referrer_id"
   add_foreign_key "reward_redemptions", "rewards"
