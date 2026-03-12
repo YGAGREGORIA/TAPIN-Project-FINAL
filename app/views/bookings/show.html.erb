@@ -1,0 +1,71 @@
+<% content_for :title, "Booking Confirmed — #{@studio.name}" %>
+
+<div class="booking-confirm-page">
+
+  <%# ── Confirmation hero ── %>
+  <div class="confirm-hero">
+    <div class="confirm-check-icon">
+      <i class="fa fa-check"></i>
+    </div>
+    <h1 class="confirm-title">You're booked!</h1>
+    <p class="confirm-subtitle"><%= @studio.name %></p>
+  </div>
+
+  <%# ── Class details card ── %>
+  <div class="confirm-body">
+    <div class="confirm-card">
+      <div class="confirm-class-name"><%= @booking.class_name %></div>
+
+      <div class="confirm-detail-row">
+        <i class="fa fa-calendar"></i>
+        <span><%= @booking.class_time.strftime("%A, %B %-d, %Y") %></span>
+      </div>
+
+      <div class="confirm-detail-row">
+        <i class="fa fa-clock-o"></i>
+        <span><%= @booking.class_time.strftime("%-I:%M %p") %></span>
+      </div>
+
+      <% if @booking.studio_class&.teacher_name.present? %>
+        <div class="confirm-detail-row">
+          <i class="fa fa-user"></i>
+          <span><%= @booking.studio_class.teacher_name %></span>
+        </div>
+      <% end %>
+
+      <% if @booking.studio_class&.duration_minutes.present? %>
+        <div class="confirm-detail-row">
+          <i class="fa fa-hourglass-half"></i>
+          <span><%= @booking.studio_class.duration_minutes %> minutes</span>
+        </div>
+      <% end %>
+
+      <div class="confirm-divider"></div>
+
+      <div class="confirm-booking-id">
+        Booking ref: <span>#<%= @booking.id %></span>
+      </div>
+    </div>
+
+    <%# ── Actions ── %>
+    <div class="confirm-actions">
+      <%= link_to "View All Bookings",
+            bookings_path(studio_slug: @studio.slug),
+            class: "btn-book" %>
+      <%= link_to "Back to Schedule",
+            classes_path(studio_slug: @studio.slug),
+            class: "btn-secondary-action" %>
+    </div>
+
+    <%# ── Cancel notice ── %>
+    <div class="confirm-cancel-note">
+      Need to cancel?
+      <%= button_to "Cancel this booking",
+            booking_path(studio_slug: @studio.slug, id: @booking.id),
+            method: :delete,
+            class: "btn-cancel-link",
+            data: { turbo_confirm: "Cancel your booking for #{@booking.class_name}?" } %>
+    </div>
+  </div>
+
+</div>

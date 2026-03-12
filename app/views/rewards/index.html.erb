@@ -1,55 +1,100 @@
-<h1>Rewards</h1>
+<% content_for :title, "Rewards — #{@studio.name}" %>
 
-<p>
-  Studio: <%= @studio.name %>
-</p>
+<div class="bookings-page">
 
-<p>
-  Your progress: <%= current_user.current_visit_progress_for(@studio) %> / 10 visits
-</p>
+  <%# ── Header ── %>
+  <div class="bookings-header">
+    <p class="schedule-studio-name"><%= @studio.name %></p>
+    <h1 class="schedule-title">Rewards</h1>
+  </div>
 
-
-<%= button_to "Test tap-in",
-  visits_path(studio_slug: @studio.slug),
-  method: :post %>
-
-<% if @rewards.any? %>
-  <ul>
-    <% @rewards.each do |reward| %>
-      <li style="margin-bottom: 20px;">
-        <h2><%= reward.name %></h2>
-
-        <% if reward.image_url.present? %>
-          <p>
-            <img src="<%= reward.image_url %>" alt="<%= reward.name %>" width="200">
-          </p>
+  <%# ── Progress toward next reward ── %>
+  <div class="bookings-section">
+    <p class="section-title">Your Progress</p>
+    <% progress = current_user.current_visit_progress_for(@studio) %>
+    <div class="studio-progress-card">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <div class="studio-progress-name">Visits this cycle</div>
+        <% if current_user.free_class_reward_available_for?(@studio) %>
+          <span class="reward-ready-badge">Reward ready!</span>
         <% end %>
+      </div>
 
-        <p><%= reward.description %></p>
+      <div class="stamp-card">
+        <div class="stamp-grid">
+          <% 10.times do |i| %>
+            <div class="stamp <%= i < progress ? 'stamp--done' : '' %>">
+              <% if i < progress %>
+                <i class="fa fa-check"></i>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
 
-        <% if reward.redeemable_by?(current_user) %>
-          <p>You unlocked this reward.</p>
+        <div class="stamp-card-footer">
+          <div class="progress dashboard-progress">
+            <div class="progress-bar" style="width: <%= (progress / 10.0 * 100).round %>%"></div>
+          </div>
+          <span class="stamp-count"><%= progress %> / 10</span>
+        </div>
+      </div>
 
-          <%= button_to "Redeem reward",
-            redeem_reward_path(studio_slug: @studio.slug, id: reward.id),
-            method: :post %>
-        <% else %>
-          <p>This reward unlocks after 10 visits.</p>
-          <p>Visits completed: <%= current_user.visits_count_for(@studio) %></p>
-          <p>Visits remaining: <%= current_user.visits_remaining_for_next_reward(@studio) %></p>
-        <% end %>
-      </li>
+      <% unless current_user.free_class_reward_available_for?(@studio) %>
+        <div class="visits-remaining-text">
+          <%= current_user.visits_remaining_for_next_reward(@studio) %>
+          more <%= current_user.visits_remaining_for_next_reward(@studio) == 1 ? "visit" : "visits" %>
+          to your next free class
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <%# ── Rewards list ── %>
+  <div class="bookings-section">
+    <p class="section-title">Available Rewards</p>
+
+    <% if @rewards.any? %>
+      <% @rewards.each do |reward| %>
+        <div class="reward-card">
+          <div class="reward-name"><%= reward.name %></div>
+          <% if reward.description.present? %>
+            <p class="reward-description"><%= reward.description %></p>
+          <% end %>
+
+          <% if reward.redeemable_by?(current_user) %>
+            <div class="d-flex justify-content-center mb-2">
+              <span class="reward-ready-badge">
+                <i class="fa fa-star"></i> Unlocked!
+              </span>
+            </div>
+            <%= button_to "Redeem Reward",
+                  redeem_reward_path(studio_slug: @studio.slug, id: reward.id),
+                  method: :post,
+                  class: "btn-redeem" %>
+          <% else %>
+            <p class="reward-description">
+              Visit <strong><%= current_user.visits_remaining_for_next_reward(@studio) %></strong>
+              more <%= current_user.visits_remaining_for_next_reward(@studio) == 1 ? "time" : "times" %>
+              to unlock this reward.
+            </p>
+          <% end %>
+        </div>
+      <% end %>
+    <% else %>
+      <div class="dashboard-card">
+        <div class="empty-state">
+          <i class="fa fa-gift"></i>
+          <p>No rewards available yet.</p>
+        </div>
+      </div>
     <% end %>
-  </ul>
-<% else %>
-  <p>No rewards available yet.</p>
-<% end %>
+  </div>
 
-<p>
-  <%= link_to "View reward history", reward_redemptions_path(studio_slug: @studio.slug) %>
-</p>
+  <%# ── History CTA ── %>
+  <div class="bookings-cta">
+    <%= link_to "View Reward History",
+          reward_redemptions_path(studio_slug: @studio.slug),
+          class: "btn-secondary-action" %>
+  </div>
 
-<% if user_signed_in? %>
-  <p>Signed in as <%= current_user.email %></p>
-  <%= button_to "Log out", destroy_user_session_path, method: :delete %>
-<% end %>
+</div>

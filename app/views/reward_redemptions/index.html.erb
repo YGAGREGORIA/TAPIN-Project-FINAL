@@ -1,39 +1,52 @@
-<h1>My Reward Redemptions</h1>
+<% content_for :title, "Reward History — #{@studio.name}" %>
 
-<p>
-  Studio: <%= @studio.name %>
-</p>
+<div class="bookings-page">
 
-<% if @reward_redemptions.any? %>
-  <ul>
-    <% @reward_redemptions.each do |reward_redemption| %>
-      <li style="margin-bottom: 20px;">
-        <p>
-          Reward:
-          <%= reward_redemption.reward.name %>
-        </p>
+  <%# ── Header ── %>
+  <div class="bookings-header">
+    <p class="schedule-studio-name"><%= @studio.name %></p>
+    <h1 class="schedule-title">Reward History</h1>
+  </div>
 
-        <p>
-          Code:
-          <%= reward_redemption.code %>
-        </p>
+  <%# ── Redemption list ── %>
+  <div class="bookings-section">
+    <p class="section-title">Redeemed Rewards</p>
 
-        <p>
-          Redeemed at:
-          <%= reward_redemption.redeemed_at&.strftime("%d.%m.%Y %H:%M") %>
-        </p>
-
-        <p>
-          <%= link_to "View details",
-            reward_redemption_path(studio_slug: @studio.slug, id: reward_redemption.id) %>
-        </p>
-      </li>
+    <% if @reward_redemptions.any? %>
+      <div class="dashboard-card">
+        <% @reward_redemptions.each do |rr| %>
+          <%= link_to reward_redemption_path(studio_slug: @studio.slug, id: rr.id),
+                      class: "deal-claim-row text-decoration-none" do %>
+            <div class="activity-icon">
+              <i class="fa fa-gift"></i>
+            </div>
+            <div class="deal-claim-details">
+              <div class="deal-claim-name"><%= rr.reward.name %></div>
+              <div class="deal-claim-meta">
+                <%= rr.redeemed_at&.strftime("%-d %B %Y") %>
+                &middot;
+                <span class="deal-code"><%= rr.code %></span>
+              </div>
+            </div>
+            <i class="fa fa-chevron-right" style="color: rgba(43,33,24,0.25); font-size: 0.75rem;"></i>
+          <% end %>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="dashboard-card">
+        <div class="empty-state">
+          <i class="fa fa-gift"></i>
+          <p>No rewards redeemed yet.</p>
+        </div>
+      </div>
     <% end %>
-  </ul>
-<% else %>
-  <p>You have not redeemed any rewards yet.</p>
-<% end %>
+  </div>
 
-<p>
-  <%= link_to "Back to rewards", rewards_path(studio_slug: @studio.slug) %>
-</p>
+  <%# ── Back CTA ── %>
+  <div class="bookings-cta">
+    <%= link_to "Back to Rewards",
+          rewards_path(studio_slug: @studio.slug),
+          class: "btn-secondary-action" %>
+  </div>
+
+</div>

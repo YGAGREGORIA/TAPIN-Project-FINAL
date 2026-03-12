@@ -1,0 +1,383 @@
+// ── Booking confirmation page ────────────────────────────────────
+.booking-confirm-page {
+  background-color: $oat;
+  min-height: 100vh;
+  font-family: 'Inter', sans-serif;
+  padding-bottom: 3rem;
+}
+
+.confirm-hero {
+  background: $espresso-brown;
+  color: $oat;
+  padding: 2.5rem 1.25rem;
+  text-align: center;
+
+  @media (min-width: $bp-tablet)  { padding: 3rem 2rem; }
+  @media (min-width: $bp-desktop) { padding: 4rem 2rem; }
+}
+
+.confirm-check-icon {
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  background: $accent-gold;
+  color: $espresso-brown;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.375rem;
+  margin: 0 auto 1rem;
+  animation: stampPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+
+  @media (min-width: $bp-desktop) {
+    width: 4.5rem;
+    height: 4.5rem;
+    font-size: 1.75rem;
+  }
+}
+
+.confirm-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.625rem;
+  font-weight: 700;
+  color: $oat;
+  margin-bottom: 0.25rem;
+
+  @media (min-width: $bp-tablet)  { font-size: 2rem; }
+  @media (min-width: $bp-desktop) { font-size: 2.5rem; }
+}
+
+.confirm-subtitle {
+  font-size: 0.875rem;
+  color: rgba($oat, 0.5);
+  margin: 0;
+
+  @media (min-width: $bp-tablet) { font-size: 1rem; }
+}
+
+.confirm-body {
+  padding: 1.25rem;
+
+  @media (min-width: $bp-tablet) {
+    padding: 2rem;
+    max-width: 560px;
+    margin: 0 auto;
+  }
+
+  @media (min-width: $bp-desktop) {
+    max-width: 640px;
+    padding: 2.5rem 0;
+  }
+}
+
+.confirm-card {
+  background: white;
+  border-radius: 0.875rem;
+  padding: 1.375rem 1.25rem;
+  box-shadow: 0 1px 4px rgba($espresso-brown, 0.07);
+  margin-bottom: 1.25rem;
+
+  @media (min-width: $bp-tablet) {
+    padding: 1.75rem 1.5rem;
+    border-radius: 1rem;
+  }
+
+  .confirm-class-name {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 1.1875rem;
+    color: $espresso-brown;
+    margin-bottom: 1rem;
+
+    @media (min-width: $bp-tablet) { font-size: 1.375rem; }
+  }
+}
+
+.confirm-detail-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.9375rem;
+  color: rgba($espresso-brown, 0.75);
+  padding: 0.375rem 0;
+
+  i {
+    width: 1rem;
+    color: rgba($espresso-brown, 0.35);
+    font-size: 0.875rem;
+    text-align: center;
+    flex-shrink: 0;
+  }
+
+  @media (min-width: $bp-tablet) { font-size: 1rem; }
+}
+
+.confirm-divider {
+  height: 1px;
+  background: rgba($espresso-brown, 0.07);
+  margin: 1rem 0 0.75rem;
+}
+
+.confirm-booking-id {
+  font-size: 0.8125rem;
+  color: rgba($espresso-brown, 0.35);
+
+  span {
+    font-family: monospace;
+    font-weight: 700;
+    color: rgba($espresso-brown, 0.5);
+  }
+}
+
+.confirm-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+
+  @media (min-width: $bp-tablet) {
+    flex-direction: row;
+
+    .btn-book,
+    .btn-secondary-action { flex: 1; }
+  }
+}
+
+.confirm-cancel-note {
+  text-align: center;
+  font-size: 0.8125rem;
+  color: rgba($espresso-brown, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+}
+
+.btn-cancel-link {
+  background: none;
+  border: none;
+  padding: 0;
+  color: $clay-red;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+  font-family: 'Inter', sans-serif;
+
+  &:hover { color: darken($clay-red, 10%); }
+}
+
+// ── Bookings index page ──────────────────────────────────────────
+.bookings-page {
+  background-color: $oat;
+  min-height: 100vh;
+  font-family: 'Inter', sans-serif;
+  padding-bottom: 3rem;
+}
+
+.bookings-section {
+  padding: 1.25rem 1.25rem 0;
+
+  @media (min-width: $bp-tablet) {
+    padding: 1.75rem 2rem 0;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  @media (min-width: $bp-desktop) {
+    max-width: 960px;
+    padding: 2rem calc((100% - 960px) / 2 + 1.25rem) 0;
+  }
+
+  @media (min-width: $bp-wide) {
+    max-width: 1100px;
+    padding: 2rem calc((100% - 1100px) / 2 + 1.25rem) 0;
+  }
+
+  .section-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: rgba($espresso-brown, 0.5);
+    margin-bottom: 0.875rem;
+
+    @media (min-width: $bp-tablet) { font-size: 0.8125rem; }
+  }
+}
+
+.bookings-cta {
+  padding: 1rem 1.25rem 0.25rem;
+
+  @media (min-width: $bp-tablet) {
+    padding: 1.25rem 2rem 0.25rem;
+    max-width: 720px;
+    margin: 0 auto;
+
+    .btn-book {
+      max-width: 320px;
+      margin: 0 auto;
+      display: block;
+    }
+  }
+
+  @media (min-width: $bp-desktop) {
+    max-width: 960px;
+    padding: 1.5rem calc((100% - 960px) / 2 + 1.25rem) 0.25rem;
+  }
+
+  @media (min-width: $bp-wide) {
+    max-width: 1100px;
+    padding: 1.5rem calc((100% - 1100px) / 2 + 1.25rem) 0.25rem;
+  }
+}
+
+// ── Mindbody link page ────────────────────────────────────────────
+.mindbody-link-page {
+  background-color: $oat;
+  min-height: 100vh;
+  font-family: 'Inter', sans-serif;
+  padding-bottom: 3rem;
+}
+
+.mb-link-header {
+  background: $espresso-brown;
+  color: $oat;
+  padding: 2.5rem 1.25rem 2rem;
+  text-align: center;
+
+  @media (min-width: $bp-tablet)  { padding: 3rem 2rem 2.5rem; }
+  @media (min-width: $bp-desktop) { padding: 4rem 2rem 3rem; }
+}
+
+.mb-link-icon {
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  background: rgba($oat, 0.1);
+  color: $accent-gold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.375rem;
+  margin: 0 auto 1.125rem;
+
+  @media (min-width: $bp-desktop) {
+    width: 4.5rem;
+    height: 4.5rem;
+    font-size: 1.75rem;
+  }
+}
+
+.mb-link-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: $oat;
+  margin-bottom: 0.5rem;
+
+  @media (min-width: $bp-tablet)  { font-size: 1.875rem; }
+  @media (min-width: $bp-desktop) { font-size: 2.25rem; }
+}
+
+.mb-link-subtitle {
+  font-size: 0.9375rem;
+  color: rgba($oat, 0.65);
+  margin: 0;
+  line-height: 1.5;
+
+  @media (min-width: $bp-tablet) {
+    font-size: 1rem;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+}
+
+.mb-link-body {
+  padding: 1.25rem;
+
+  @media (min-width: $bp-tablet) {
+    padding: 2rem;
+    max-width: 560px;
+    margin: 0 auto;
+  }
+
+  @media (min-width: $bp-desktop) {
+    max-width: 640px;
+    padding: 2.5rem 0;
+  }
+}
+
+.mb-link-card {
+  background: white;
+  border-radius: 0.875rem;
+  padding: 1.5rem 1.25rem;
+  box-shadow: 0 1px 4px rgba($espresso-brown, 0.07);
+  margin-bottom: 1rem;
+
+  @media (min-width: $bp-tablet) {
+    padding: 2rem 1.75rem;
+    border-radius: 1rem;
+  }
+}
+
+.mb-link-desc {
+  font-size: 0.9375rem;
+  color: rgba($espresso-brown, 0.7);
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+
+  @media (min-width: $bp-tablet) { font-size: 1rem; }
+}
+
+.mb-link-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+  margin-bottom: 1.75rem;
+}
+
+.mb-step {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+
+  .mb-step-num {
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 50%;
+    background: $espresso-brown;
+    color: $oat;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 0.8125rem;
+    flex-shrink: 0;
+  }
+
+  .mb-step-text {
+    font-size: 0.9375rem;
+    color: $espresso-brown;
+    font-weight: 500;
+
+    @media (min-width: $bp-tablet) { font-size: 1rem; }
+  }
+}
+
+.mb-link-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+
+  .btn-book { width: 100%; }
+}
+
+.mb-link-coming-soon {
+  font-size: 0.75rem;
+  color: rgba($espresso-brown, 0.35);
+  margin: 0;
+}

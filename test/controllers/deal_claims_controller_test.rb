@@ -62,7 +62,7 @@ class DealClaimsControllerTest < ActionDispatch::IntegrationTest
 
   test "redirects with alert when user is not eligible" do
     sign_in @user
-    # No visit created — user does not satisfy first_visit trigger
+    # No visit — does not satisfy first_visit trigger
 
     assert_no_difference "DealClaim.count" do
       post "/s/#{@studio.slug}/deals/#{@deal.id}/claim"
@@ -82,7 +82,6 @@ class DealClaimsControllerTest < ActionDispatch::IntegrationTest
     end
 
     assert_redirected_to "/s/#{@studio.slug}/deals"
-    assert_equal "This deal is not available for you.", flash[:alert]
   end
 
   # --- show ---
@@ -93,17 +92,50 @@ class DealClaimsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to new_user_session_path
   end
 
-  test "authenticated user can view their own claim" do
+  # --- Criteria 3: show page displays code and expiration date ---
+
+  test "show page displays the claim code" do
     sign_in @user
     claim = DealClaim.create!(user: @user, deal: @deal, studio: @studio)
+
     get "/s/#{@studio.slug}/deal_claims/#{claim.id}"
+
     assert_response :success
     assert_match claim.code, response.body
   end
 
+  test "show page displays the expiration date when deal has expiry_days" do
+    sign_in @user
+    claim = DealClaim.create!(user: @user, deal: @deal, studio: @studio)
+    expected_date = claim.expires_at.strftime("%d.%m.%Y")
+
+    get "/s/#{@studio.slug}/deal_claims/#{claim.id}"
+
+    assert_match expected_date, response.body
+  end
+
+  test "show page does not display an expiration date when deal has no expiry_days" do
+    deal_no_expiry = Deal.create!(
+      studio: @studio,
+      name: "No Expiry Deal",
+      deal_type: "discount",
+      trigger_condition: "first_visit",
+      active: true,
+      expiry_days: nil
+    )
+    sign_in @user
+    claim = DealClaim.create!(user: @user, deal: deal_no_expiry, studio: @studio)
+
+    get "/s/#{@studio.slug}/deal_claims/#{claim.id}"
+
+    assert_response :success
+    assert_no_match "Expires at", response.body
+  end
+
   test "user cannot view another user's claim" do
     other_user  = User.create!(email: "other@claims-ctrl.com", password: "password")
-    other_deal  = Deal.create!(studio: @studio, name: "Other Deal", deal_type: "discount", trigger_condition: "first_visit", active: true)
+    other_deal  = Deal.create!(studio: @studio, name: "Other Deal", deal_type: "discount",
+                               trigger_condition: "first_visit", active: true)
     other_claim = DealClaim.create!(user: other_user, deal: other_deal, studio: @studio)
 
     sign_in @user

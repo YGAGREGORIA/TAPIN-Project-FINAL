@@ -1,23 +1,62 @@
-<h1>Reward Redemption</h1>
+<% content_for :title, "Reward Redeemed — #{@studio.name}" %>
 
-<p>Studio: <%= @studio.name %></p>
+<div class="booking-confirm-page">
 
-<p>Reward: <%= @reward_redemption.reward.name %></p>
+  <%# ── Hero ── %>
+  <div class="confirm-hero">
+    <div class="confirm-check-icon">
+      <i class="fa fa-gift"></i>
+    </div>
+    <h1 class="confirm-title">Reward Redeemed!</h1>
+    <p class="confirm-subtitle"><%= @studio.name %></p>
+  </div>
 
-<p>Code: <%= @reward_redemption.code %></p>
+  <%# ── Card ── %>
+  <div class="confirm-body">
+    <div class="confirm-card">
 
-<p>Redeemed at: <%= @reward_redemption.redeemed_at&.strftime("%d.%m.%Y %H:%M") %></p>
+      <div class="confirm-booking-id mb-1">Your reward code</div>
+      <div class="confirm-class-name"><%= @reward_redemption.code %></div>
 
-<% if @reward_redemption.expires_at.present? %>
-  <p>Expires at: <%= @reward_redemption.expires_at.strftime("%d.%m.%Y %H:%M") %></p>
-<% end %>
+      <div class="confirm-detail-row">
+        <i class="fa fa-gift"></i>
+        <span><%= @reward_redemption.reward.name %></span>
+      </div>
 
-<% if @reward_redemption.expired? %>
-  <p>This reward has expired.</p>
-<% else %>
-  <p>Show this code at reception to claim your reward.</p>
-<% end %>
+      <div class="confirm-detail-row">
+        <i class="fa fa-calendar-check-o"></i>
+        <span>Redeemed <%= @reward_redemption.redeemed_at&.strftime("%-d %B %Y") %></span>
+      </div>
 
-<p>
-  <%= link_to "Back to reward history", reward_redemptions_path(studio_slug: @studio.slug) %>
-</p>
+      <% if @reward_redemption.expires_at.present? %>
+        <div class="confirm-detail-row">
+          <i class="fa fa-clock-o"></i>
+          <span>Expires <%= @reward_redemption.expires_at.strftime("%-d %B %Y") %></span>
+        </div>
+      <% end %>
+
+      <div class="confirm-divider"></div>
+
+      <% if @reward_redemption.expired? %>
+        <div class="confirm-booking-id" style="color: #B4533C;">
+          <i class="fa fa-exclamation-circle"></i> This reward has expired.
+        </div>
+      <% else %>
+        <div class="confirm-booking-id">
+          Show this code at reception to claim your reward.
+        </div>
+      <% end %>
+
+    </div>
+
+    <div class="confirm-actions">
+      <%= link_to "Back to Reward History",
+            reward_redemptions_path(studio_slug: @studio.slug),
+            class: "btn-book" %>
+      <%= link_to "Back to Rewards",
+            rewards_path(studio_slug: @studio.slug),
+            class: "btn-secondary-action" %>
+    </div>
+  </div>
+
+</div>

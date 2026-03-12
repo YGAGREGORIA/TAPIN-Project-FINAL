@@ -1,0 +1,213 @@
+<% content_for :title, "My Dashboard" %>
+
+<div class="dashboard" data-controller="dashboard">
+
+  <%# ── Hero: greeting + points ── %>
+  <div class="dashboard-hero">
+    <p class="hero-greeting">
+      Hi, <%= current_user.first_name.presence || current_user.email.split("@").first %>!
+    </p>
+    <p class="hero-points">
+      <span class="hero-points-value"
+            data-dashboard-target="pointsValue"
+            data-points="<%= current_user.available_points || 0 %>"><%= current_user.available_points || 0 %> pts</span> available
+    </p>
+  </div>
+
+  <%# ── Progress toward next reward (per studio) ── %>
+  <% if @studios_visited.any? %>
+    <section class="dashboard-section">
+      <p class="section-title">Your Progress</p>
+      <% @studios_visited.each do |studio| %>
+        <div class="studio-progress-card">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <div class="studio-progress-name"><%= studio.name %></div>
+            <% if current_user.free_class_reward_available_for?(studio) %>
+              <span class="reward-ready-badge">Reward ready!</span>
+            <% end %>
+          </div>
+
+          <% progress = current_user.current_visit_progress_for(studio) %>
+
+          <div class="stamp-card">
+            <div class="stamp-grid">
+              <% 10.times do |i| %>
+                <div class="stamp <%= i < progress ? 'stamp--done' : '' %>">
+                  <% if i < progress %>
+                    <i class="fa fa-check"></i>
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
+
+            <div class="stamp-card-footer">
+              <div class="progress dashboard-progress">
+                <div class="progress-bar"
+                     style="width: <%= (progress / 10.0 * 100).round %>%">
+                </div>
+              </div>
+              <span class="stamp-count"><%= progress %> / 10</span>
+            </div>
+          </div>
+
+          <% unless current_user.free_class_reward_available_for?(studio) %>
+            <div class="visits-remaining-text">
+              <%= current_user.visits_remaining_for_next_reward(studio) %>
+              more <%= current_user.visits_remaining_for_next_reward(studio) == 1 ? "visit" : "visits" %>
+              to your next free class
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    </section>
+  <% end %>
+
+  <%# ── Available Rewards ── %>
+  <section class="dashboard-section">
+    <p class="section-title">Available Rewards</p>
+    <% if @available_rewards.any? %>
+      <% @available_rewards.each do |reward| %>
+        <div class="reward-card">
+          <div class="reward-name"><%= reward.name %></div>
+          <div class="reward-studio-name"><%= reward.studio.name %></div>
+          <% if reward.description.present? %>
+            <p class="reward-description"><%= reward.description %></p>
+          <% end %>
+          <%= button_to "Redeem Now",
+                redeem_reward_path(studio_slug: reward.studio.slug, id: reward.id),
+                method: :post,
+                class: "btn-redeem" %>
+        </div>
+      <% end %>
+    <% else %>
+      <div class="dashboard-card">
+        <div class="empty-state">
+          <i class="fa fa-gift"></i>
+          <p>Keep attending classes to unlock rewards!</p>
+        </div>
+      </div>
+    <% end %>
+  </section>
+
+  <%# ── Active Deals ── %>
+  <section class="dashboard-section">
+    <p class="section-title">Active Deals</p>
+
+    <% if @active_deal_claims.any? %>
+      <div class="dashboard-card">
+        <% @active_deal_claims.each do |claim| %>
+          <div class="deal-claim-row">
+            <div class="deal-claim-icon">
+              <i class="fa fa-tag"></i>
+            </div>
+            <div class="deal-claim-details">
+              <div class="deal-claim-name"><%= claim.deal.name %></div>
+              <div class="deal-claim-meta">
+                <%= claim.deal.studio.name %>
+                &middot;
+                Code: <span class="deal-code"><%= claim.code %></span>
+              </div>
+            </div>
+            <% if claim.deal.discount_percent.present? %>
+              <div class="deal-discount"><%= claim.deal.discount_percent %>%<br><span>off</span></div>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+
+    <% if @available_deals.any? %>
+      <% if @active_deal_claims.any? %>
+        <p class="section-sub-title mt-3">Also available to claim</p>
+      <% end %>
+      <% @available_deals.each do |deal| %>
+        <div class="deal-card">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <div class="deal-card-name"><%= deal.name %></div>
+              <div class="deal-card-meta"><%= deal.studio.name %></div>
+            </div>
+            <% if deal.discount_percent.present? %>
+              <div class="deal-big-discount"><%= deal.discount_percent %>%<br><span>off</span></div>
+            <% end %>
+          </div>
+          <%= button_to "Claim Deal",
+                claim_deal_path(studio_slug: deal.studio.slug, id: deal.id),
+                method: :post,
+                class: "btn-claim mt-2" %>
+        </div>
+      <% end %>
+    <% end %>
+
+    <% if @active_deal_claims.empty? && @available_deals.empty? %>
+      <div class="dashboard-card">
+        <div class="empty-state">
+          <i class="fa fa-tag"></i>
+          <p>No active deals right now</p>
+        </div>
+      </div>
+    <% end %>
+  </section>
+
+  <%# ── Upcoming Classes ── %>
+  <section class="dashboard-section">
+    <p class="section-title">Upcoming Classes</p>
+    <div class="dashboard-card">
+      <% if @upcoming_bookings.any? %>
+        <% @upcoming_bookings.each do |booking| %>
+          <div class="booking-row">
+            <div class="booking-date-block">
+              <div class="booking-day"><%= booking.class_time.strftime("%-d") %></div>
+              <div class="booking-month"><%= booking.class_time.strftime("%b") %></div>
+            </div>
+            <div class="booking-details">
+              <div class="booking-class-name"><%= booking.class_name %></div>
+              <div class="booking-studio-name"><%= booking.studio.name %></div>
+            </div>
+            <div class="booking-time"><%= booking.class_time.strftime("%-I:%M %p") %></div>
+          </div>
+        <% end %>
+      <% else %>
+        <div class="empty-state">
+          <i class="fa fa-calendar-o"></i>
+          <p>No upcoming classes booked</p>
+        </div>
+      <% end %>
+    </div>
+  </section>
+
+  <%# ── Recent Activity ── %>
+  <section class="dashboard-section pb-5">
+    <p class="section-title">Recent Activity</p>
+    <div class="dashboard-card">
+      <% if @recent_visits.any? %>
+        <% @recent_visits.each do |visit| %>
+          <div class="activity-row">
+            <div class="activity-icon">
+              <i class="fa fa-check"></i>
+            </div>
+            <div class="activity-details">
+              <div class="activity-title">
+                <%= visit.class_config&.class_name.presence || "Class visit" %>
+              </div>
+              <div class="activity-subtitle">
+                <%= visit.studio.name %>
+                &middot;
+                <%= visit.visited_at.strftime("%b %-d, %Y") %>
+              </div>
+            </div>
+            <% if visit.points_earned.present? && visit.points_earned > 0 %>
+              <div class="activity-points">+<%= visit.points_earned %> pts</div>
+            <% end %>
+          </div>
+        <% end %>
+      <% else %>
+        <div class="empty-state">
+          <i class="fa fa-history"></i>
+          <p>No visits yet — start attending classes!</p>
+        </div>
+      <% end %>
+    </div>
+  </section>
+
+</div>

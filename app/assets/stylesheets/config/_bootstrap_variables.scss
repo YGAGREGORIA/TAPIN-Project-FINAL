@@ -1,0 +1,138 @@
+// =============================================================================
+// Bootstrap Color Map Overrides
+// =============================================================================
+$primary:   $espresso-brown;
+$secondary: $accent-gold;
+$danger:    $clay-red;
+$light:     $oat;
+$dark:      $espresso-brown;
+$warning:   $mustard-gold;
+
+// =============================================================================
+// Body
+// =============================================================================
+$body-bg:    $oat;
+$body-color: $espresso-brown;
+
+// =============================================================================
+// Typography
+// =============================================================================
+$font-family-base:     'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+$headings-font-family: 'Space Grotesk', sans-serif;
+
+$font-size-base: 1rem;
+
+$h1-font-size: 2.5rem;
+$h2-font-size: 2rem;
+$h3-font-size: 1.5rem;
+$h4-font-size: 1.25rem;
+$h5-font-size: 1rem;
+
+$headings-font-weight:    600;
+$headings-line-height:    1.3;
+$headings-letter-spacing: -0.01em;
+
+$line-height-base: 1.6;
+
+$font-weight-normal: 400;
+$font-weight-medium: 500;
+$font-weight-bold:   600;
+
+// =============================================================================
+// Border Radius
+// =============================================================================
+$border-radius:      0.75rem;
+$border-radius-sm:   0.5rem;
+$border-radius-lg:   1rem;
+$border-radius-xl:   1.25rem;
+$border-radius-pill: 50rem;
+
+// =============================================================================
+// Borders & Inputs
+// =============================================================================
+$border-color:             rgba(43, 33, 24, 0.1);
+$input-bg:                 #ffffff;
+$input-border-color:       rgba(43, 33, 24, 0.1);
+$input-focus-border-color: $accent-gold;
+$input-focus-box-shadow:   0 0 0 0.25rem rgba(225, 184, 74, 0.25);
+
+// =============================================================================
+// Cards
+// =============================================================================
+$card-bg:            #ffffff;
+$card-border-color:  rgba(43, 33, 24, 0.1);
+$card-border-radius: $border-radius;
+
+// =============================================================================
+// Buttons
+// =============================================================================
+$btn-border-radius:    $border-radius;
+$btn-border-radius-sm: $border-radius-sm;
+$btn-border-radius-lg: $border-radius-lg;
+$btn-font-weight:      500;
+
+// =============================================================================
+// Links
+// =============================================================================
+$link-color:       $espresso-brown;
+$link-hover-color: $accent-gold;
+
+// =============================================================================
+// Focus Ring
+// =============================================================================
+$focus-ring-color: rgba(225, 184, 74, 0.5);
+
+// =============================================================================
+// CSS Custom Properties — Design Tokens (Light Mode)
+// =============================================================================
+:root {
+  --espresso-brown: #2B2118;
+  --accent-gold:    #E1B84A;
+  --clay-red:       #B4533C;
+  --oat:            #F6F1EB;
+  --mustard-gold:   #D4A574;
+
+  --background:       #F6F1EB;
+  --foreground:       #2B2118;
+  --card:             #ffffff;
+  --card-foreground:  #2B2118;
+  --muted:            #F6F1EB;
+  --muted-foreground: #6B6560;
+  --border:           rgba(43, 33, 24, 0.1);
+  --input-background: #ffffff;
+  --ring:             #E1B84A;
+  --radius:           0.75rem;
+
+  --sidebar:                    #ffffff;
+  --sidebar-foreground:         #2B2118;
+  --sidebar-primary:            #2B2118;
+  --sidebar-primary-foreground: #F6F1EB;
+  --sidebar-accent:             #F6F1EB;
+  --sidebar-accent-foreground:  #2B2118;
+  --sidebar-border:             rgba(43, 33, 24, 0.1);
+  --sidebar-ring:               #E1B84A;
+}
+
+// =============================================================================
+// CSS Custom Properties — Dark Mode
+// =============================================================================
+.dark {
+  --background:       #2B2118;
+  --foreground:       #F6F1EB;
+  --card:             #3A3028;
+  --card-foreground:  #F6F1EB;
+  --muted:            #3A3028;
+  --muted-foreground: #B8B3AE;
+  --border:           rgba(246, 241, 235, 0.1);
+  --input-background: #3A3028;
+  --ring:             #E1B84A;
+
+  --sidebar:                    #3A3028;
+  --sidebar-foreground:         #F6F1EB;
+  --sidebar-primary:            #E1B84A;
+  --sidebar-primary-foreground: #2B2118;
+  --sidebar-accent:             #2B2118;
+  --sidebar-accent-foreground:  #F6F1EB;
+  --sidebar-border:             rgba(246, 241, 235, 0.1);
+  --sidebar-ring:               #E1B84A;
+}

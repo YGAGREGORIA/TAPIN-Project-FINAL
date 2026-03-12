@@ -1,0 +1,99 @@
+<% content_for :title, "My Bookings — #{@studio.name}" %>
+
+<div class="bookings-page">
+
+  <%# ── Header ── %>
+  <div class="bookings-header">
+    <p class="schedule-studio-name"><%= @studio.name %></p>
+    <h1 class="schedule-title">My Bookings</h1>
+  </div>
+
+  <%# ── Upcoming ── %>
+  <div class="bookings-section">
+    <p class="section-title">Upcoming</p>
+
+    <% if @upcoming_bookings.any? %>
+      <% @upcoming_bookings.group_by { |b| b.class_time.to_date }.each do |day, day_bookings| %>
+        <div class="schedule-day-label">
+          <% if day == Date.today %>
+            Today &middot; <%= day.strftime("%A, %B %-d") %>
+          <% elsif day == Date.today + 1 %>
+            Tomorrow &middot; <%= day.strftime("%A, %B %-d") %>
+          <% else %>
+            <%= day.strftime("%A, %B %-d") %>
+          <% end %>
+        </div>
+
+        <div class="class-cards-grid">
+          <% day_bookings.each do |booking| %>
+            <%= link_to booking_path(studio_slug: @studio.slug, id: booking.id),
+                        class: "class-card" do %>
+              <div class="class-card-time">
+                <div class="class-time-hour"><%= booking.class_time.strftime("%-I:%M") %></div>
+                <div class="class-time-period"><%= booking.class_time.strftime("%p") %></div>
+              </div>
+
+              <div class="class-card-body">
+                <div class="class-card-name"><%= booking.class_name %></div>
+                <div class="class-card-meta">
+                  <% if booking.studio_class&.teacher_name.present? %>
+                    <span><i class="fa fa-user"></i> <%= booking.studio_class.teacher_name %></span>
+                  <% end %>
+                  <% if booking.studio_class&.duration_minutes.present? %>
+                    <span><i class="fa fa-clock-o"></i> <%= booking.studio_class.duration_minutes %> min</span>
+                  <% end %>
+                </div>
+                <div class="class-spots-remaining">
+                  <span class="spots-ok"><i class="fa fa-check-circle"></i> Booked</span>
+                </div>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
+      <% end %>
+    <% else %>
+      <div class="dashboard-card">
+        <div class="empty-state">
+          <i class="fa fa-calendar-o"></i>
+          <p>No upcoming classes booked</p>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <%# ── Book a class CTA ── %>
+  <div class="bookings-cta">
+    <%= link_to "Browse Class Schedule",
+          classes_path(studio_slug: @studio.slug),
+          class: "btn-book" %>
+  </div>
+
+  <%# ── Past bookings ── %>
+  <% if @past_bookings.any? %>
+    <div class="bookings-section">
+      <p class="section-title">Past Classes</p>
+
+      <div class="class-cards-grid">
+        <% @past_bookings.each do |booking| %>
+          <div class="class-card class-card--full">
+            <div class="class-card-time">
+              <div class="class-time-hour"><%= booking.class_time.strftime("%-I:%M") %></div>
+              <div class="class-time-period"><%= booking.class_time.strftime("%p") %></div>
+            </div>
+
+            <div class="class-card-body">
+              <div class="class-card-name"><%= booking.class_name %></div>
+              <div class="class-card-meta">
+                <% if booking.studio_class&.teacher_name.present? %>
+                  <span><i class="fa fa-user"></i> <%= booking.studio_class.teacher_name %></span>
+                <% end %>
+                <span><i class="fa fa-calendar"></i> <%= booking.class_time.strftime("%b %-d, %Y") %></span>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+</div>

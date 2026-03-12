@@ -1,36 +1,91 @@
-<h1>Deals</h1>
+<% content_for :title, "Deals — #{@studio.name}" %>
 
-<p>Studio: <%= @studio.name %></p>
+<div class="bookings-page">
 
-<% if @deals.any? %>
-  <ul>
-    <% @deals.each do |deal| %>
-      <li style="margin-bottom: 20px;">
-        <h2><%= deal.name %></h2>
+  <%# ── Header ── %>
+  <div class="bookings-header">
+    <p class="schedule-studio-name"><%= @studio.name %></p>
+    <h1 class="schedule-title">Deals</h1>
+  </div>
 
-        <p>Discount: <%= deal.discount_percent %>%</p>
-        <p>Trigger: <%= deal.trigger_condition %></p>
+  <div class="bookings-section">
 
-        <% case deal.eligibility_status_for(current_user) %>
-        <% when :eligible %>
-          <p>This deal is available for you.</p>
+    <% if @deals.any? %>
 
-          <%= button_to "Claim deal",
-            claim_deal_path(studio_slug: @studio.slug, id: deal.id),
-            method: :post %>
+      <%# Separate claimed from unclaimed so they render in the right pattern %>
+      <% claimed_deals   = @deals.select { |d| d.eligibility_status_for(current_user) == :already_claimed } %>
+      <% unclaimed_deals = @deals.reject { |d| d.eligibility_status_for(current_user) == :already_claimed } %>
 
-        <% when :already_claimed %>
-          <p>You already claimed this deal.</p>
+      <%# ── Already-claimed deals (deal-claim-row, like the dashboard) ── %>
+      <% if claimed_deals.any? %>
+        <p class="section-title">Your Claimed Deals</p>
+        <div class="dashboard-card mb-3">
+          <% claimed_deals.each do |deal| %>
+            <% claim = current_user.deal_claims.find_by(deal: deal) %>
+            <%= link_to claim ? deal_claim_path(studio_slug: @studio.slug, id: claim.id) : "#",
+                        class: "deal-claim-row text-decoration-none" do %>
+              <div class="deal-claim-icon">
+                <i class="fa fa-tag"></i>
+              </div>
+              <div class="deal-claim-details">
+                <div class="deal-claim-name"><%= deal.name %></div>
+                <div class="deal-claim-meta">
+                  You already claimed this deal.
+                  <% if claim %>&middot; <span class="deal-code"><%= claim.code %></span><% end %>
+                </div>
+              </div>
+              <% if deal.discount_percent.present? && deal.discount_percent > 0 %>
+                <div class="deal-discount">
+                  <%= deal.discount_percent %>%<br><span>off</span>
+                </div>
+              <% end %>
+            <% end %>
+          <% end %>
+        </div>
+      <% end %>
 
-        <% when :not_unlocked_yet %>
-          <p>This deal will unlock after your first visit.</p>
+      <%# ── Eligible & locked deals (deal-card, like the dashboard) ── %>
+      <% if unclaimed_deals.any? %>
+        <p class="section-title"><%= claimed_deals.any? ? "Also Available" : "Available Deals" %></p>
+        <% unclaimed_deals.each do |deal| %>
+          <% status = deal.eligibility_status_for(current_user) %>
+          <div class="deal-card">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <div class="deal-card-name"><%= deal.name %></div>
+                <div class="deal-card-meta"><%= deal.trigger_condition&.humanize %></div>
+              </div>
+              <% if deal.discount_percent.present? && deal.discount_percent > 0 %>
+                <div class="deal-big-discount">
+                  <%= deal.discount_percent %>%<br><span>off</span>
+                </div>
+              <% end %>
+            </div>
 
-        <% else %>
-          <p>This deal is not available for you.</p>
+            <% if status == :eligible %>
+              <%= button_to "Claim deal",
+                    claim_deal_path(studio_slug: @studio.slug, id: deal.id),
+                    method: :post,
+                    class: "btn-claim mt-2" %>
+            <% elsif status == :not_unlocked_yet %>
+              <div class="deal-card-meta mt-2">
+                <i class="fa fa-lock"></i> This deal will unlock after your first visit.
+              </div>
+            <% end %>
+          </div>
         <% end %>
-      </li>
+      <% end %>
+
+    <% else %>
+      <p class="section-title">Available Deals</p>
+      <div class="dashboard-card">
+        <div class="empty-state">
+          <i class="fa fa-tag"></i>
+          <p>No deals available yet.</p>
+        </div>
+      </div>
     <% end %>
-  </ul>
-<% else %>
-  <p>No deals available yet.</p>
-<% end %>
+
+  </div>
+
+</div>

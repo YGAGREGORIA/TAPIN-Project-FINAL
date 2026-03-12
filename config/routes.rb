@@ -14,9 +14,21 @@ Rails.application.routes.draw do
     end
 
     resources :deal_claims, only: [ :show ]
+
+    resources :classes, only: [ :index, :show ] do
+      post :book, to: "bookings#create", on: :member
+    end
+
+    resources :bookings, only: [ :index, :show, :destroy ]
+
+    resources :mindbody_links, only: [ :new ]
   end
 
+  resource :dashboard, only: [:show]
+
   resources :visits, only: [:create]
+
+  
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.

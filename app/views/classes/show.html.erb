@@ -1,0 +1,131 @@
+<% content_for :title, "#{@studio_class.name} — #{@studio.name}" %>
+
+<div class="class-detail-page">
+
+  <%# ── Back nav ── %>
+  <div class="detail-nav">
+    <%= link_to classes_path(studio_slug: @studio.slug), class: "detail-back-link" do %>
+      <i class="fa fa-arrow-left"></i> Schedule
+    <% end %>
+  </div>
+
+  <%# ── Class header ── %>
+  <div class="detail-hero">
+    <% if @studio_class.class_type.present? %>
+      <span class="class-type-badge"><%= @studio_class.class_type.capitalize %></span>
+    <% end %>
+    <h1 class="detail-class-name"><%= @studio_class.name %></h1>
+    <div class="detail-studio-name"><%= @studio.name %></div>
+  </div>
+
+  <%# ── Class info ── %>
+  <div class="detail-body">
+
+    <%# Teacher %>
+    <div class="detail-info-card">
+      <div class="detail-info-row">
+        <div class="detail-info-icon">
+          <i class="fa fa-user"></i>
+        </div>
+        <div class="detail-info-content">
+          <div class="detail-info-label">Instructor</div>
+          <div class="detail-info-value"><%= @studio_class.teacher_name %></div>
+        </div>
+      </div>
+
+      <%# Date & Time %>
+      <div class="detail-info-row">
+        <div class="detail-info-icon">
+          <i class="fa fa-calendar"></i>
+        </div>
+        <div class="detail-info-content">
+          <div class="detail-info-label">Date</div>
+          <div class="detail-info-value">
+            <%= @studio_class.scheduled_at.strftime("%A, %B %-d, %Y") %>
+          </div>
+        </div>
+      </div>
+
+      <%# Time %>
+      <div class="detail-info-row">
+        <div class="detail-info-icon">
+          <i class="fa fa-clock-o"></i>
+        </div>
+        <div class="detail-info-content">
+          <div class="detail-info-label">Time</div>
+          <div class="detail-info-value">
+            <%= @studio_class.scheduled_at.strftime("%-I:%M %p") %>
+            &middot; <%= @studio_class.duration_minutes %> min
+          </div>
+        </div>
+      </div>
+
+      <%# Spots %>
+      <div class="detail-info-row">
+        <div class="detail-info-icon">
+          <i class="fa fa-users"></i>
+        </div>
+        <div class="detail-info-content">
+          <div class="detail-info-label">Availability</div>
+          <div class="detail-info-value">
+            <% if @studio_class.full? %>
+              <span class="spots-full">Class full</span>
+            <% else %>
+              <span class="<%= @studio_class.spots_available <= 5 ? 'spots-low' : 'spots-ok' %>">
+                <%= @studio_class.spots_available %> of <%= @studio_class.capacity %> spots remaining
+              </span>
+            <% end %>
+          </div>
+          <% unless @studio_class.full? %>
+            <div class="spots-bar">
+              <div class="spots-bar-fill" style="width: <%= (@studio_class.spots_taken.to_f / @studio_class.capacity * 100).round %>%"></div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <% if @studio_class.class_config&.point_value.present? %>
+        <div class="detail-info-row">
+          <div class="detail-info-icon">
+            <i class="fa fa-star"></i>
+          </div>
+          <div class="detail-info-content">
+            <div class="detail-info-label">Points earned</div>
+            <div class="detail-info-value">+<%= @studio_class.class_config.point_value %> pts after attending</div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <%# Description %>
+    <% if @studio_class.description.present? %>
+      <div class="detail-description">
+        <p class="detail-desc-title">About this class</p>
+        <p class="detail-desc-body"><%= @studio_class.description %></p>
+      </div>
+    <% end %>
+
+    <%# Book CTA %>
+    <div class="detail-cta">
+      <% if @already_booked %>
+        <div class="already-booked-badge">
+          <i class="fa fa-check-circle"></i> You're booked for this class
+        </div>
+        <%= link_to "View My Bookings",
+              bookings_path(studio_slug: @studio.slug),
+              class: "btn-secondary-action" %>
+      <% elsif @studio_class.full? %>
+        <button class="btn-book btn-book--disabled" disabled>Class Full</button>
+      <% elsif @studio_class.scheduled_at < Time.current %>
+        <button class="btn-book btn-book--disabled" disabled>Class Ended</button>
+      <% else %>
+        <%= button_to "Book This Class",
+              book_class_path(studio_slug: @studio.slug, id: @studio_class.id),
+              method: :post,
+              class: "btn-book" %>
+      <% end %>
+    </div>
+
+  </div>
+
+</div>
