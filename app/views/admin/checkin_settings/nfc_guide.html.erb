@@ -1,0 +1,64 @@
+<% content_for(:title) { "NFC Programming Guide" } %>
+
+<h2 class="mb-4">NFC Programming Guide</h2>
+
+<%= link_to "Back to Settings", admin_checkin_settings_path, class: "btn btn-outline-secondary mb-4" %>
+
+<div class="row">
+  <div class="col-md-8">
+    <div class="card mb-4">
+      <div class="card-body">
+        <h5 class="card-title">What you need</h5>
+        <ul>
+          <li>An NFC tag (NTAG213 or NTAG215 recommended — available on Amazon for ~$1 each)</li>
+          <li>An Android phone with NFC (most modern Android phones have this)</li>
+          <li>A free NFC writing app (e.g., NFC Tools, NXP TagWriter)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card mb-4">
+      <div class="card-body">
+        <h5 class="card-title">Step-by-step instructions</h5>
+        <ol class="mb-0">
+          <li class="mb-3">
+            <strong>Install an NFC writing app</strong><br>
+            Download "NFC Tools" from the Google Play Store (free).
+          </li>
+          <li class="mb-3">
+            <strong>Open the app and tap "Write"</strong><br>
+            Select "Add a record" → "URL/URI".
+          </li>
+          <li class="mb-3">
+            <strong>Enter your studio check-in URL</strong><br>
+            <code><%= "#{request.base_url}/s/#{current_studio&.slug}" %></code>
+          </li>
+          <li class="mb-3">
+            <strong>Tap "Write" and hold your NFC tag to the phone</strong><br>
+            Keep the tag steady until you see "Write complete".
+          </li>
+          <li class="mb-3">
+            <strong>Test it</strong><br>
+            Tap any Android phone (with NFC enabled) on the tag — it should open the TapIn check-in page in Chrome.
+          </li>
+          <li class="mb-3">
+            <strong>Place at reception</strong><br>
+            Stick the NFC tag at your reception desk with a small sign: "Tap here to check in!"
+          </li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">What about iPhone users?</h5>
+        <p class="mb-0">
+          iPhones support reading NFC tags from iPhone 7 onwards (iOS 11+), but the experience varies.
+          For the most reliable iOS experience, place a <strong>QR code</strong> next to your NFC tag.
+          You can download the QR code from the
+          <%= link_to "Check-in Settings page", admin_checkin_settings_path %>.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

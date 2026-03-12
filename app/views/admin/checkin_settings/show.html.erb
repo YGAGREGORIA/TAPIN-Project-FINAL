@@ -1,0 +1,68 @@
+<% content_for(:title) { "Check-in Settings" } %>
+
+<h2 class="mb-4">Check-in Settings</h2>
+
+<div class="row">
+  <!-- Check-in URL & QR Code -->
+  <div class="col-md-6 mb-4">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Your Check-in URL</h5>
+        <div class="input-group mb-3">
+          <input type="text" class="form-control" value="<%= @checkin_url %>" readonly id="checkin-url">
+          <button class="btn btn-outline-primary" onclick="navigator.clipboard.writeText(document.getElementById('checkin-url').value); this.textContent='Copied!'; setTimeout(() => this.textContent='Copy', 2000);">
+            Copy
+          </button>
+        </div>
+        <p class="text-muted small">Share this URL or encode it into a QR code for your studio entrance.</p>
+
+        <h6 class="mt-4">QR Code</h6>
+        <div class="text-center p-3 bg-light rounded">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=<%= CGI.escape(@checkin_url) %>" alt="QR Code" class="img-fluid" style="max-width: 200px;">
+        </div>
+        <div class="mt-2 text-center">
+          <a href="https://api.qrserver.com/v1/create-qr-code/?size=600x600&format=png&data=<%= CGI.escape(@checkin_url) %>" download="tapin-qr-code.png" class="btn btn-sm btn-outline-secondary">
+            Download PNG
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Slug -->
+  <div class="col-md-6 mb-4">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Studio Slug</h5>
+        <p class="text-muted small">Customise your check-in URL to match your brand.</p>
+
+        <%= form_with(model: current_studio, url: admin_checkin_settings_path, method: :patch) do |f| %>
+          <div class="mb-3">
+            <label for="studio_slug" class="form-label">Slug</label>
+            <div class="input-group">
+              <span class="input-group-text">/s/</span>
+              <%= f.text_field :slug, class: "form-control", id: "studio_slug" %>
+            </div>
+            <% if current_studio.errors[:slug].any? %>
+              <div class="text-danger small mt-1"><%= current_studio.errors[:slug].join(", ") %></div>
+            <% end %>
+          </div>
+          <%= f.submit "Update Slug", class: "btn btn-primary" %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Test Check-in -->
+<div class="row">
+  <div class="col-md-6 mb-4">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Test Check-in</h5>
+        <p class="text-muted small">Simulate a customer tapping the NFC tag to verify the flow works.</p>
+        <%= button_to "Test Check-in Flow", test_admin_checkin_settings_path, method: :post, class: "btn btn-outline-primary" %>
+      </div>
+    </div>
+  </div>
+</div>
