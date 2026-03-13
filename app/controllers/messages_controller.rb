@@ -142,8 +142,8 @@ class MessagesController < ApplicationController
     deals = studio.deals.where(active: true).pluck(:name, :discount_percent)
     deal_list = deals.map { |name, pct| "#{name} (#{pct}% off)" }.join(", ")
 
-    rewards = studio.rewards.where(active: true).pluck(:name, :visits_required)
-    reward_list = rewards.map { |name, visits| "#{name} (#{visits} visits)" }.join(", ")
+    rewards = studio.rewards.where(active: true).pluck(:name, :points_cost)
+    reward_list = rewards.map { |name, pts| "#{name} (#{pts} points)" }.join(", ")
 
     bookings = user.bookings.where(studio: studio, status: true)
                    .where("class_time > ?", Time.current)
