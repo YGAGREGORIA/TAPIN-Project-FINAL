@@ -1,16 +1,16 @@
 <% content_for :title, "Welcome to Tapin" %>
 
-<div class="home-page">
-  <div class="home-hero">
-    <h1 class="home-title">Welcome to Tapin</h1>
-    <p class="home-subtitle">Track your classes, earn rewards, and discover deals at your favourite studios.</p>
+<div class="schedule-page">
+  <div class="schedule-header" style="padding-bottom: 2rem;">
+    <h1 class="schedule-title" style="font-size: 2.25rem;">Welcome to Tapin</h1>
+    <p class="schedule-subtitle">Track your classes, earn rewards, and discover deals at your favourite studios.</p>
 
-    <div class="home-actions">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1.5rem; width: 100%; max-width: 280px;">
       <% if user_signed_in? %>
-        <%= link_to "Go to Dashboard", dashboard_path, class: "btn-primary" %>
+        <%= link_to "Go to Dashboard", dashboard_path, class: "btn-book", style: "text-align: center;" %>
       <% else %>
-        <%= link_to "Sign In", new_user_session_path, class: "btn-primary" %>
-        <%= link_to "Sign Up", new_user_registration_path, class: "btn-secondary" %>
+        <%= link_to "Sign In", new_user_session_path, class: "btn-book", style: "text-align: center;" %>
+        <%= link_to "Sign Up", new_user_registration_path, class: "btn-secondary-action", style: "text-align: center;" %>
       <% end %>
     </div>
   </div>

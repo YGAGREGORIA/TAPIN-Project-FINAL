@@ -507,3 +507,54 @@ $nav-height: 60px;
   background-color: #f0ebe4;
   min-height: 100%;
 }
+
+.tapin-topnav {
+  background: $espresso-brown;
+  padding: 0.5rem 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 1050;
+
+  &__inner {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  &__link {
+    color: rgba($oat, 0.7);
+    text-decoration: none;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    padding: 0.375rem 0.75rem;
+    border-radius: 1rem;
+    transition: background 0.15s, color 0.15s;
+
+    &:hover {
+      color: $oat;
+      background: rgba($oat, 0.1);
+    }
+  }
+
+  &__logout {
+    margin-left: auto;
+    background: none;
+    border: 1.5px solid rgba($oat, 0.25);
+    color: rgba($oat, 0.7);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    padding: 0.375rem 0.75rem;
+    border-radius: 1rem;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+
+    &:hover {
+      color: $oat;
+      border-color: rgba($oat, 0.5);
+    }
+  }
+}

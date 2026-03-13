@@ -1,0 +1,29 @@
+<h1>Deals</h1>
+
+<p><%= link_to "New Deal", new_admin_deal_path, class: "btn btn-primary btn-sm" %></p>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Discount</th>
+      <th>Active</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @deals.each do |deal| %>
+      <tr>
+        <td><%= deal.name %></td>
+        <td><%= deal.deal_type %></td>
+        <td><%= deal.discount_percent %>%</td>
+        <td><%= deal.active? ? "Yes" : "No" %></td>
+        <td>
+          <%= link_to "Edit", edit_admin_deal_path(deal) %>
+          <%= button_to "Delete", admin_deal_path(deal), method: :delete, class: "btn btn-link btn-sm text-danger", data: { turbo_confirm: "Are you sure?" } %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

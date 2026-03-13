@@ -1,0 +1,78 @@
+<% content_for(:title) { "Analytics — Points Economy" } %>
+
+<h1>Points Economy</h1>
+
+<%= render "date_range" %>
+
+<%# ── Summary Cards ── %>
+<div class="row g-3 mb-4">
+  <div class="col-md-4">
+    <div class="card text-center p-3">
+      <h3 class="text-success">+<%= number_with_delimiter(@total_awarded) %></h3>
+      <p class="text-muted mb-0">Points Awarded</p>
+      <small class="text-muted">in selected period</small>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card text-center p-3">
+      <h3 class="text-danger">-<%= number_with_delimiter(@total_redeemed) %></h3>
+      <p class="text-muted mb-0">Points Redeemed</p>
+      <small class="text-muted">in selected period</small>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card text-center p-3">
+      <h3><%= number_with_delimiter(@in_circulation) %></h3>
+      <p class="text-muted mb-0">In Circulation</p>
+      <small class="text-muted">across all members</small>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3">
+  <%# ── Points by Class Type ── %>
+  <div class="col-md-6">
+    <div class="card p-3">
+      <h5>Points by Class Type</h5>
+      <% if @points_by_class.any? %>
+        <table class="table table-sm">
+          <thead><tr><th>Class</th><th class="text-end">Points Awarded</th></tr></thead>
+          <tbody>
+            <% @points_by_class.sort_by { |_, v| -v }.each do |class_name, pts| %>
+              <tr>
+                <td><%= class_name %></td>
+                <td class="text-end"><%= number_with_delimiter(pts) %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      <% else %>
+        <p class="text-muted">No points awarded in this period.</p>
+      <% end %>
+    </div>
+  </div>
+
+  <%# ── Top Earners ── %>
+  <div class="col-md-6">
+    <div class="card p-3">
+      <h5>Top Earners</h5>
+      <% if @top_earners.any? %>
+        <table class="table table-sm">
+          <thead><tr><th>Member</th><th class="text-end">Available Points</th></tr></thead>
+          <tbody>
+            <% @top_earners.each do |user| %>
+              <tr>
+                <td>
+                  <%= link_to "#{user.first_name} #{user.last_name}", admin_member_path(user) %>
+                </td>
+                <td class="text-end"><%= number_with_delimiter(user.available_points) %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      <% else %>
+        <p class="text-muted">No members with points yet.</p>
+      <% end %>
+    </div>
+  </div>
+</div>

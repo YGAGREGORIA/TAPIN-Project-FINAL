@@ -3,88 +3,113 @@
 <div class="studio-landing" data-controller="nfc"
      data-nfc-studio-slug-value="<%= @studio.slug %>">
 
-  <div class="studio-landing__header">
+  <div class="schedule-header studio-landing__header">
     <% if @brand&.logo_url.present? %>
       <img src="<%= @brand.logo_url %>" alt="<%= @studio.name %> logo" class="studio-landing__logo">
     <% end %>
-    <h1 class="studio-landing__name"><%= @studio.name %></h1>
+    <h1 class="schedule-title"><%= @studio.name %></h1>
     <% if @brand&.tagline.present? %>
-      <p class="studio-landing__tagline"><%= @brand.tagline %></p>
+      <p class="schedule-subtitle"><%= @brand.tagline %></p>
     <% end %>
   </div>
 
-  <div class="studio-landing__actions">
-    <!-- TODO: Navid's phone entry form will go here -->
-    <p>Welcome! Enter your phone number to check in.</p>
-    <p class="studio-landing__hint">
-      Tap your phone on the NFC tag or scan the QR code at reception.
-    </p>
-  </div>
+  <% if notice.present? %>
+    <div class="studio-landing__flash studio-landing__flash--notice"><%= notice %></div>
+  <% end %>
+  <% if alert.present? %>
+    <div class="studio-landing__flash studio-landing__flash--alert"><%= alert %></div>
+  <% end %>
+
+  <section class="dashboard-section" style="max-width: 400px; margin: 0 auto;">
+    <div class="dashboard-card" style="text-align: center; padding: 1.5rem;">
+      <p style="font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 1.0625rem; margin-bottom: 1rem;">
+        Welcome! Enter your phone number to check in.
+      </p>
+
+      <%= form_with url: studio_checkin_path(studio_slug: @studio.slug), method: :post do |f| %>
+        <div style="display: flex; gap: 0.5rem;">
+          <%= f.telephone_field :phone, class: "studio-landing__input", placeholder: "e.g. 612345678", autofocus: true, inputmode: "tel" %>
+          <%= f.submit "Check In", class: "btn-book" %>
+        </div>
+      <% end %>
+
+      <p style="font-size: 0.8125rem; opacity: 0.5; margin-top: 1rem;">
+        Tap your phone on the NFC tag or scan the QR code at reception.
+      </p>
+
+      <p style="font-size: 0.8125rem; margin-top: 0.75rem; opacity: 0.6;">
+        First time? Just enter your phone number — we'll set you up automatically.
+      </p>
+    </div>
+  </section>
 
   <div class="studio-landing__nfc-status" data-nfc-target="status" style="display: none;">
   </div>
 </div>
 
-<% if @brand %>
 <style>
-  :root {
-    --studio-primary: <%= @brand.primary_color || '#FF5733' %>;
-    --studio-secondary: <%= @brand.secondary_color || '#33C1FF' %>;
-    --studio-bg: <%= @brand.background_color || '#F5F5F5' %>;
-    --studio-text: <%= @brand.text_color || '#222222' %>;
-  }
-
   .studio-landing {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    padding: 2rem;
-    background-color: var(--studio-bg);
-    color: var(--studio-text);
-    font-family: <%= @brand.font_body || 'system-ui, sans-serif' %>;
+    padding: 0;
+    background-color: var(--oat, #F6F1EB);
+    color: var(--espresso-brown, #2B2118);
+    font-family: 'Inter', system-ui, sans-serif;
   }
 
   .studio-landing__header {
-    text-align: center;
-    margin-bottom: 2rem;
+    width: 100%;
   }
 
   .studio-landing__logo {
-    max-width: 120px;
-    margin-bottom: 1rem;
+    max-width: 100px;
+    margin-bottom: 0.75rem;
+    border-radius: 0.5rem;
   }
 
-  .studio-landing__name {
-    font-family: <%= @brand.font_heading || 'system-ui, sans-serif' %>;
-    font-size: 2rem;
-    color: var(--studio-primary);
-    margin: 0;
-  }
-
-  .studio-landing__tagline {
-    color: var(--studio-secondary);
+  .studio-landing__input {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    border: 1.5px solid rgba(43,33,24,0.15);
+    border-radius: 0.75rem;
     font-size: 1.1rem;
-    margin-top: 0.5rem;
-  }
-
-  .studio-landing__actions {
     text-align: center;
-    max-width: 400px;
+    outline: none;
+    background: var(--oat, #F6F1EB);
+    font-family: 'Space Grotesk', sans-serif;
   }
 
-  .studio-landing__hint {
-    font-size: 0.875rem;
-    opacity: 0.7;
-    margin-top: 1rem;
+  .studio-landing__input:focus {
+    border-color: var(--accent-gold, #E1B84A);
+    box-shadow: 0 0 0 3px rgba(225,184,74,0.2);
+  }
+
+  .studio-landing__flash {
+    padding: 0.75rem 1rem;
+    border-radius: 0.875rem;
+    margin: 0 1.25rem 1rem;
+    font-size: 0.9rem;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+  }
+
+  .studio-landing__flash--notice {
+    background: rgba(225,184,74,0.15);
+    color: var(--espresso-brown, #2B2118);
+  }
+
+  .studio-landing__flash--alert {
+    background: rgba(180,83,60,0.1);
+    color: var(--clay-red, #B4533C);
   }
 
   .studio-landing__nfc-status {
     margin-top: 1rem;
     padding: 0.75rem 1.5rem;
-    border-radius: 8px;
+    border-radius: 0.875rem;
     font-size: 0.875rem;
   }
 </style>
-<% end %>
