@@ -49,6 +49,16 @@ class User < ApplicationRecord
     user
   end
 
+  def recalculate_points!
+    earned = visits.sum(:points_earned).to_i
+    spent = reward_redemptions.sum(:point_spent).to_i
+    update_columns(
+      available_points: earned - spent,
+      total_points: earned,
+      total_visits: visits.count
+    )
+  end
+
   def visits_count_for(studio)
     visits.where(studio: studio).count
   end

@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   scope "/s/:studio_slug" do
     # NFC/QR landing page — Rajesh
     get "/", to: "studios#show", as: :studio_landing
+    post "checkin", to: "studios#checkin", as: :studio_checkin
 
     resources :rewards, only: [ :index ] do
       post :redeem, to: "reward_redemptions#create", on: :member
@@ -37,7 +38,6 @@ Rails.application.routes.draw do
 
   resources :visits, only: [:create]
 
-<<<<<<< HEAD
   namespace :admin do
     namespace :loyalty do
       patch "deals/referral", to: "deals#update_referral", as: :deals_referral
@@ -47,20 +47,14 @@ Rails.application.routes.draw do
         patch :toggle, on: :member
       end
     end
-  end
 
-  get "up" => "rails/health#show", as: :rails_health_check
-=======
-  # === Admin namespace ===
-  namespace :admin do
-    # Navid's areas
     resource :dashboard, only: [:show]
     resources :rewards
     resources :class_configs, only: [:index, :update]
     resources :deals do
       patch :update_referral, on: :collection
     end
-    resources :members, only: [:index, :show, :export] do
+    resources :members, only: [:index, :show] do
       post :points, to: "member_points#create", on: :member
       post :rewards, to: "member_rewards#create", on: :member
       get :export, on: :collection
@@ -83,6 +77,10 @@ Rails.application.routes.draw do
     resource :assistant, only: [:show], controller: "assistant" do
       post :respond
     end
+    resource :analytics, only: [:show], controller: "analytics" do
+      get :points
+      get :loyalty
+    end
   end
 
   # AI Assistant — Rajesh
@@ -101,5 +99,4 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
->>>>>>> edadfae12e779043a86bfafd0ffdad17e549b892
 end

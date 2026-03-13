@@ -23,7 +23,7 @@
             <div class="deal-claim-details">
               <div class="deal-claim-name"><%= rr.reward.name %></div>
               <div class="deal-claim-meta">
-                <%= rr.redeemed_at&.strftime("%-d %B %Y") %>
+                <%= rr.redeemed_at&.strftime("%b %-d, %Y") %>
                 &middot;
                 <span class="deal-code"><%= rr.code %></span>
               </div>
@@ -36,7 +36,7 @@
       <div class="dashboard-card">
         <div class="empty-state">
           <i class="fa fa-gift"></i>
-          <p>No rewards redeemed yet.</p>
+          <p>You haven't redeemed any rewards yet.</p>
         </div>
       </div>
     <% end %>

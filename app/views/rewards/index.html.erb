@@ -6,6 +6,9 @@
   <div class="bookings-header">
     <p class="schedule-studio-name"><%= @studio.name %></p>
     <h1 class="schedule-title">Rewards</h1>
+    <p class="schedule-subtitle">
+      <%= current_user.current_visit_progress_for(@studio) %> / 10 visits toward your next reward
+    </p>
   </div>
 
   <%# ── Progress toward next reward ── %>
@@ -19,7 +22,6 @@
           <span class="reward-ready-badge">Reward ready!</span>
         <% end %>
       </div>
-
       <div class="stamp-card">
         <div class="stamp-grid">
           <% 10.times do |i| %>
@@ -30,7 +32,6 @@
             </div>
           <% end %>
         </div>
-
         <div class="stamp-card-footer">
           <div class="progress dashboard-progress">
             <div class="progress-bar" style="width: <%= (progress / 10.0 * 100).round %>%"></div>
@@ -52,7 +53,6 @@
   <%# ── Rewards list ── %>
   <div class="bookings-section">
     <p class="section-title">Available Rewards</p>
-
     <% if @rewards.any? %>
       <% @rewards.each do |reward| %>
         <div class="reward-card">
