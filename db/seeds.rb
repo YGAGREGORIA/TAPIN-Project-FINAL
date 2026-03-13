@@ -3,6 +3,10 @@
 # The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
 
 puts "Cleaning database..."
+Notification.destroy_all if defined?(Notification)
+PushSubscription.destroy_all if defined?(PushSubscription)
+NotificationTemplate.destroy_all if defined?(NotificationTemplate)
+Broadcast.destroy_all if defined?(Broadcast)
 MindbodyClient.destroy_all
 MindbodyLink.destroy_all
 Referral.destroy_all

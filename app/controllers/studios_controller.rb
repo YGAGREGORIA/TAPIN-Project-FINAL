@@ -4,7 +4,7 @@ class StudiosController < ApplicationController
     @brand = @studio.studio_brand
 
     if user_signed_in?
-      redirect_to rewards_path(studio_slug: @studio.slug)
+      redirect_to dashboard_path
     end
   end
 
@@ -39,10 +39,10 @@ class StudiosController < ApplicationController
     )
 
     if visit.save
-      redirect_to rewards_path(studio_slug: @studio.slug),
+      redirect_to dashboard_path,
         notice: "Welcome, #{user.first_name}! Your visit was counted."
     else
-      redirect_to rewards_path(studio_slug: @studio.slug),
+      redirect_to dashboard_path,
         alert: visit.errors.full_messages.to_sentence
     end
   end
