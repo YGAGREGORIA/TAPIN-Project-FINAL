@@ -5,9 +5,41 @@ class StudiosController < ApplicationController
 
     if user_signed_in?
       redirect_to rewards_path(studio_slug: @studio.slug)
-      # TODO: redirect to dashboard once Iga builds it
-      # redirect_to dashboard_path(studio_slug: @studio.slug)
     end
-    # Otherwise render the landing page for new/unauthenticated users
+  end
+
+  def checkin
+    @studio = Studio.find_by!(slug: params[:studio_slug])
+    phone = params[:phone].to_s.gsub(/\D/, "")
+
+    if phone.blank?
+      redirect_to studio_landing_path(studio_slug: @studio.slug), alert: "Please enter your phone number."
+      return
+    end
+
+    user = User.find_by(phone: phone.to_i)
+
+    unless user
+      redirect_to studio_landing_path(studio_slug: @studio.slug),
+        alert: "No account found with that phone number. Please sign up first."
+      return
+    end
+
+    sign_in(user)
+
+    class_config = @studio.class_configs.first
+    visit = user.visits.new(
+      studio: @studio,
+      class_config: class_config,
+      visited_at: Time.current
+    )
+
+    if visit.save
+      redirect_to rewards_path(studio_slug: @studio.slug),
+        notice: "Welcome back, #{user.first_name}! Your visit was counted."
+    else
+      redirect_to rewards_path(studio_slug: @studio.slug),
+        alert: visit.errors.full_messages.to_sentence
+    end
   end
 end

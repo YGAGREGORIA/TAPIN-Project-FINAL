@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   scope "/s/:studio_slug" do
     # NFC/QR landing page — Rajesh
     get "/", to: "studios#show", as: :studio_landing
+    post "checkin", to: "studios#checkin", as: :studio_checkin
 
     resources :rewards, only: [ :index ] do
       post :redeem, to: "reward_redemptions#create", on: :member
@@ -46,7 +47,7 @@ Rails.application.routes.draw do
     resources :deals do
       patch :update_referral, on: :collection
     end
-    resources :members, only: [:index, :show, :export] do
+    resources :members, only: [:index, :show] do
       post :points, to: "member_points#create", on: :member
       post :rewards, to: "member_rewards#create", on: :member
       get :export, on: :collection

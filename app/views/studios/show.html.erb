@@ -13,11 +13,29 @@
     <% end %>
   </div>
 
+  <% if notice.present? %>
+    <div class="studio-landing__flash studio-landing__flash--notice"><%= notice %></div>
+  <% end %>
+  <% if alert.present? %>
+    <div class="studio-landing__flash studio-landing__flash--alert"><%= alert %></div>
+  <% end %>
+
   <div class="studio-landing__actions">
-    <!-- TODO: Navid's phone entry form will go here -->
-    <p>Welcome! Enter your phone number to check in.</p>
+    <p class="studio-landing__welcome">Welcome! Enter your phone number to check in.</p>
+
+    <%= form_with url: studio_checkin_path(studio_slug: @studio.slug), method: :post, class: "studio-landing__form" do |f| %>
+      <div class="studio-landing__input-group">
+        <%= f.telephone_field :phone, class: "studio-landing__input", placeholder: "e.g. 612345678", autofocus: true, inputmode: "tel" %>
+        <%= f.submit "Check In", class: "studio-landing__button" %>
+      </div>
+    <% end %>
+
     <p class="studio-landing__hint">
       Tap your phone on the NFC tag or scan the QR code at reception.
+    </p>
+
+    <p class="studio-landing__signup">
+      Don't have an account? <%= link_to "Sign up", new_user_registration_path, class: "studio-landing__link" %>
     </p>
   </div>
 
@@ -74,10 +92,81 @@
     max-width: 400px;
   }
 
+  .studio-landing__form {
+    margin-top: 1.5rem;
+    width: 100%;
+  }
+
+  .studio-landing__input-group {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .studio-landing__input {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    border: 2px solid var(--studio-primary);
+    border-radius: 8px;
+    font-size: 1.1rem;
+    text-align: center;
+    outline: none;
+  }
+
+  .studio-landing__input:focus {
+    border-color: var(--studio-secondary);
+    box-shadow: 0 0 0 3px rgba(51, 193, 255, 0.2);
+  }
+
+  .studio-landing__button {
+    padding: 0.75rem 1.5rem;
+    background-color: var(--studio-primary);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .studio-landing__button:hover {
+    opacity: 0.9;
+  }
+
+  .studio-landing__signup {
+    margin-top: 1.5rem;
+    font-size: 0.875rem;
+  }
+
+  .studio-landing__link {
+    color: var(--studio-primary);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
   .studio-landing__hint {
     font-size: 0.875rem;
     opacity: 0.7;
     margin-top: 1rem;
+  }
+
+  .studio-landing__flash {
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+  }
+
+  .studio-landing__flash--notice {
+    background-color: #d4edda;
+    color: #155724;
+  }
+
+  .studio-landing__flash--alert {
+    background-color: #f8d7da;
+    color: #721c24;
   }
 
   .studio-landing__nfc-status {
