@@ -442,6 +442,12 @@ chat2 = Chat.create!(
   status: true
 )
 
+chat3 = Chat.create!(
+  user: carol,
+  studio: studio,
+  status: true
+)
+
 puts "Creating messages..."
 
 Message.create!(
@@ -478,6 +484,24 @@ Message.create!(
   sentiment: "neutral",
   content: "You have 9 visits — just 1 more to unlock your free class!",
   summary: "Assistant shared reward progress"
+)
+
+Message.create!(
+  chat: chat3,
+  role: "user",
+  tag: "inquiry",
+  sentiment: "positive",
+  content: "I just hit 23 visits! Can I use my free class reward this week?",
+  summary: "User asking about redeeming free class reward"
+)
+
+Message.create!(
+  chat: chat3,
+  role: "assistant",
+  tag: "response",
+  sentiment: "positive",
+  content: "Congrats on 23 visits! Yes, your free class reward is ready to redeem — just tap 'Redeem Now' on your dashboard. You also have a Pilates Core class booked tomorrow and a HIIT Blast coming up in 5 days!",
+  summary: "Assistant confirmed reward is redeemable and recapped upcoming bookings"
 )
 
 puts "Done! Seed data created successfully."
