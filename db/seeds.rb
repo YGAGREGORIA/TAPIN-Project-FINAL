@@ -550,9 +550,47 @@ MindbodyClient.create!(
   email: "caroline.p@gmail.com"
 )
 
+puts "Creating Mindbody links (simulated match results)..."
+
+# Alice: phone matched MB-1001 on visit 1 → auto-linked
+MindbodyLink.create!(
+  user: alice,
+  mindbody_client_id: "MB-1001",
+  status: "linked",
+  linked_at: 10.weeks.ago,
+  match_data: { "matched_by" => "phone", "name" => "Alice Martin" }
+)
+
+# Bob: no phone match on visit 1, name match found MB-1002 at visit 9 → pending admin review
+MindbodyLink.create!(
+  user: bob,
+  mindbody_client_id: "MB-1002",
+  status: "pending",
+  match_data: { "match_type" => "name", "matched_by" => "name", "name" => "Bob Chen" }
+)
+
+# Carol: phone matched two Mindbody clients (MB-1004 + MB-1005) → conflict
+MindbodyLink.create!(
+  user: carol,
+  status: "conflict",
+  match_data: {
+    "conflicting_client_ids" => [ "MB-1004", "MB-1005" ],
+    "clients" => [
+      { "mindbody_client_id" => "MB-1004", "name" => "Carol Park", "phone" => "612345678" },
+      { "mindbody_client_id" => "MB-1005", "name" => "Caroline Parker", "phone" => "612345678" }
+    ]
+  }
+)
+
+# Owner has no Mindbody link (admin, not a customer)
+
 puts "Done! Seed data created successfully."
 puts ""
 puts "Test scenarios:"
-puts "  alice@example.com  — 10 visits, reward available (+ 1 expired redemption)"
-puts "  bob@example.com    — 9 visits, 1 visit remaining"
-puts "  carol@example.com  — 20 visits, 1 available reward, 2 upcoming bookings, 2 deal claims, active reward redemption"
+puts "  alice@example.com  — 10 visits, reward available, Mindbody LINKED (MB-1001)"
+puts "  bob@example.com    — 9 visits, 1 visit remaining, Mindbody PENDING review (name match MB-1002)"
+puts "  carol@example.com  — 23 visits, 1 available reward, Mindbody CONFLICT (MB-1004 vs MB-1005)"
+puts ""
+puts "Admin Mindbody pages:"
+puts "  /admin/mindbody_matches — 1 pending (Bob), 2 recent (Alice linked, Carol conflict)"
+puts "  /admin/mindbody_conflicts/#{MindbodyLink.find_by(status: 'conflict')&.id} — Carol's conflict"
