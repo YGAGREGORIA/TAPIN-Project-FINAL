@@ -1,0 +1,235 @@
+// ═══════════════════════════════════════════════════════════════════════════
+// ADMIN DASHBOARD
+// ═══════════════════════════════════════════════════════════════════════════
+
+// ─── Page title ─────────────────────────────────────────────────────────────
+
+.admin-page-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: $espresso-brown;
+}
+
+// ─── KPI stat cards ─────────────────────────────────────────────────────────
+
+.admin-stat-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.25rem 1rem;
+  text-align: center;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.07);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  height: 100%;
+
+  .admin-stat-icon {
+    font-size: 1.25rem;
+    color: $accent-gold;
+    margin-bottom: 0.5rem;
+  }
+
+  .admin-stat-value {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 2rem;
+    color: $espresso-brown;
+    line-height: 1;
+    margin-bottom: 0.25rem;
+  }
+
+  .admin-stat-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: rgba(0, 0, 0, 0.45);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .admin-stat-delta {
+    font-size: 0.78rem;
+    color: darken($accent-gold, 10%);
+    margin-top: 0.35rem;
+    font-weight: 500;
+  }
+}
+
+// ─── Section title ──────────────────────────────────────────────────────────
+
+.admin-section-title {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+
+  span:first-child {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    color: $espresso-brown;
+  }
+
+  .admin-section-subtitle {
+    font-size: 0.8rem;
+    color: rgba(0, 0, 0, 0.45);
+    font-weight: 400;
+  }
+}
+
+// ─── Feature cards ──────────────────────────────────────────────────────────
+
+.admin-feature-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: #fff;
+  border-radius: 12px;
+  padding: 1rem 1.1rem;
+  text-decoration: none;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+  transition: box-shadow 0.15s, transform 0.12s, border-color 0.15s;
+  height: 100%;
+
+  &:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+    border-color: rgba($accent-gold, 0.4);
+    text-decoration: none;
+  }
+
+  .admin-feature-icon {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    background: rgba($accent-gold, 0.12);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    color: darken($accent-gold, 8%);
+  }
+
+  .admin-feature-body {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .admin-feature-title {
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: $espresso-brown;
+    margin-bottom: 0.2rem;
+  }
+
+  .admin-feature-desc {
+    font-size: 0.78rem;
+    color: rgba(0, 0, 0, 0.5);
+    line-height: 1.4;
+  }
+
+  .admin-feature-arrow {
+    color: rgba(0, 0, 0, 0.2);
+    font-size: 0.75rem;
+    flex-shrink: 0;
+  }
+}
+
+// ─── Recent activity card ────────────────────────────────────────────────────
+
+.admin-card {
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+
+  .admin-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.875rem 1rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    font-weight: 700;
+    font-size: 0.875rem;
+    color: $espresso-brown;
+  }
+
+  .admin-card-link {
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: darken($accent-gold, 10%);
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.admin-activity-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.7rem 1rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  .admin-activity-avatar {
+    width: 34px;
+    height: 34px;
+    flex-shrink: 0;
+    background: rgba($accent-gold, 0.15);
+    color: darken($accent-gold, 12%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.85rem;
+  }
+
+  .admin-activity-details {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .admin-activity-name {
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: $espresso-brown;
+  }
+
+  .admin-activity-meta {
+    font-size: 0.75rem;
+    color: rgba(0, 0, 0, 0.45);
+  }
+
+  .admin-activity-points {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: darken($accent-gold, 8%);
+    white-space: nowrap;
+  }
+
+  .admin-activity-link {
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: darken($accent-gold, 10%);
+    text-decoration: none;
+    white-space: nowrap;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.admin-empty-state {
+  padding: 1.5rem 1rem;
+  text-align: center;
+  font-size: 0.85rem;
+  color: rgba(0, 0, 0, 0.35);
+}
