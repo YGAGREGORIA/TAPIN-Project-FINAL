@@ -71,6 +71,11 @@ Rails.application.routes.draw do
     end
   end
 
+  # AI Assistant — Rajesh
+  resources :chats, only: [:index, :show, :create] do
+    resources :messages, only: [:create]
+  end
+
   # Push notification subscription — Rajesh
   resources :push_subscriptions, only: [:create]
 

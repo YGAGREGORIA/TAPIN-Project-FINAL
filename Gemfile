@@ -73,3 +73,5 @@ gem "font-awesome-sass", "~> 6.1"
 gem "simple_form"
 
 gem "web-push", "~> 3.1"
+
+gem "ruby_llm", "~> 1.13"
