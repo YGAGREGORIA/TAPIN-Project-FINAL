@@ -21,6 +21,35 @@ class User < ApplicationRecord
   has_many :notifications, dependent: :destroy
 
   validates :email, presence: true
+  validates :phone_number, uniqueness: true, allow_blank: true
+
+  before_validation :normalize_phone_number
+
+  def self.normalize_phone_number(raw_phone_number)
+    raw_phone_number.to_s.gsub(/\D/, "")
+  end
+
+  def self.fits_legacy_phone_column?(normalized_phone_number)
+    normalized_phone_number.to_i <= 2_147_483_647
+  end
+
+  def self.find_or_create_for_phone_login!(raw_phone_number)
+    normalized_phone_number = normalize_phone_number(raw_phone_number)
+    user = find_by(phone_number: normalized_phone_number)
+    user ||= find_by(phone: normalized_phone_number.to_i) if fits_legacy_phone_column?(normalized_phone_number)
+    if user.present?
+      user.update!(phone_number: normalized_phone_number) if user.phone_number.blank?
+      return user
+    end
+
+    create!(
+      email: "member-#{normalized_phone_number}@tapin.local",
+      password: SecureRandom.base58(24),
+      first_name: "Member",
+      phone_number: normalized_phone_number,
+      phone: normalized_phone_number.to_i
+    )
+  end
 
   def visits_count_for(studio)
     visits.where(studio: studio).count
@@ -48,5 +77,12 @@ class User < ApplicationRecord
 
     remainder = count % 10
     remainder.zero? ? 10 : 10 - remainder
+  end
+
+  private
+
+  def normalize_phone_number
+    normalized_phone_number = self.class.normalize_phone_number(phone_number)
+    self.phone_number = normalized_phone_number.presence
   end
 end

@@ -28,9 +28,11 @@ alice = User.create!(
   password: "password",
   first_name: "Alice",
   last_name: "Martin",
+  phone_number: "611234567",
   phone: 611234567,
   referred_by: nil,
-  last_visit_at: 1.day.ago
+  last_visit_at: 1.day.ago,
+  role: :admin
 )
 
 # bob: 9 visits → almost there (9/10)
@@ -39,6 +41,7 @@ bob = User.create!(
   password: "password",
   first_name: "Bob",
   last_name: "Chen",
+  phone_number: "619876543",
   phone: 619876543,
   referred_by: "alice@example.com",
   last_visit_at: 2.days.ago
@@ -50,6 +53,7 @@ carol = User.create!(
   password: "password",
   first_name: "Carol",
   last_name: "Park",
+  phone_number: "612345678",
   phone: 612345678,
   referred_by: nil,
   last_visit_at: 1.week.ago
@@ -60,6 +64,7 @@ owner = User.create!(
   password: "password",
   first_name: "Sara",
   last_name: "Lopez",
+  phone_number: "610001111",
   phone: 610001111,
   referred_by: nil,
   last_visit_at: nil,
@@ -496,3 +501,9 @@ puts "Test scenarios:"
 puts "  alice@example.com  — 10 visits, reward available (+ 1 expired redemption)"
 puts "  bob@example.com    — 9 visits, 1 visit remaining"
 puts "  carol@example.com  — 20 visits, 1 available reward, 2 upcoming bookings, 2 deal claims, active reward redemption"
+puts ""
+puts "Phone check-in demo:"
+puts "  /s/tapin-fitness"
+puts "  Alice: 611234567"
+puts "  Bob:   619876543"
+puts "  Carol: 612345678"

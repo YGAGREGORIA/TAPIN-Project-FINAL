@@ -5,6 +5,9 @@ Rails.application.routes.draw do
   scope "/s/:studio_slug" do
     # NFC/QR landing page — Rajesh
     get "/", to: "studios#show", as: :studio_landing
+    post "phone-login", to: "phone_authentications#create", as: :studio_phone_login
+    get "phone-login/verify", to: "phone_authentications#verify", as: :verify_studio_phone_login
+    post "phone-login/verify", to: "phone_authentications#confirm", as: :confirm_studio_phone_login
 
     resources :rewards, only: [ :index ] do
       post :redeem, to: "reward_redemptions#create", on: :member

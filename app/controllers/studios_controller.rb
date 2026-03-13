@@ -4,10 +4,14 @@ class StudiosController < ApplicationController
     @brand = @studio.studio_brand
 
     if user_signed_in?
-      redirect_to rewards_path(studio_slug: @studio.slug)
-      # TODO: redirect to dashboard once Iga builds it
-      # redirect_to dashboard_path(studio_slug: @studio.slug)
+      if current_user[:admin] || current_user.role == "admin"
+        redirect_to admin_dashboard_path, alert: "Studio-Accounts nutzen bitte das Admin-Dashboard."
+        return
+      end
+
+      result = PhoneCheckInService.new(user: current_user, studio: @studio).call
+      redirect_to dashboard_path, result.success? ? { notice: result.message } : { alert: result.message }
+      return
     end
-    # Otherwise render the landing page for new/unauthenticated users
   end
 end
