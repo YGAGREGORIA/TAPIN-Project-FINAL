@@ -9,6 +9,11 @@ if defined?(Visit)
 end
 Rails.application.config.active_job.queue_adapter = :async
 
+# Skip Devise confirmation emails during seeding (no SMTP on Heroku one-off dynos)
+if User.method_defined?(:send_on_create_confirmation_instructions)
+  User.skip_callback(:commit, :after, :send_on_create_confirmation_instructions)
+end
+
 puts "Seeding users..."
 
 alice = User.find_or_create_by!(email: "alice@example.com") do |u|
@@ -17,6 +22,7 @@ alice = User.find_or_create_by!(email: "alice@example.com") do |u|
   u.last_name = "Martin"
   u.phone = 611234567
   u.last_visit_at = 1.day.ago
+  u.confirmed_at = Time.current if u.respond_to?(:confirmed_at=)
 end
 alice.update_columns(admin: true) if alice.respond_to?(:admin) && User.column_names.include?("admin")
 alice.update_columns(confirmed_at: Time.current) if User.column_names.include?("confirmed_at") && alice.confirmed_at.nil?
@@ -28,6 +34,7 @@ bob = User.find_or_create_by!(email: "bob@example.com") do |u|
   u.phone = 619876543
   u.referred_by = "alice@example.com"
   u.last_visit_at = 2.days.ago
+  u.confirmed_at = Time.current if u.respond_to?(:confirmed_at=)
 end
 bob.update_columns(confirmed_at: Time.current) if User.column_names.include?("confirmed_at") && bob.confirmed_at.nil?
 
@@ -37,6 +44,7 @@ carol = User.find_or_create_by!(email: "carol@example.com") do |u|
   u.last_name = "Park"
   u.phone = 612345678
   u.last_visit_at = 1.week.ago
+  u.confirmed_at = Time.current if u.respond_to?(:confirmed_at=)
 end
 carol.update_columns(confirmed_at: Time.current) if User.column_names.include?("confirmed_at") && carol.confirmed_at.nil?
 
@@ -45,6 +53,7 @@ owner = User.find_or_create_by!(email: "owner@tapinstudio.com") do |u|
   u.first_name = "Sara"
   u.last_name = "Lopez"
   u.phone = 610001111
+  u.confirmed_at = Time.current if u.respond_to?(:confirmed_at=)
 end
 owner.update_columns(admin: true) if owner.respond_to?(:admin) && User.column_names.include?("admin")
 owner.update_columns(confirmed_at: Time.current) if User.column_names.include?("confirmed_at") && owner.confirmed_at.nil?
@@ -68,6 +77,7 @@ demo_users = demo_members.map do |m|
     user.last_name = m[:last_name]
     user.phone = m[:phone]
     user.last_visit_at = m[:weeks_ago].weeks.ago
+    user.confirmed_at = Time.current if user.respond_to?(:confirmed_at=)
   end
   u.update_columns(confirmed_at: Time.current) if User.column_names.include?("confirmed_at") && u.confirmed_at.nil?
   u
