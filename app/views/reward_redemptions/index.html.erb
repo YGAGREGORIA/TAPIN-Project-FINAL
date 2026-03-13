@@ -1,35 +1,35 @@
 <% content_for :title, "Reward History — #{@studio.name}" %>
 
-<div class="schedule-page">
+<div class="bookings-page">
 
   <%# ── Header ── %>
-  <div class="schedule-header">
+  <div class="bookings-header">
     <p class="schedule-studio-name"><%= @studio.name %></p>
     <h1 class="schedule-title">Reward History</h1>
   </div>
 
-  <section class="dashboard-section">
-    <p class="section-title">Your Redemptions</p>
+  <%# ── Redemption list ── %>
+  <div class="bookings-section">
+    <p class="section-title">Redeemed Rewards</p>
 
     <% if @reward_redemptions.any? %>
       <div class="dashboard-card">
-        <% @reward_redemptions.each do |redemption| %>
-          <div class="activity-row">
+        <% @reward_redemptions.each do |rr| %>
+          <%= link_to reward_redemption_path(studio_slug: @studio.slug, id: rr.id),
+                      class: "deal-claim-row text-decoration-none" do %>
             <div class="activity-icon">
               <i class="fa fa-gift"></i>
             </div>
-            <div class="activity-details">
-              <div class="activity-title"><%= redemption.reward.name %></div>
-              <div class="activity-subtitle">
-                Code: <span style="font-weight: 600;"><%= redemption.code %></span>
+            <div class="deal-claim-details">
+              <div class="deal-claim-name"><%= rr.reward.name %></div>
+              <div class="deal-claim-meta">
+                <%= rr.redeemed_at&.strftime("%b %-d, %Y") %>
                 &middot;
-                <%= redemption.redeemed_at&.strftime("%b %-d, %Y") %>
+                <span class="deal-code"><%= rr.code %></span>
               </div>
             </div>
-            <%= link_to "View",
-                  reward_redemption_path(studio_slug: @studio.slug, id: redemption.id),
-                  class: "btn-claim" %>
-          </div>
+            <i class="fa fa-chevron-right" style="color: rgba(43,33,24,0.25); font-size: 0.75rem;"></i>
+          <% end %>
         <% end %>
       </div>
     <% else %>
@@ -40,14 +40,13 @@
         </div>
       </div>
     <% end %>
-  </section>
+  </div>
 
-  <section class="dashboard-section pb-5">
-    <div class="dashboard-card" style="text-align: center;">
-      <%= link_to rewards_path(studio_slug: @studio.slug), class: "btn-secondary-action" do %>
-        <i class="fa fa-arrow-left"></i> Back to Rewards
-      <% end %>
-    </div>
-  </section>
+  <%# ── Back CTA ── %>
+  <div class="bookings-cta">
+    <%= link_to "Back to Rewards",
+          rewards_path(studio_slug: @studio.slug),
+          class: "btn-secondary-action" %>
+  </div>
 
 </div>
