@@ -2,20 +2,24 @@
 # development, test). The code here should be idempotent so that it can be executed at any point in every environment.
 # The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
 
-puts "Cleaning database..."
-Message.destroy_all
-Chat.destroy_all
-RewardRedemption.destroy_all
-Reward.destroy_all
-DealClaim.destroy_all
-Deal.destroy_all
-Visit.destroy_all
-Booking.destroy_all
-StudioClass.destroy_all
-ClassConfig.destroy_all
-StudioBrand.destroy_all
-Studio.destroy_all
-User.destroy_all
+# puts "Cleaning database..."
+# Notification.destroy_all if defined?(Notification)
+# PushSubscription.destroy_all if defined?(PushSubscription)
+# NotificationTemplate.destroy_all if defined?(NotificationTemplate)
+# Broadcast.destroy_all if defined?(Broadcast)
+# Message.destroy_all
+# Chat.destroy_all
+# RewardRedemption.destroy_all
+# Reward.destroy_all
+# DealClaim.destroy_all
+# Deal.destroy_all
+# Visit.destroy_all
+# Booking.destroy_all
+# StudioClass.destroy_all
+# ClassConfig.destroy_all
+# StudioBrand.destroy_all
+# Studio.destroy_all
+# User.destroy_all
 
 puts "Creating users..."
 
