@@ -445,18 +445,9 @@ puts ""
 puts "Login credentials:"
 puts "  Password for all seeded users: Password123"
 puts "  Sign in at: http://localhost:3000/users/sign_in"
-<<<<<<< HEAD
 puts ""
 puts "Test scenarios:"
-
-puts "  alice@example.com  — 10 visits, reward available, Mindbody LINKED (MB-1001)"
-puts "  bob@example.com    — 9 visits, 1 visit remaining, Mindbody PENDING review (name match MB-1002)"
-puts "  carol@example.com  — 23 visits, 1 available reward, Mindbody CONFLICT (MB-1004 vs MB-1005)"
-=======
->>>>>>> 051493cd5cd428e8f1baf2d6a471f086c213e5e4
-puts ""
-puts "Test scenarios:"
-puts "  alice@example.com  — 10 visits, reward available (+ 1 expired redemption)"
+puts "  alice@example.com  — admin, 10 visits, reward available (+ 1 expired redemption)"
 puts "  bob@example.com    — 9 visits, 1 visit remaining"
 puts "  carol@example.com  — 20 visits, 1 available reward, 2 upcoming bookings, 2 deal claims, active reward redemption"
 puts "  owner@tapinstudio.com — studio owner account"
