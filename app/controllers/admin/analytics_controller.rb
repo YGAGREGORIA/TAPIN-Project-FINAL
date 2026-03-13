@@ -73,9 +73,9 @@ class Admin::AnalyticsController < Admin::BaseController
     @end_date = Date.current.end_of_day
     @start_date = if params[:start_date].present?
                     Date.parse(params[:start_date]).beginning_of_day
-                  else
+    else
                     30.days.ago.beginning_of_day
-                  end
+    end
     @end_date = Date.parse(params[:end_date]).end_of_day if params[:end_date].present?
     @range_label = "#{@start_date.strftime('%b %-d')} — #{@end_date.strftime('%b %-d, %Y')}"
   end
@@ -96,7 +96,10 @@ class Admin::AnalyticsController < Admin::BaseController
   end
 
   # Simple weekly grouping without groupdate gem
+  ALLOWED_COLUMNS = %w[created_at claimed_at visited_at redeemed_at].freeze
+
   def group_by_week(relation, column)
-    relation.group("DATE_TRUNC('week', #{column})").count
+    safe_column = ALLOWED_COLUMNS.include?(column.to_s) ? column.to_s : "created_at"
+    relation.group(Arel.sql("DATE_TRUNC('week', #{safe_column})")).count
   end
 end

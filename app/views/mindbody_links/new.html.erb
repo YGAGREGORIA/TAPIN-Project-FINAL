@@ -41,15 +41,9 @@
       </div>
     </div>
 
-    <% if @redirect_back_to.present? %>
       <%= link_to "Skip for now",
-            @redirect_back_to,
+            session[:mindbody_return_to] || classes_path(studio_slug: @studio.slug),
             class: "btn-secondary-action" %>
-    <% else %>
-      <%= link_to "Back to Schedule",
-            classes_path(studio_slug: @studio.slug),
-            class: "btn-secondary-action" %>
-    <% end %>
   </div>
 
 </div>

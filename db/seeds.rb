@@ -162,10 +162,10 @@ pilates_desc = "Core-focused movements to improve posture, stability, and total-
   { day: 6, hour: 10, type: "pilates", teacher: teachers[:pilates][0],  config: pilates, name: "Pilates Core" }
 ].each do |c|
   desc = case c[:type]
-         when "yoga"    then yoga_desc
-         when "hiit"    then hiit_desc
-         when "pilates" then pilates_desc
-         end
+  when "yoga"    then yoga_desc
+  when "hiit"    then hiit_desc
+  when "pilates" then pilates_desc
+  end
   capacity = c[:type] == "hiit" ? 15 : 20
 
   StudioClass.create!(

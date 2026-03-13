@@ -3,7 +3,7 @@ module Admin
     class DealsController < ApplicationController
       before_action :authenticate_user!
       before_action :set_studio
-      before_action :set_deal, only: [:update, :destroy]
+      before_action :set_deal, only: [ :update, :destroy ]
 
       def index
         @deals = @studio.deals.order(:id)

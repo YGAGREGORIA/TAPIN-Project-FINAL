@@ -3,7 +3,7 @@ module Admin
     class RewardsController < ApplicationController
       before_action :authenticate_user!
       before_action :set_studio
-      before_action :set_reward, only: [:update, :toggle]
+      before_action :set_reward, only: [ :update, :toggle ]
 
       def index
         @rewards = @studio.rewards.order(:id)
