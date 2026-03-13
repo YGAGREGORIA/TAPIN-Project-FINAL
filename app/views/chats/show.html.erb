@@ -21,13 +21,18 @@
       <% @messages.each do |m| %>
         <% if m.role == "user" %>
           <div class="chat-row chat-row--user">
-            <div class="chat-bubble chat-bubble--user"><%= simple_format(m.content, {}, wrapper_tag: "span") %></div>
+            <div class="chat-bubble chat-bubble--user">
+              <% if m.image.attached? %>
+                <%= image_tag m.image, class: "chat-image" %>
+              <% end %>
+              <span><%= m.content %></span>
+            </div>
             <div class="chat-avatar chat-avatar--user">You</div>
           </div>
         <% else %>
           <div class="chat-row chat-row--assistant">
             <div class="chat-avatar chat-avatar--ai">AI</div>
-            <div class="chat-bubble chat-bubble--assistant"><%= simple_format(m.content, {}, wrapper_tag: "span") %></div>
+            <div class="chat-bubble chat-bubble--assistant chat-markdown"><%= render_markdown(m.content) %></div>
           </div>
         <% end %>
       <% end %>
@@ -36,38 +41,55 @@
       <div class="chat-welcome" data-chat-shell-target="welcome">
         <div class="chat-avatar chat-avatar--ai chat-welcome__avatar">AI</div>
         <h3>Hi<%= current_user.first_name.present? ? ", #{current_user.first_name}" : "" %>!</h3>
-        <p>I'm your TapIn assistant. Ask me about your visits, rewards, classes, or deals.</p>
+        <p>I'm your TapIn assistant. Ask me anything about your visits, rewards, classes, or deals — or send me a photo!</p>
       </div>
 
       <%# Suggestion chips %>
       <div class="suggestion-chips" data-chat-shell-target="suggestions">
-        <button class="suggestion-chip" data-action="click->chat-shell#sendSuggestion" data-message="How many visits do I have?">
-          My visits
+        <button class="suggestion-chip" data-action="click->chat-shell#sendSuggestion" data-message="How am I doing with my visits?">
+          My progress
         </button>
-        <button class="suggestion-chip" data-action="click->chat-shell#sendSuggestion" data-message="What rewards can I unlock?">
+        <button class="suggestion-chip" data-action="click->chat-shell#sendSuggestion" data-message="What rewards can I earn?">
           Rewards
         </button>
-        <button class="suggestion-chip" data-action="click->chat-shell#sendSuggestion" data-message="Recommend a class for me">
+        <button class="suggestion-chip" data-action="click->chat-shell#sendSuggestion" data-message="What classes do you recommend for me?">
           Classes
         </button>
-        <button class="suggestion-chip" data-action="click->chat-shell#sendSuggestion" data-message="Show me current deals">
+        <button class="suggestion-chip" data-action="click->chat-shell#sendSuggestion" data-message="Any deals I should know about?">
           Deals
         </button>
       </div>
     <% end %>
   </div>
 
+  <%# Image preview area %>
+  <div class="chat-image-preview" data-chat-shell-target="imagePreview" style="display:none;"></div>
+
   <%# Input area %>
   <div class="chat-input-area">
     <form class="chat-input-form" data-action="submit->chat-shell#send">
+      <input type="file"
+             accept="image/*"
+             class="d-none"
+             data-chat-shell-target="imageInput"
+             data-action="change->chat-shell#previewImage">
+      <button type="button" class="chat-image-btn" data-action="click->chat-shell#triggerImageUpload" title="Upload image">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+          <circle cx="8.5" cy="8.5" r="1.5"/>
+          <polyline points="21 15 16 10 5 21"/>
+        </svg>
+      </button>
       <input type="text"
              name="message"
              class="chat-input"
-             placeholder="Type a message..."
+             placeholder="Ask me anything..."
              autocomplete="off"
              data-chat-shell-target="input">
       <button type="submit" class="chat-send-btn" data-chat-shell-target="sendBtn">
-        Send
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+        </svg>
       </button>
     </form>
   </div>
@@ -121,23 +143,44 @@
   .chat-avatar { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 700; flex-shrink: 0; font-family: 'Space Grotesk', sans-serif; }
   .chat-avatar--ai { background: var(--espresso-brown, #2B2118); color: var(--oat, #F6F1EB); }
   .chat-avatar--user { background: rgba(43,33,24,0.1); color: var(--espresso-brown, #2B2118); }
-  .chat-bubble { max-width: 75%; padding: 0.75rem 1rem; border-radius: 16px; line-height: 1.5; font-size: 0.9375rem; }
+  .chat-bubble { max-width: 75%; padding: 0.75rem 1rem; border-radius: 16px; line-height: 1.5; font-size: 0.9375rem; word-wrap: break-word; }
   .chat-bubble--user { background: var(--espresso-brown, #2B2118); color: var(--oat, #F6F1EB); border-bottom-right-radius: 4px; }
   .chat-bubble--assistant { background: white; color: var(--espresso-brown, #2B2118); border-bottom-left-radius: 4px; box-shadow: 0 1px 4px rgba(43,33,24,0.07); }
+
+  /* Markdown styles inside assistant bubbles */
+  .chat-markdown strong { font-weight: 700; }
+  .chat-markdown em { font-style: italic; }
+  .chat-markdown code { background: rgba(43,33,24,0.06); padding: 0.125rem 0.375rem; border-radius: 4px; font-size: 0.85em; font-family: monospace; }
+  .chat-markdown ul, .chat-markdown ol { margin: 0.5rem 0; padding-left: 1.25rem; }
+  .chat-markdown li { margin-bottom: 0.25rem; }
+  .chat-markdown h3 { font-size: 1rem; font-weight: 700; margin: 0.75rem 0 0.25rem; font-family: 'Space Grotesk', sans-serif; }
+  .chat-markdown h4 { font-size: 0.9375rem; font-weight: 700; margin: 0.5rem 0 0.25rem; font-family: 'Space Grotesk', sans-serif; }
+
+  /* Image in chat */
+  .chat-image { max-width: 100%; max-height: 200px; border-radius: 12px; margin-bottom: 0.5rem; display: block; }
+
+  /* Image preview before sending */
+  .chat-image-preview { padding: 0.5rem 1rem; background: white; border-top: 1px solid rgba(43,33,24,0.07); }
+  .image-preview { position: relative; display: inline-block; }
+  .image-preview img { max-height: 80px; border-radius: 8px; border: 2px solid var(--accent-gold, #E1B84A); }
+  .image-preview__remove { position: absolute; top: -8px; right: -8px; width: 22px; height: 22px; border-radius: 50%; background: var(--espresso-brown, #2B2118); color: var(--oat, #F6F1EB); border: none; cursor: pointer; font-size: 0.875rem; display: flex; align-items: center; justify-content: center; line-height: 1; }
 
   .chat-welcome { text-align: center; padding: 3rem 1rem 1rem; color: var(--espresso-brown, #2B2118); }
   .chat-welcome h3 { font-family: 'Space Grotesk', sans-serif; }
   .chat-welcome__avatar { width: 48px; height: 48px; font-size: 1rem; margin: 0 auto 1rem; }
   .suggestion-chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem; padding: 0 1rem; }
-  .suggestion-chip { padding: 0.5rem 1rem; background: white; border: 1.5px solid rgba(43,33,24,0.15); border-radius: 20px; cursor: pointer; font-size: 0.875rem; color: var(--espresso-brown, #2B2118); font-family: 'Space Grotesk', sans-serif; }
+  .suggestion-chip { padding: 0.5rem 1rem; background: white; border: 1.5px solid rgba(43,33,24,0.15); border-radius: 20px; cursor: pointer; font-size: 0.875rem; color: var(--espresso-brown, #2B2118); font-family: 'Space Grotesk', sans-serif; transition: all 0.15s; }
   .suggestion-chip:hover { border-color: var(--accent-gold, #E1B84A); color: var(--espresso-brown, #2B2118); background: rgba(225,184,74,0.1); }
 
   .chat-input-area { padding: 0.75rem 1rem; border-top: 1px solid rgba(43,33,24,0.07); background: white; }
-  .chat-input-form { display: flex; gap: 0.5rem; }
+  .chat-input-form { display: flex; align-items: center; gap: 0.5rem; }
+  .chat-image-btn { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: none; border: 1.5px solid rgba(43,33,24,0.15); border-radius: 50%; cursor: pointer; color: rgba(43,33,24,0.5); flex-shrink: 0; transition: all 0.15s; }
+  .chat-image-btn:hover { border-color: var(--accent-gold, #E1B84A); color: var(--espresso-brown, #2B2118); background: rgba(225,184,74,0.1); }
   .chat-input { flex: 1; padding: 0.75rem 1rem; border: 1.5px solid rgba(43,33,24,0.15); border-radius: 20px; font-size: 0.9375rem; outline: none; background: var(--oat, #F6F1EB); }
   .chat-input:focus { border-color: var(--accent-gold, #E1B84A); box-shadow: 0 0 0 3px rgba(225,184,74,0.2); }
-  .chat-send-btn { padding: 0.75rem 1.25rem; background: var(--espresso-brown, #2B2118); color: var(--oat, #F6F1EB); border: none; border-radius: 20px; cursor: pointer; font-weight: 600; font-family: 'Space Grotesk', sans-serif; }
-  .chat-send-btn:active { transform: scale(0.97); }
+  .chat-send-btn { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: var(--espresso-brown, #2B2118); color: var(--oat, #F6F1EB); border: none; border-radius: 50%; cursor: pointer; flex-shrink: 0; transition: transform 0.1s; }
+  .chat-send-btn:active { transform: scale(0.93); }
+  .chat-send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
   .chat-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(43,33,24,0.4); z-index: 1060; }
   .chat-sidebar { position: fixed; top: 0; left: -300px; width: 300px; height: 100%; background: white; box-shadow: 2px 0 8px rgba(43,33,24,0.1); z-index: 1070; transition: left 0.2s; }
