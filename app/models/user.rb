@@ -17,6 +17,8 @@ class User < ApplicationRecord
   has_many :referrals, foreign_key: :referrer_id, dependent: :destroy
   has_many :mindbody_links, dependent: :destroy
   has_many :rewards, through: :reward_redemptions
+  has_many :push_subscriptions, dependent: :destroy
+  has_many :notifications, dependent: :destroy
 
   validates :email, presence: true
 
