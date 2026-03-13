@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= content_for(:title) || "Tapin Project Final" %></title>
+    <title><%= content_for(:title) || "TapIn" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="application-name" content="Tapin Project Final">
+    <meta name="application-name" content="TapIn">
     <meta name="mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
@@ -17,24 +17,26 @@
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
 
-    <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
 
   <body>
-    <% if user_signed_in? %>
-      <nav class="tapin-topnav">
-        <div class="tapin-topnav__inner">
-          <%= link_to "Dashboard", dashboard_path, class: "tapin-topnav__link" %>
-          <%= link_to "Classes", classes_path(studio_slug: current_user.visits.last&.studio&.slug || "tapin-fitness"), class: "tapin-topnav__link" %>
-          <%= link_to "Chat", chats_path, class: "tapin-topnav__link" %>
-          <%= button_to "Log Out", destroy_user_session_path, method: :delete, class: "tapin-topnav__logout" %>
-        </div>
-      </nav>
+    <%= render "shared/navbar" %>
+
+    <% if notice.present? %>
+      <div class="alert alert-success alert-dismissible fade show m-0 rounded-0" role="alert">
+        <div class="container"><%= notice %></div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
     <% end %>
-    <p class="notice"><%= notice %></p>
-    <p class="alert"><%= alert %></p>
+    <% if alert.present? %>
+      <div class="alert alert-danger alert-dismissible fade show m-0 rounded-0" role="alert">
+        <div class="container"><%= alert %></div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+    <% end %>
+
     <%= yield %>
   </body>
 </html>

@@ -10,54 +10,78 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
-    <div class="d-flex">
-      <!-- Sidebar -->
-      <nav class="bg-dark text-white p-3" style="width: 240px; min-height: 100vh;">
-        <h5 class="mb-4">TapIn Admin</h5>
+  <body class="admin-layout">
+
+    <%# ── Admin top navbar ────────────────────────────────────────────── %>
+    <nav class="navbar navbar-admin-top">
+      <div class="container-fluid px-3">
+
+        <%# Logo — left %>
+        <%= link_to admin_dashboard_path, class: "navbar-brand navbar-admin-brand d-flex align-items-center gap-2" do %>
+          <img src="/icon.png" alt="TapIn" height="28">
+          <span>TapIn <span class="admin-badge">Admin</span></span>
+        <% end %>
+
+        <%# Right side — Dashboard + Logout %>
+        <div class="d-flex align-items-center gap-2">
+          <%= link_to "Dashboard", admin_dashboard_path, class: "btn btn-sm btn-admin-outline" %>
+          <%= button_to "Log Out", destroy_user_session_path,
+                        method: :delete,
+                        class: "btn btn-sm btn-admin-logout border-0" %>
+        </div>
+
+      </div>
+    </nav>
+
+    <%# ── Body: sidebar + main ───────────────────────────────────────── %>
+    <div class="d-flex admin-body">
+
+      <%# Sidebar %>
+      <nav class="admin-sidebar">
+        <p class="admin-sidebar-section">Navigation</p>
         <ul class="nav flex-column">
           <li class="nav-item">
-            <%= link_to "Home", admin_dashboard_path, class: "nav-link text-white" %>
+            <%= link_to "Dashboard",         admin_dashboard_path,              class: "nav-link admin-nav-link #{active_link_class(admin_dashboard_path)}" %>
           </li>
           <li class="nav-item">
-            <%= link_to "Members", admin_members_path, class: "nav-link text-white-50" %>
+            <%= link_to "Members",           admin_members_path,                class: "nav-link admin-nav-link #{active_link_class(admin_members_path)}" %>
           </li>
           <li class="nav-item">
-            <%= link_to "Deals", admin_deals_path, class: "nav-link text-white-50" %>
+            <%= link_to "Deals",             admin_deals_path,                  class: "nav-link admin-nav-link #{active_link_class(admin_deals_path)}" %>
           </li>
           <li class="nav-item">
-            <%= link_to "Rewards", admin_rewards_path, class: "nav-link text-white-50" %>
+            <%= link_to "Rewards",           admin_rewards_path,                class: "nav-link admin-nav-link #{active_link_class(admin_rewards_path)}" %>
           </li>
           <li class="nav-item">
-            <%= link_to "Mindbody", admin_mindbody_matches_path, class: "nav-link text-white-50" %>
+            <%= link_to "Mindbody",          admin_mindbody_matches_path,       class: "nav-link admin-nav-link #{active_link_class(admin_mindbody_matches_path)}" %>
           </li>
           <li class="nav-item">
-            <%= link_to "Notifications", admin_notification_templates_path, class: "nav-link text-white-50" %>
+            <%= link_to "Notifications",     admin_notification_templates_path, class: "nav-link admin-nav-link #{active_link_class(admin_notification_templates_path)}" %>
           </li>
           <li class="nav-item">
-            <%= link_to "Broadcasts", admin_broadcasts_path, class: "nav-link text-white-50" %>
+            <%= link_to "Broadcasts",        admin_broadcasts_path,             class: "nav-link admin-nav-link #{active_link_class(admin_broadcasts_path)}" %>
           </li>
           <li class="nav-item">
-            <%= link_to "Check-in Settings", admin_checkin_settings_path, class: "nav-link text-white-50" %>
+            <%= link_to "Check-in Settings", admin_checkin_settings_path,       class: "nav-link admin-nav-link #{active_link_class(admin_checkin_settings_path)}" %>
           </li>
           <li class="nav-item">
-            <%= link_to "Analytics", admin_analytics_path, class: "nav-link text-white-50" %>
+            <%= link_to "Analytics",         admin_analytics_path,              class: "nav-link admin-nav-link #{active_link_class(admin_analytics_path)}" %>
           </li>
           <li class="nav-item">
-            <%= link_to "AI Assistant", admin_assistant_path, class: "nav-link text-white-50" %>
+            <%= link_to "AI Assistant",      admin_assistant_path,              class: "nav-link admin-nav-link #{active_link_class(admin_assistant_path)}" %>
           </li>
         </ul>
-        <hr class="text-white-50">
-        <small class="text-white-50"><%= current_studio&.name %></small>
-        <% if user_signed_in? %>
-          <div class="mt-3">
-            <%= button_to "Log Out", destroy_user_session_path, method: :delete, class: "btn btn-outline-light btn-sm w-100" %>
+
+        <% if current_studio.present? %>
+          <div class="admin-sidebar-studio">
+            <i class="fa fa-building me-1"></i>
+            <%= current_studio.name %>
           </div>
         <% end %>
       </nav>
 
-      <!-- Main content -->
-      <main class="flex-grow-1 p-4">
+      <%# Main content %>
+      <main class="flex-grow-1 p-4 admin-main">
         <% if notice.present? %>
           <div class="alert alert-success alert-dismissible fade show" role="alert">
             <%= notice %>
@@ -73,6 +97,7 @@
 
         <%= yield %>
       </main>
+
     </div>
   </body>
 </html>

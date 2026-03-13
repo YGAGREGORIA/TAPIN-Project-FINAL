@@ -1,0 +1,115 @@
+<% if user_signed_in? %>
+  <%# ── Logged-in navbar ─────────────────────────────────────────────── %>
+  <nav class="navbar navbar-tapin">
+    <div class="container">
+
+      <%# Logo — left %>
+      <%= link_to root_path, class: "navbar-brand" do %>
+        <span class="tapin-logo">TapIn<span>.</span></span>
+      <% end %>
+
+      <%# Hamburger — always visible, opens sidebar %>
+      <button class="tapin-hamburger ms-auto" type="button"
+              data-bs-toggle="offcanvas" data-bs-target="#tapinSidebar"
+              aria-controls="tapinSidebar" aria-label="Open menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+    </div>
+  </nav>
+
+  <%# ── Sidebar (offcanvas) ──────────────────────────────────────────── %>
+  <div class="offcanvas offcanvas-end tapin-sidebar" tabindex="-1"
+       id="tapinSidebar" aria-labelledby="tapinSidebarLabel">
+
+    <div class="offcanvas-header tapin-sidebar-header">
+      <div class="d-flex align-items-center gap-3">
+        <div class="tapin-sidebar-avatar">
+          <%= current_user.email.first.upcase %>
+        </div>
+        <div>
+          <div class="tapin-sidebar-name">My Account</div>
+          <div class="tapin-sidebar-email"><%= current_user.email %></div>
+        </div>
+      </div>
+      <button type="button" class="tapin-sidebar-close" data-bs-dismiss="offcanvas" aria-label="Close">
+        &#x2715;
+      </button>
+    </div>
+
+    <div class="offcanvas-body tapin-sidebar-body">
+      <nav class="tapin-sidebar-nav">
+        <%= link_to dashboard_path, class: "tapin-sidebar-link" do %>
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M8 4a.5.5 0 0 1 .5.5V6a.5.5 0 0 1-1 0V4.5A.5.5 0 0 1 8 4zM3.732 5.732a.5.5 0 0 1 .707 0l.915.914a.5.5 0 1 1-.708.708l-.914-.915a.5.5 0 0 1 0-.707zM2 10a.5.5 0 0 1 .5-.5h1.586a.5.5 0 0 1 0 1H2.5A.5.5 0 0 1 2 10zm9.5 0a.5.5 0 0 1 .5-.5h1.5a.5.5 0 0 1 0 1H12a.5.5 0 0 1-.5-.5zm.754-4.246a.389.389 0 0 0-.527-.02L7.547 9.31a.91.91 0 1 0 1.302 1.258l3.434-4.297a.389.389 0 0 0-.029-.518z"/>
+            <path fill-rule="evenodd" d="M0 10a8 8 0 1 1 15.547 2.661c-.442 1.253-1.845 1.602-2.932 1.25C11.309 13.488 9.475 13 8 13c-1.474 0-3.31.488-4.615.911-1.087.352-2.49.003-2.932-1.25A7.988 7.988 0 0 1 0 10zm8-7a7 7 0 0 0-6.603 9.329c.203.575.923.876 1.68.63C4.397 12.533 6.358 12 8 12s3.604.532 4.923.96c.757.245 1.477-.056 1.68-.631A7 7 0 0 0 8 3z"/>
+          </svg>
+          Dashboard
+        <% end %>
+
+        <%= link_to classes_path(studio_slug: current_user.visits.last&.studio&.slug || "tapin-fitness"), class: "tapin-sidebar-link" do %>
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M1 2.828c.885-.37 2.154-.769 3.388-.893 1.33-.134 2.458.063 3.112.752v9.746c-.935-.53-2.12-.603-3.213-.493-1.18.12-2.37.461-3.287.811V2.828zm7.5-.141c.654-.689 1.782-.886 3.112-.752 1.234.124 2.503.523 3.388.893v9.923c-.918-.35-2.107-.692-3.287-.81-1.094-.111-2.278-.039-3.213.492V2.687zM8 1.783C7.015.936 5.65.81 4.12.96c-1.516.153-3.026.635-3.926 1.01A.5.5 0 0 0 0 2.5v11a.5.5 0 0 0 .707.455c.882-.4 2.303-.881 3.68-1.02 1.409-.142 2.59.087 3.223.877a.5.5 0 0 0 .78 0c.633-.79 1.814-1.019 3.222-.877 1.378.139 2.8.62 3.681 1.02A.5.5 0 0 0 16 13.5v-11a.5.5 0 0 0-.194-.39c-.9-.375-2.41-.857-3.926-1.01-1.53-.15-2.895.027-3.88.873z"/>
+          </svg>
+          Classes
+        <% end %>
+
+        <%= link_to chats_path, class: "tapin-sidebar-link" do %>
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M5 8a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+            <path d="m2.165 15.803.02-.004c1.83-.363 2.948-.842 3.468-1.105A9.06 9.06 0 0 0 8 15c4.418 0 8-3.134 8-7s-3.582-7-8-7-8 3.134-8 7c0 1.76.743 3.37 1.97 4.6a10.437 10.437 0 0 1-.524 2.318l-.003.011a10.722 10.722 0 0 1-.244.637c-.079.186.074.394.273.362a21.673 21.673 0 0 0 .693-.125zm.8-3.108a1 1 0 0 0-.287-.801C1.618 10.83 1 9.468 1 8c0-3.192 3.004-6 7-6s7 2.808 7 6c0 3.193-3.004 6-7 6a8.06 8.06 0 0 1-2.088-.272 1 1 0 0 0-.711.074c-.387.196-1.24.57-2.634.893a10.97 10.97 0 0 0 .038-.694z"/>
+          </svg>
+          Chat
+        <% end %>
+      </nav>
+
+      <div class="tapin-sidebar-footer">
+        <%= button_to "Log Out", destroy_user_session_path,
+                      method: :delete,
+                      class: "tapin-sidebar-logout" %>
+      </div>
+    </div>
+
+  </div>
+
+<% else %>
+  <%# ── Pre-login navbar — logo centered ────────────────────────────── %>
+  <nav class="navbar navbar-tapin navbar-centered">
+    <div class="container position-relative d-flex align-items-center justify-content-center">
+
+      <%# Hamburger — absolute left on mobile, hidden on desktop %>
+      <button class="navbar-toggler position-absolute start-0 d-lg-none" type="button"
+              data-bs-toggle="collapse" data-bs-target="#navbarGuest"
+              aria-controls="navbarGuest" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <%# Logo — centered %>
+      <%= link_to root_path, class: "navbar-brand mx-auto mx-lg-0" do %>
+        <span class="tapin-logo">TapIn<span>.</span></span>
+      <% end %>
+
+      <%# Desktop links — right side, hidden on mobile (handled by collapse below) %>
+      <div class="d-none d-lg-flex align-items-center gap-2 ms-auto">
+        <%= link_to "Log In", new_user_session_path, class: "nav-link navbar-tapin-link" %>
+        <%= link_to "Sign Up", new_user_registration_path, class: "btn btn-sm btn-tapin-gold" %>
+      </div>
+
+      <%# Mobile collapse panel %>
+      <div class="collapse navbar-collapse navbar-guest-collapse" id="navbarGuest">
+        <ul class="navbar-nav flex-column text-center py-2 d-lg-none">
+          <li class="nav-item">
+            <%= link_to "Log In", new_user_session_path, class: "nav-link navbar-tapin-link" %>
+          </li>
+          <li class="nav-item mt-1">
+            <%= link_to "Sign Up", new_user_registration_path, class: "btn btn-sm btn-tapin-gold w-100" %>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+  </nav>
+
+<% end %>

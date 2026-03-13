@@ -1,6 +1,511 @@
-.navbar-brand {
+// ─── Shared navbar variables ───────────────────────────────────────────────
+$nav-height: 60px;
+
+// ─── TapIn logo ─────────────────────────────────────────────────────────────
+
+.tapin-logo {
+  display: inline-flex;
+  align-items: baseline;
   font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 24px;
+  letter-spacing: -1px;
+  color: #F6F1EB;
+  text-decoration: none;
+
+  span {
+    color: #D4A017;
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// USER-FACING NAVBAR  (.navbar-tapin)
+// ═══════════════════════════════════════════════════════════════════════════
+
+.navbar-tapin {
+  background-color: $espresso-brown;
+  min-height: $nav-height;
+  padding: 14px 28px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+
+  // Brand / logo
+  .navbar-brand {
+    text-decoration: none;
+
+    &:hover .tapin-logo {
+      color: #fff;
+    }
+  }
+
+  // Standard nav links
+  .navbar-tapin-link {
+    color: #E9E1D8;
+    font-weight: 500;
+    margin-right: 22px;
+    padding: 0.4rem 0.75rem;
+    border-radius: 0.5rem;
+    transition: all 0.2s ease;
+
+    &:hover {
+      color: $accent-gold;
+      background: transparent;
+    }
+
+    &.active {
+      color: $accent-gold;
+      font-weight: 600;
+    }
+  }
+
+  // Hamburger toggler
+  .navbar-toggler {
+    border-color: rgba(255, 255, 255, 0.3);
+    padding: 0.3rem 0.5rem;
+
+    .navbar-toggler-icon {
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255%2C255%2C255%2C0.85%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+    }
+
+    &:focus {
+      box-shadow: 0 0 0 2px rgba($accent-gold, 0.4);
+    }
+  }
+
+  // User avatar bubble
+  .navbar-avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: $accent-gold;
+    color: $espresso-brown;
+    font-weight: 600;
+    font-size: 13px;
+    flex-shrink: 0;
+  }
+
+  // Dropdown toggle link
+  .nav-link.dropdown-toggle {
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 500;
+    border-radius: 0.5rem;
+    padding: 0.4rem 0.75rem;
+    transition: background 0.15s;
+
+    &:hover,
+    &.show {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+    }
+  }
+
+  // Dropdown menu
+  .dropdown-menu {
+    background: #ffffff;
+    border: none;
+    border-radius: 10px;
+    min-width: 220px;
+    padding: 8px;
+    margin-top: 10px;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.15);
+
+    .dropdown-header {
+      font-size: 0.75rem;
+      color: $espresso-brown;
+      opacity: 0.6;
+      padding-bottom: 0;
+    }
+
+    .dropdown-item {
+      font-weight: 500;
+      border-radius: 0.4rem;
+      padding: 0.5rem 1rem;
+      transition: background 0.12s;
+
+      &:hover {
+        background-color: rgba($accent-gold, 0.12);
+        color: $espresso-brown;
+      }
+    }
+
+    .dropdown-item-logout {
+      background: $accent-gold;
+      border: 1px solid $accent-gold;
+      color: $espresso-brown;
+      padding: 6px 16px;
+      border-radius: 6px;
+      font-weight: 500;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background: $accent-gold;
+        color: #ffffff;
+      }
+    }
+  }
+
+  // Mobile collapse panel
+  .navbar-collapse {
+    @include media-breakpoint-down(lg) {
+      background: darken($espresso-brown, 4%);
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 0.75rem 0;
+      margin: 0 -12px -8px;
+      border-radius: 0 0 0.75rem 0.75rem;
+
+      .dropdown-menu {
+        position: static !important;
+        transform: none !important;
+        background: transparent;
+        border: none;
+        box-shadow: none;
+        padding: 0 0.5rem;
+
+        .dropdown-item {
+          color: rgba(255, 255, 255, 0.8);
+
+          &:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+          }
+
+          &.dropdown-item-logout {
+            color: lighten($clay-red, 20%);
+          }
+        }
+
+        .dropdown-divider {
+          border-color: rgba(255, 255, 255, 0.1);
+        }
+      }
+    }
+  }
+
+  // Guest collapse (mobile only)
+  .navbar-guest-collapse {
+    @include media-breakpoint-down(lg) {
+      background: darken($espresso-brown, 4%);
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 0.75rem;
+      margin: 0 -12px;
+      border-radius: 0 0 0.75rem 0.75rem;
+
+      .nav-link {
+        color: rgba(255, 255, 255, 0.85);
+        text-align: center;
+        padding: 0.5rem;
+
+        &:hover {
+          color: #fff;
+        }
+      }
+    }
+  }
+}
+
+// ─── Hamburger button ───────────────────────────────────────────────────────
+
+.tapin-hamburger {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  background: transparent;
+  border: none;
+  padding: 6px;
+  cursor: pointer;
+
+  span {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: #F6F1EB;
+    border-radius: 2px;
+    transition: all 0.2s ease;
+  }
+
+  &:hover span {
+    background: $accent-gold;
+  }
+}
+
+// ─── Sidebar (offcanvas) ────────────────────────────────────────────────────
+
+.tapin-sidebar {
+  width: 280px;
+  background: $espresso-brown;
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+
+  .tapin-sidebar-header {
+    padding: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    align-items: center;
+  }
+
+  .tapin-sidebar-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: $accent-gold;
+    color: $espresso-brown;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .tapin-sidebar-name {
+    font-weight: 600;
+    font-size: 14px;
+    color: #F6F1EB;
+  }
+
+  .tapin-sidebar-email {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.45);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 180px;
+  }
+
+  .tapin-sidebar-close {
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 16px;
+    line-height: 1;
+    padding: 4px;
+    cursor: pointer;
+    margin-left: auto;
+
+    &:hover {
+      color: #fff;
+    }
+  }
+
+  .tapin-sidebar-body {
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+  }
+
+  .tapin-sidebar-nav {
+    flex: 1;
+  }
+
+  .tapin-sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: 500;
+    font-size: 15px;
+    padding: 12px 14px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.15s ease;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.07);
+      color: $accent-gold;
+    }
+
+    &.active {
+      background: rgba($accent-gold, 0.12);
+      color: $accent-gold;
+    }
+  }
+
+  .tapin-sidebar-footer {
+    padding-top: 16px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    margin-top: auto;
+
+    form {
+      width: 100%;
+    }
+  }
+
+  .tapin-sidebar-logout {
+    width: 100%;
+    background: $accent-gold;
+    border: none;
+    color: $espresso-brown;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 10px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.15s ease;
+
+    &:hover {
+      background: #d2a63c;
+    }
+  }
+}
+
+// Gold action button
+.btn-tapin-gold {
+  background-color: $accent-gold;
+  color: $espresso-brown;
+  padding: 8px 18px;
   font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background 0.15s, transform 0.1s;
+
+  &:hover {
+    background-color: #d2a63c;
+    color: $espresso-brown;
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+
+// ═══════════════════════════════════════════════════════════════════════════
+// ADMIN TOP NAVBAR  (.navbar-admin-top)
+// ═══════════════════════════════════════════════════════════════════════════
+
+.navbar-admin-top {
+  background-color: $espresso-brown;
+  min-height: 52px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  position: sticky;
+  top: 0;
+  z-index: 1030;
+
+  .navbar-admin-brand {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: $accent-gold;
+    letter-spacing: -0.01em;
+
+    img {
+      border-radius: 5px;
+    }
+
+    &:hover {
+      color: lighten($accent-gold, 10%);
+    }
+  }
+
+  .admin-badge {
+    display: inline-block;
+    font-size: 0.6rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    background: rgba($accent-gold, 0.2);
+    color: $accent-gold;
+    border: 1px solid rgba($accent-gold, 0.35);
+    border-radius: 4px;
+    padding: 1px 5px;
+    vertical-align: middle;
+    margin-left: 2px;
+  }
+
+  .btn-admin-outline {
+    color: rgba(255, 255, 255, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 0.5rem;
+    font-weight: 500;
+    font-size: 0.85rem;
+    padding: 0.3rem 0.75rem;
+    transition: all 0.15s;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.4);
+    }
+  }
+
+  .btn-admin-logout {
+    color: lighten($clay-red, 20%);
+    border: 1px solid rgba($clay-red, 0.4);
+    border-radius: 0.5rem;
+    font-weight: 500;
+    font-size: 0.85rem;
+    padding: 0.3rem 0.75rem;
+    transition: all 0.15s;
+
+    &:hover {
+      background: rgba($clay-red, 0.15);
+      color: lighten($clay-red, 30%);
+      border-color: rgba($clay-red, 0.6);
+    }
+  }
+}
+
+// ─── Admin body layout ──────────────────────────────────────────────────────
+
+.admin-layout {
+  background-color: #f0ebe4;
+}
+
+.admin-body {
+  min-height: calc(100vh - 52px);
+}
+
+.admin-sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  background-color: $espresso-brown;
+  padding: 1.25rem 0.75rem;
+
+  .admin-sidebar-section {
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: rgba(255, 255, 255, 0.35);
+    margin: 0 0.5rem 0.5rem;
+  }
+
+  .admin-nav-link {
+    color: rgba(255, 255, 255, 0.65);
+    font-weight: 500;
+    font-size: 0.875rem;
+    border-radius: 0.5rem;
+    padding: 0.45rem 0.75rem;
+    margin-bottom: 2px;
+    transition: color 0.12s, background 0.12s;
+
+    &:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    &.active {
+      color: $accent-gold;
+      background: rgba($accent-gold, 0.12);
+    }
+  }
+
+  .admin-sidebar-studio {
+    margin-top: auto;
+    padding: 0.75rem;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.35);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    margin-top: 1rem;
+  }
+}
+
+.admin-main {
+  background-color: #f0ebe4;
+  min-height: 100%;
 }
 
 .tapin-topnav {
