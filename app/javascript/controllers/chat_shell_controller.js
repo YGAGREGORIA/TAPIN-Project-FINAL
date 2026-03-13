@@ -102,6 +102,7 @@ export default class extends Controller {
           } else if (data.type === "done") {
             if (state.bubble) {
               this.updateStreamingBubble(state.bubble, state.fullText)
+              state.bubble.classList.remove("chat-bubble--streaming")
             }
           } else if (data.type === "error") {
             this.removeTyping()
@@ -135,6 +136,8 @@ export default class extends Controller {
     // If we never got any chunks, remove typing
     if (!state.bubble) {
       this.removeTyping()
+    } else {
+      state.bubble.classList.remove("chat-bubble--streaming")
     }
   }
 
@@ -145,7 +148,8 @@ export default class extends Controller {
         <div class="chat-bubble chat-bubble--assistant chat-bubble--streaming"></div>
       </div>`
     this.messagesTarget.insertAdjacentHTML("beforeend", html)
-    return this.messagesTarget.querySelector(".chat-bubble--streaming")
+    const bubbles = this.messagesTarget.querySelectorAll(".chat-bubble--streaming")
+    return bubbles[bubbles.length - 1]
   }
 
   updateStreamingBubble(bubble, text) {
