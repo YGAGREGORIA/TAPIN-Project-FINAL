@@ -1,4 +1,339 @@
-.navbar-brand {
-  font-family: 'Space Grotesk', sans-serif;
+// ─── Shared navbar variables ───────────────────────────────────────────────
+$nav-height: 60px;
+
+// ═══════════════════════════════════════════════════════════════════════════
+// USER-FACING NAVBAR  (.navbar-tapin)
+// ═══════════════════════════════════════════════════════════════════════════
+
+.navbar-tapin {
+  background-color: $espresso-brown;
+  min-height: $nav-height;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+
+  // Brand / logo
+  .navbar-brand {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: $accent-gold;
+    letter-spacing: -0.01em;
+
+    img {
+      border-radius: 6px;
+    }
+
+    &:hover {
+      color: lighten($accent-gold, 10%);
+    }
+  }
+
+  // Standard nav links
+  .navbar-tapin-link {
+    color: rgba(255, 255, 255, 0.85);
+    font-weight: 500;
+    padding: 0.4rem 0.75rem;
+    border-radius: 0.5rem;
+    transition: color 0.15s, background 0.15s;
+
+    &:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.1);
+    }
+  }
+
+  // Hamburger toggler
+  .navbar-toggler {
+    border-color: rgba(255, 255, 255, 0.3);
+    padding: 0.3rem 0.5rem;
+
+    .navbar-toggler-icon {
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255%2C255%2C255%2C0.85%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+    }
+
+    &:focus {
+      box-shadow: 0 0 0 2px rgba($accent-gold, 0.4);
+    }
+  }
+
+  // User avatar bubble
+  .navbar-avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: $accent-gold;
+    color: $espresso-brown;
+    font-weight: 700;
+    font-size: 0.8rem;
+    flex-shrink: 0;
+  }
+
+  // Dropdown toggle link
+  .nav-link.dropdown-toggle {
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 500;
+    border-radius: 0.5rem;
+    padding: 0.4rem 0.75rem;
+    transition: background 0.15s;
+
+    &:hover,
+    &.show {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+    }
+  }
+
+  // Dropdown menu
+  .dropdown-menu {
+    border: 1px solid rgba($espresso-brown, 0.1);
+    box-shadow: 0 8px 24px rgba($espresso-brown, 0.15);
+    border-radius: 0.75rem;
+    min-width: 220px;
+    margin-top: 0.5rem;
+
+    .dropdown-header {
+      font-size: 0.75rem;
+      color: $espresso-brown;
+      opacity: 0.6;
+      padding-bottom: 0;
+    }
+
+    .dropdown-item {
+      font-weight: 500;
+      border-radius: 0.4rem;
+      padding: 0.5rem 1rem;
+      transition: background 0.12s;
+
+      &:hover {
+        background-color: rgba($accent-gold, 0.12);
+        color: $espresso-brown;
+      }
+    }
+
+    .dropdown-item-logout {
+      color: $clay-red;
+
+      &:hover {
+        background-color: rgba($clay-red, 0.08);
+        color: darken($clay-red, 10%);
+      }
+    }
+  }
+
+  // Mobile collapse panel
+  .navbar-collapse {
+    @include media-breakpoint-down(lg) {
+      background: darken($espresso-brown, 4%);
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 0.75rem 0;
+      margin: 0 -12px -8px;
+      border-radius: 0 0 0.75rem 0.75rem;
+
+      .dropdown-menu {
+        position: static !important;
+        transform: none !important;
+        background: transparent;
+        border: none;
+        box-shadow: none;
+        padding: 0 0.5rem;
+
+        .dropdown-item {
+          color: rgba(255, 255, 255, 0.8);
+
+          &:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+          }
+
+          &.dropdown-item-logout {
+            color: lighten($clay-red, 20%);
+          }
+        }
+
+        .dropdown-divider {
+          border-color: rgba(255, 255, 255, 0.1);
+        }
+      }
+    }
+  }
+
+  // Guest collapse (mobile only)
+  .navbar-guest-collapse {
+    @include media-breakpoint-down(lg) {
+      background: darken($espresso-brown, 4%);
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 0.75rem;
+      margin: 0 -12px;
+      border-radius: 0 0 0.75rem 0.75rem;
+
+      .nav-link {
+        color: rgba(255, 255, 255, 0.85);
+        text-align: center;
+        padding: 0.5rem;
+
+        &:hover {
+          color: #fff;
+        }
+      }
+    }
+  }
+}
+
+// Gold action button
+.btn-tapin-gold {
+  background-color: $accent-gold;
+  color: $espresso-brown;
   font-weight: 600;
+  border: none;
+  border-radius: 0.5rem;
+  transition: background 0.15s, transform 0.1s;
+
+  &:hover {
+    background-color: darken($accent-gold, 8%);
+    color: $espresso-brown;
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+
+// ═══════════════════════════════════════════════════════════════════════════
+// ADMIN TOP NAVBAR  (.navbar-admin-top)
+// ═══════════════════════════════════════════════════════════════════════════
+
+.navbar-admin-top {
+  background-color: $espresso-brown;
+  min-height: 52px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  position: sticky;
+  top: 0;
+  z-index: 1030;
+
+  .navbar-admin-brand {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: $accent-gold;
+    letter-spacing: -0.01em;
+
+    img {
+      border-radius: 5px;
+    }
+
+    &:hover {
+      color: lighten($accent-gold, 10%);
+    }
+  }
+
+  .admin-badge {
+    display: inline-block;
+    font-size: 0.6rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    background: rgba($accent-gold, 0.2);
+    color: $accent-gold;
+    border: 1px solid rgba($accent-gold, 0.35);
+    border-radius: 4px;
+    padding: 1px 5px;
+    vertical-align: middle;
+    margin-left: 2px;
+  }
+
+  .btn-admin-outline {
+    color: rgba(255, 255, 255, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 0.5rem;
+    font-weight: 500;
+    font-size: 0.85rem;
+    padding: 0.3rem 0.75rem;
+    transition: all 0.15s;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.4);
+    }
+  }
+
+  .btn-admin-logout {
+    color: lighten($clay-red, 20%);
+    border: 1px solid rgba($clay-red, 0.4);
+    border-radius: 0.5rem;
+    font-weight: 500;
+    font-size: 0.85rem;
+    padding: 0.3rem 0.75rem;
+    transition: all 0.15s;
+
+    &:hover {
+      background: rgba($clay-red, 0.15);
+      color: lighten($clay-red, 30%);
+      border-color: rgba($clay-red, 0.6);
+    }
+  }
+}
+
+// ─── Admin body layout ──────────────────────────────────────────────────────
+
+.admin-layout {
+  background-color: #f0ebe4;
+}
+
+.admin-body {
+  min-height: calc(100vh - 52px);
+}
+
+.admin-sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  background-color: $espresso-brown;
+  padding: 1.25rem 0.75rem;
+
+  .admin-sidebar-section {
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: rgba(255, 255, 255, 0.35);
+    margin: 0 0.5rem 0.5rem;
+  }
+
+  .admin-nav-link {
+    color: rgba(255, 255, 255, 0.65);
+    font-weight: 500;
+    font-size: 0.875rem;
+    border-radius: 0.5rem;
+    padding: 0.45rem 0.75rem;
+    margin-bottom: 2px;
+    transition: color 0.12s, background 0.12s;
+
+    &:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    &.active {
+      color: $accent-gold;
+      background: rgba($accent-gold, 0.12);
+    }
+  }
+
+  .admin-sidebar-studio {
+    margin-top: auto;
+    padding: 0.75rem;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.35);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    margin-top: 1rem;
+  }
+}
+
+.admin-main {
+  background-color: #f0ebe4;
+  min-height: 100%;
 }

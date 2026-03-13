@@ -1,0 +1,93 @@
+<% if user_signed_in? %>
+  <%# ── Logged-in navbar ─────────────────────────────────────────────── %>
+  <nav class="navbar navbar-expand-lg navbar-tapin">
+    <div class="container">
+
+      <%# Logo — left when signed in %>
+      <%= link_to root_path, class: "navbar-brand d-flex align-items-center gap-2" do %>
+        <img src="/icon.png" alt="TapIn" height="32">
+        <span>TapIn</span>
+      <% end %>
+
+      <%# Mobile toggler %>
+      <button class="navbar-toggler" type="button"
+              data-bs-toggle="collapse" data-bs-target="#navbarMain"
+              aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarMain">
+        <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-1">
+
+          <%# User dropdown %>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle d-flex align-items-center gap-2"
+               href="#" id="userMenu" role="button"
+               data-bs-toggle="dropdown" aria-expanded="false">
+              <span class="navbar-avatar">
+                <%= current_user.email.first.upcase %>
+              </span>
+              <span class="d-none d-lg-inline"><%= current_user.email %></span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu">
+              <li>
+                <span class="dropdown-header"><%= current_user.email %></span>
+              </li>
+              <li><hr class="dropdown-divider"></li>
+              <li>
+                <%= link_to "Dashboard", dashboard_path, class: "dropdown-item" %>
+              </li>
+              <li><hr class="dropdown-divider"></li>
+              <li>
+                <%= button_to "Log Out", destroy_user_session_path,
+                              method: :delete,
+                              class: "dropdown-item dropdown-item-logout border-0 w-100 text-start bg-transparent" %>
+              </li>
+            </ul>
+          </li>
+
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+<% else %>
+  <%# ── Pre-login navbar — logo centered ────────────────────────────── %>
+  <nav class="navbar navbar-tapin navbar-centered">
+    <div class="container position-relative d-flex align-items-center justify-content-center">
+
+      <%# Hamburger — absolute left on mobile, hidden on desktop %>
+      <button class="navbar-toggler position-absolute start-0 d-lg-none" type="button"
+              data-bs-toggle="collapse" data-bs-target="#navbarGuest"
+              aria-controls="navbarGuest" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <%# Logo — centered %>
+      <%= link_to root_path, class: "navbar-brand d-flex align-items-center gap-2 mx-auto mx-lg-0" do %>
+        <img src="/icon.png" alt="TapIn" height="32">
+        <span>TapIn</span>
+      <% end %>
+
+      <%# Desktop links — right side, hidden on mobile (handled by collapse below) %>
+      <div class="d-none d-lg-flex align-items-center gap-2 ms-auto">
+        <%= link_to "Log In", new_user_session_path, class: "nav-link navbar-tapin-link" %>
+        <%= link_to "Sign Up", new_user_registration_path, class: "btn btn-sm btn-tapin-gold" %>
+      </div>
+
+      <%# Mobile collapse panel %>
+      <div class="collapse navbar-collapse navbar-guest-collapse" id="navbarGuest">
+        <ul class="navbar-nav flex-column text-center py-2 d-lg-none">
+          <li class="nav-item">
+            <%= link_to "Log In", new_user_session_path, class: "nav-link navbar-tapin-link" %>
+          </li>
+          <li class="nav-item mt-1">
+            <%= link_to "Sign Up", new_user_registration_path, class: "btn btn-sm btn-tapin-gold w-100" %>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+  </nav>
+
+<% end %>
