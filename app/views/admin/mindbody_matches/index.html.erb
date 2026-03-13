@@ -1,0 +1,97 @@
+<% content_for(:title) { "Mindbody Matches" } %>
+
+<h2 class="mb-4">
+  Mindbody Matches
+  <% if @pending_links.any? %>
+    <span class="badge bg-warning text-dark"><%= @pending_links.count %> pending</span>
+  <% end %>
+</h2>
+
+<!-- Pending Matches -->
+<div class="card mb-4">
+  <div class="card-header bg-warning bg-opacity-25">
+    <h5 class="mb-0">Pending Review</h5>
+  </div>
+  <div class="card-body">
+    <% if @pending_links.any? %>
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>TapIn User</th>
+            <th>Phone</th>
+            <th>Mindbody Client ID</th>
+            <th>Match Type</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @pending_links.each do |link| %>
+            <tr>
+              <td><%= link.user.first_name %> <%= link.user.last_name %></td>
+              <td><%= link.user.phone %></td>
+              <td><%= link.mindbody_client_id %></td>
+              <td>
+                <% if link.match_data&.dig("match_type") == "name" %>
+                  <span class="badge bg-info">Name match</span>
+                <% else %>
+                  <span class="badge bg-secondary">Phone match</span>
+                <% end %>
+              </td>
+              <td>
+                <%= button_to "Confirm", confirm_admin_mindbody_match_path(link), method: :post, class: "btn btn-sm btn-success me-1" %>
+                <%= button_to "Reject", reject_admin_mindbody_match_path(link), method: :post, class: "btn btn-sm btn-outline-danger me-1" %>
+                <% if link.match_data&.dig("conflicting_client_ids").present? %>
+                  <%= link_to "Resolve Conflict", admin_mindbody_conflict_path(link), class: "btn btn-sm btn-outline-warning" %>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% else %>
+      <p class="text-muted mb-0">No pending matches to review.</p>
+    <% end %>
+  </div>
+</div>
+
+<!-- Recent Activity -->
+<div class="card">
+  <div class="card-header">
+    <h5 class="mb-0">Recent Activity</h5>
+  </div>
+  <div class="card-body">
+    <% if @recent_links.any? %>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>User</th>
+            <th>Mindbody ID</th>
+            <th>Status</th>
+            <th>Updated</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @recent_links.each do |link| %>
+            <tr>
+              <td><%= link.user.first_name %> <%= link.user.last_name %></td>
+              <td><%= link.mindbody_client_id || "—" %></td>
+              <td>
+                <% case link.status %>
+                <% when "linked" %>
+                  <span class="badge bg-success">Linked</span>
+                <% when "standalone" %>
+                  <span class="badge bg-secondary">Standalone</span>
+                <% when "conflict" %>
+                  <span class="badge bg-danger">Conflict</span>
+                <% end %>
+              </td>
+              <td><%= time_ago_in_words(link.updated_at) %> ago</td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% else %>
+      <p class="text-muted mb-0">No matching activity yet.</p>
+    <% end %>
+  </div>
+</div>
