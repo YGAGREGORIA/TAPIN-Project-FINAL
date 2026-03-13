@@ -35,10 +35,12 @@ class StudiosController < ApplicationController
     visit = user.visits.new(
       studio: @studio,
       class_config: class_config,
-      visited_at: Time.current
+      visited_at: Time.current,
+      points_earned: class_config&.point_value || 10
     )
 
     if visit.save
+      user.recalculate_points!
       redirect_to dashboard_path,
         notice: "Welcome, #{user.first_name}! Your visit was counted."
     else

@@ -1,0 +1,51 @@
+<% content_for :title, "Deals — #{@studio.name}" %>
+
+<div class="schedule-page">
+
+  <%# ── Header ── %>
+  <div class="schedule-header">
+    <p class="schedule-studio-name"><%= @studio.name %></p>
+    <h1 class="schedule-title">Deals</h1>
+    <p class="schedule-subtitle">Claim exclusive offers from your studio</p>
+  </div>
+
+  <section class="dashboard-section">
+    <p class="section-title">Available Deals</p>
+
+    <% if @deals.any? %>
+      <% @deals.each do |deal| %>
+        <div class="deal-card">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <div class="deal-card-name"><%= deal.name %></div>
+              <div class="deal-card-meta"><%= deal.studio.name %></div>
+            </div>
+            <% if deal.discount_percent.present? %>
+              <div class="deal-big-discount"><%= deal.discount_percent %>%<br><span>off</span></div>
+            <% end %>
+          </div>
+
+          <% claimed = current_user.deal_claims.exists?(deal: deal) %>
+          <% if claimed %>
+            <div class="already-booked-badge" style="margin-top: 0.75rem;">
+              <i class="fa fa-check-circle"></i> Already claimed
+            </div>
+          <% else %>
+            <%= button_to "Claim Deal",
+                  claim_deal_path(studio_slug: @studio.slug, id: deal.id),
+                  method: :post,
+                  class: "btn-claim mt-2" %>
+          <% end %>
+        </div>
+      <% end %>
+    <% else %>
+      <div class="dashboard-card">
+        <div class="empty-state">
+          <i class="fa fa-tag"></i>
+          <p>No active deals right now</p>
+        </div>
+      </div>
+    <% end %>
+  </section>
+
+</div>

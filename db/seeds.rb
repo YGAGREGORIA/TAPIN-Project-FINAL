@@ -17,9 +17,9 @@ Reward.destroy_all
 DealClaim.destroy_all
 Deal.destroy_all
 Visit.destroy_all
-ClassConfig.destroy_all
 Booking.destroy_all
 StudioClass.destroy_all
+ClassConfig.destroy_all
 StudioBrand.destroy_all
 Studio.destroy_all
 User.destroy_all
@@ -441,6 +441,62 @@ Message.create!(
   sentiment: "neutral",
   content: "You have 9 visits — just 1 more to unlock your free class!",
   summary: "Assistant shared reward progress"
+)
+
+puts "Updating user point totals..."
+[ alice, bob, carol ].each(&:recalculate_points!)
+
+puts "Creating notification templates..."
+NotificationTemplate::VALID_EVENT_TYPES.each do |event_type|
+  title, body = case event_type
+  when "reward_unlocked"
+    [ "Reward Unlocked!", "Congrats {{first_name}}! You've earned a free class at {{studio_name}}." ]
+  when "deal_available"
+    [ "New Deal Available", "Hey {{first_name}}, a new deal is waiting for you at {{studio_name}}!" ]
+  when "booking_reminder"
+    [ "Class Reminder", "Don't forget — {{class_name}} starts in 1 hour at {{studio_name}}." ]
+  when "inactive_user"
+    [ "We Miss You!", "Hey {{first_name}}, it's been a while. Come back to {{studio_name}} and keep your streak going!" ]
+  when "deal_expiry"
+    [ "Deal Expiring Soon", "Your deal at {{studio_name}} expires tomorrow — don't miss out!" ]
+  end
+
+  NotificationTemplate.create!(
+    studio: studio,
+    event_type: event_type,
+    title_template: title,
+    body_template: body,
+    enabled: true
+  )
+end
+
+puts "Creating broadcasts..."
+Broadcast.create!(
+  studio: studio,
+  subject: "Welcome to TAPIN Fitness!",
+  body: "Thanks for joining our community. Check in at reception to start earning rewards!",
+  channel: "push",
+  audience_filter: "all",
+  scheduled_at: 1.day.ago,
+  sent_at: 1.day.ago,
+  total_sent: 3,
+  total_delivered: 3,
+  total_failed: 0
+)
+
+puts "Creating referrals..."
+# Alice has an active referral code she can share
+Referral.create!(
+  referrer: alice,
+  status: "pending"
+)
+
+# Carol referred Bob (completed)
+Referral.create!(
+  referrer: carol,
+  referred: bob,
+  status: "completed",
+  completed_at: 8.weeks.ago
 )
 
 puts "Creating mock Mindbody clients..."
