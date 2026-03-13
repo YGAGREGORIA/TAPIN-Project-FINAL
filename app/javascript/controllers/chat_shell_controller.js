@@ -81,43 +81,34 @@ export default class extends Controller {
     const reader = response.body.getReader()
     const decoder = new TextDecoder()
     let buffer = ""
-    let assistantBubble = null
-    let fullText = ""
+    const state = { bubble: null, fullText: "" }
 
-    while (true) {
-      const { done, value } = await reader.read()
-      if (done) break
-
-      buffer += decoder.decode(value, { stream: true })
-      const lines = buffer.split("\n")
-      buffer = lines.pop() // keep incomplete line in buffer
-
+    const processLines = (lines) => {
       for (const line of lines) {
         if (!line.startsWith("data: ")) continue
-
         try {
           const data = JSON.parse(line.slice(6))
 
           if (data.type === "title" && this.hasChatTitleTarget) {
             this.chatTitleTarget.textContent = data.title
           } else if (data.type === "chunk") {
-            if (!assistantBubble) {
+            if (!state.bubble) {
               this.removeTyping()
-              assistantBubble = this.createStreamingBubble()
+              state.bubble = this.createStreamingBubble()
             }
-            fullText += data.content
-            this.updateStreamingBubble(assistantBubble, fullText)
+            state.fullText += data.content
+            this.updateStreamingBubble(state.bubble, state.fullText)
             this.scrollToBottom()
           } else if (data.type === "done") {
-            if (assistantBubble) {
-              this.updateStreamingBubble(assistantBubble, fullText)
+            if (state.bubble) {
+              this.updateStreamingBubble(state.bubble, state.fullText)
             }
           } else if (data.type === "error") {
             this.removeTyping()
-            if (!assistantBubble) {
+            if (!state.bubble) {
               this.appendAssistantMessage(data.content)
             } else {
-              this.updateStreamingBubble(assistantBubble, data.content)
+              this.updateStreamingBubble(state.bubble, data.content)
             }
           }
         } catch (e) {
@@ -126,8 +117,23 @@ export default class extends Controller {
       }
     }
 
+    while (true) {
+      const { done, value } = await reader.read()
+      if (done) {
+        // Flush remaining buffer
+        buffer += decoder.decode()
+        if (buffer.trim()) processLines(buffer.split("\n"))
+        break
+      }
+
+      buffer += decoder.decode(value, { stream: true })
+      const lines = buffer.split("\n")
+      buffer = lines.pop() // keep incomplete line in buffer
+      processLines(lines)
+    }
+
     // If we never got any chunks, remove typing
-    if (!assistantBubble) {
+    if (!state.bubble) {
       this.removeTyping()
     }
   }
