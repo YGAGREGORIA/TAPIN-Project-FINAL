@@ -402,6 +402,12 @@ chat2 = Chat.create!(
   status: true
 )
 
+chat3 = Chat.create!(
+  user: carol,
+  studio: studio,
+  status: true
+)
+
 puts "Creating messages..."
 
 Message.create!(
@@ -440,23 +446,32 @@ Message.create!(
   summary: "Assistant shared reward progress"
 )
 
+Message.create!(
+  chat: chat3,
+  role: "user",
+  tag: "inquiry",
+  sentiment: "positive",
+  content: "I just hit 23 visits! Can I use my free class reward this week?",
+  summary: "User asking about redeeming free class reward"
+)
+
+Message.create!(
+  chat: chat3,
+  role: "assistant",
+  tag: "response",
+  sentiment: "positive",
+  content: "Congrats on 23 visits! Yes, your free class reward is ready to redeem — just tap 'Redeem Now' on your dashboard. You also have a Pilates Core class booked tomorrow and a HIIT Blast coming up in 5 days!",
+  summary: "Assistant confirmed reward is redeemable and recapped upcoming bookings"
+)
+
 puts "Done! Seed data created successfully."
 puts ""
 puts "Login credentials:"
 puts "  Password for all seeded users: Password123"
 puts "  Sign in at: http://localhost:3000/users/sign_in"
-<<<<<<< HEAD
-puts ""
-puts "Test scenarios:"
-
-puts "  alice@example.com  — 10 visits, reward available, Mindbody LINKED (MB-1001)"
-puts "  bob@example.com    — 9 visits, 1 visit remaining, Mindbody PENDING review (name match MB-1002)"
-puts "  carol@example.com  — 23 visits, 1 available reward, Mindbody CONFLICT (MB-1004 vs MB-1005)"
-=======
->>>>>>> 051493cd5cd428e8f1baf2d6a471f086c213e5e4
 puts ""
 puts "Test scenarios:"
 puts "  alice@example.com  — 10 visits, reward available (+ 1 expired redemption)"
 puts "  bob@example.com    — 9 visits, 1 visit remaining"
-puts "  carol@example.com  — 20 visits, 1 available reward, 2 upcoming bookings, 2 deal claims, active reward redemption"
+puts "  carol@example.com  — 23 visits, 1 available reward, 2 upcoming bookings, 2 deal claims, active reward redemption, chat with messages"
 puts "  owner@tapinstudio.com — studio owner account"
