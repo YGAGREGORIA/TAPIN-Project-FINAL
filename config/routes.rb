@@ -70,6 +70,10 @@ Rails.application.routes.draw do
     resource :assistant, only: [:show], controller: "assistant" do
       post :respond
     end
+    resource :analytics, only: [:show], controller: "analytics" do
+      get :points
+      get :loyalty
+    end
   end
 
   # AI Assistant — Rajesh

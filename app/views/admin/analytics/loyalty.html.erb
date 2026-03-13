@@ -1,0 +1,99 @@
+<% content_for(:title) { "Analytics — Loyalty Performance" } %>
+
+<h1>Loyalty Performance</h1>
+
+<%= render "date_range" %>
+
+<%# ── Rewards Summary ── %>
+<div class="row g-3 mb-4">
+  <div class="col-md-3">
+    <div class="card text-center p-3">
+      <h3><%= @rewards_created %></h3>
+      <p class="text-muted mb-0">Reward Tiers</p>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card text-center p-3">
+      <h3><%= @total_redemptions %></h3>
+      <p class="text-muted mb-0">Redemptions</p>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card text-center p-3">
+      <h3><%= @total_deal_claims %></h3>
+      <p class="text-muted mb-0">Deal Claims</p>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card text-center p-3">
+      <h3><%= @deal_conversion_rate %>%</h3>
+      <p class="text-muted mb-0">Deal Conversion</p>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3 mb-4">
+  <%# ── Reward Breakdown ── %>
+  <div class="col-md-6">
+    <div class="card p-3">
+      <h5>Reward Redemptions</h5>
+      <% if @reward_breakdown.any? %>
+        <table class="table table-sm">
+          <thead><tr><th>Reward</th><th class="text-end">Redeemed</th></tr></thead>
+          <tbody>
+            <% @reward_breakdown.sort_by { |_, v| -v }.each do |name, count| %>
+              <tr>
+                <td><%= name %></td>
+                <td class="text-end"><%= count %></td>
+              </tr>
+            <% end %>
+          </tbody>
+          <tfoot>
+            <tr class="fw-bold">
+              <td>Total</td>
+              <td class="text-end"><%= @total_redemptions %></td>
+            </tr>
+            <tr>
+              <td>Used</td>
+              <td class="text-end"><%= @rewards_used %> (<%= @reward_conversion_rate %>%)</td>
+            </tr>
+          </tfoot>
+        </table>
+      <% else %>
+        <p class="text-muted">No redemptions in this period.</p>
+      <% end %>
+    </div>
+  </div>
+
+  <%# ── Deal Breakdown ── %>
+  <div class="col-md-6">
+    <div class="card p-3">
+      <h5>Deal Claims</h5>
+      <% if @deal_breakdown.any? %>
+        <table class="table table-sm">
+          <thead><tr><th>Deal</th><th class="text-end">Claimed</th></tr></thead>
+          <tbody>
+            <% @deal_breakdown.sort_by { |_, v| -v }.each do |name, count| %>
+              <tr>
+                <td><%= name %></td>
+                <td class="text-end"><%= count %></td>
+              </tr>
+            <% end %>
+          </tbody>
+          <tfoot>
+            <tr class="fw-bold">
+              <td>Total</td>
+              <td class="text-end"><%= @total_deal_claims %></td>
+            </tr>
+            <tr>
+              <td>Used</td>
+              <td class="text-end"><%= @deals_used %> (<%= @deal_conversion_rate %>%)</td>
+            </tr>
+          </tfoot>
+        </table>
+      <% else %>
+        <p class="text-muted">No deal claims in this period.</p>
+      <% end %>
+    </div>
+  </div>
+</div>
