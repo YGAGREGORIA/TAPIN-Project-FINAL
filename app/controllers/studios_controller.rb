@@ -20,9 +20,13 @@ class StudiosController < ApplicationController
     user = User.find_by(phone: phone.to_i)
 
     unless user
-      redirect_to studio_landing_path(studio_slug: @studio.slug),
-        alert: "No account found with that phone number. Please sign up first."
-      return
+      user = User.create!(
+        phone: phone.to_i,
+        email: "#{phone}@tapin.local",
+        password: SecureRandom.hex(16),
+        first_name: "New",
+        last_name: "Member"
+      )
     end
 
     sign_in(user)
@@ -36,7 +40,7 @@ class StudiosController < ApplicationController
 
     if visit.save
       redirect_to rewards_path(studio_slug: @studio.slug),
-        notice: "Welcome back, #{user.first_name}! Your visit was counted."
+        notice: "Welcome, #{user.first_name}! Your visit was counted."
     else
       redirect_to rewards_path(studio_slug: @studio.slug),
         alert: visit.errors.full_messages.to_sentence
