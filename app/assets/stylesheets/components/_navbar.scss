@@ -1,6 +1,23 @@
 // ─── Shared navbar variables ───────────────────────────────────────────────
 $nav-height: 60px;
 
+// ─── TapIn logo ─────────────────────────────────────────────────────────────
+
+.tapin-logo {
+  display: inline-flex;
+  align-items: baseline;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 24px;
+  letter-spacing: -1px;
+  color: #F6F1EB;
+  text-decoration: none;
+
+  span {
+    color: #D4A017;
+  }
+}
+
 // ═══════════════════════════════════════════════════════════════════════════
 // USER-FACING NAVBAR  (.navbar-tapin)
 // ═══════════════════════════════════════════════════════════════════════════
@@ -8,36 +25,35 @@ $nav-height: 60px;
 .navbar-tapin {
   background-color: $espresso-brown;
   min-height: $nav-height;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  padding: 14px 28px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 
   // Brand / logo
   .navbar-brand {
-    font-family: 'Space Grotesk', sans-serif;
-    font-weight: 700;
-    font-size: 1.2rem;
-    color: $accent-gold;
-    letter-spacing: -0.01em;
+    text-decoration: none;
 
-    img {
-      border-radius: 6px;
-    }
-
-    &:hover {
-      color: lighten($accent-gold, 10%);
+    &:hover .tapin-logo {
+      color: #fff;
     }
   }
 
   // Standard nav links
   .navbar-tapin-link {
-    color: rgba(255, 255, 255, 0.85);
+    color: #E9E1D8;
     font-weight: 500;
+    margin-right: 22px;
     padding: 0.4rem 0.75rem;
     border-radius: 0.5rem;
-    transition: color 0.15s, background 0.15s;
+    transition: all 0.2s ease;
 
     &:hover {
-      color: #fff;
-      background: rgba(255, 255, 255, 0.1);
+      color: $accent-gold;
+      background: transparent;
+    }
+
+    &.active {
+      color: $accent-gold;
+      font-weight: 600;
     }
   }
 
@@ -60,13 +76,13 @@ $nav-height: 60px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 30px;
-    height: 30px;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
     background: $accent-gold;
     color: $espresso-brown;
-    font-weight: 700;
-    font-size: 0.8rem;
+    font-weight: 600;
+    font-size: 13px;
     flex-shrink: 0;
   }
 
@@ -87,11 +103,13 @@ $nav-height: 60px;
 
   // Dropdown menu
   .dropdown-menu {
-    border: 1px solid rgba($espresso-brown, 0.1);
-    box-shadow: 0 8px 24px rgba($espresso-brown, 0.15);
-    border-radius: 0.75rem;
+    background: #ffffff;
+    border: none;
+    border-radius: 10px;
     min-width: 220px;
-    margin-top: 0.5rem;
+    padding: 8px;
+    margin-top: 10px;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.15);
 
     .dropdown-header {
       font-size: 0.75rem;
@@ -113,11 +131,17 @@ $nav-height: 60px;
     }
 
     .dropdown-item-logout {
-      color: $clay-red;
+      background: $accent-gold;
+      border: 1px solid $accent-gold;
+      color: $espresso-brown;
+      padding: 6px 16px;
+      border-radius: 6px;
+      font-weight: 500;
+      transition: all 0.2s ease;
 
       &:hover {
-        background-color: rgba($clay-red, 0.08);
-        color: darken($clay-red, 10%);
+        background: $accent-gold;
+        color: #ffffff;
       }
     }
   }
@@ -181,17 +205,163 @@ $nav-height: 60px;
   }
 }
 
+// ─── Hamburger button ───────────────────────────────────────────────────────
+
+.tapin-hamburger {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  background: transparent;
+  border: none;
+  padding: 6px;
+  cursor: pointer;
+
+  span {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: #F6F1EB;
+    border-radius: 2px;
+    transition: all 0.2s ease;
+  }
+
+  &:hover span {
+    background: $accent-gold;
+  }
+}
+
+// ─── Sidebar (offcanvas) ────────────────────────────────────────────────────
+
+.tapin-sidebar {
+  width: 280px;
+  background: $espresso-brown;
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+
+  .tapin-sidebar-header {
+    padding: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    align-items: center;
+  }
+
+  .tapin-sidebar-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: $accent-gold;
+    color: $espresso-brown;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .tapin-sidebar-name {
+    font-weight: 600;
+    font-size: 14px;
+    color: #F6F1EB;
+  }
+
+  .tapin-sidebar-email {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.45);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 180px;
+  }
+
+  .tapin-sidebar-close {
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 16px;
+    line-height: 1;
+    padding: 4px;
+    cursor: pointer;
+    margin-left: auto;
+
+    &:hover {
+      color: #fff;
+    }
+  }
+
+  .tapin-sidebar-body {
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+  }
+
+  .tapin-sidebar-nav {
+    flex: 1;
+  }
+
+  .tapin-sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: 500;
+    font-size: 15px;
+    padding: 12px 14px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.15s ease;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.07);
+      color: $accent-gold;
+    }
+
+    &.active {
+      background: rgba($accent-gold, 0.12);
+      color: $accent-gold;
+    }
+  }
+
+  .tapin-sidebar-footer {
+    padding-top: 16px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    margin-top: auto;
+
+    form {
+      width: 100%;
+    }
+  }
+
+  .tapin-sidebar-logout {
+    width: 100%;
+    background: $accent-gold;
+    border: none;
+    color: $espresso-brown;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 10px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.15s ease;
+
+    &:hover {
+      background: #d2a63c;
+    }
+  }
+}
+
 // Gold action button
 .btn-tapin-gold {
   background-color: $accent-gold;
   color: $espresso-brown;
+  padding: 8px 18px;
   font-weight: 600;
   border: none;
-  border-radius: 0.5rem;
+  border-radius: 8px;
+  text-decoration: none;
   transition: background 0.15s, transform 0.1s;
 
   &:hover {
-    background-color: darken($accent-gold, 8%);
+    background-color: #d2a63c;
     color: $espresso-brown;
     transform: translateY(-1px);
   }

@@ -1,55 +1,63 @@
 <% if user_signed_in? %>
   <%# ── Logged-in navbar ─────────────────────────────────────────────── %>
-  <nav class="navbar navbar-expand-lg navbar-tapin">
+  <nav class="navbar navbar-tapin">
     <div class="container">
 
-      <%# Logo — left when signed in %>
-      <%= link_to root_path, class: "navbar-brand d-flex align-items-center gap-2" do %>
-        <img src="/icon.png" alt="TapIn" height="32">
-        <span>TapIn</span>
+      <%# Logo — left %>
+      <%= link_to root_path, class: "navbar-brand" do %>
+        <span class="tapin-logo">TapIn<span>.</span></span>
       <% end %>
 
-      <%# Mobile toggler %>
-      <button class="navbar-toggler" type="button"
-              data-bs-toggle="collapse" data-bs-target="#navbarMain"
-              aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
+      <%# Hamburger — always visible, opens sidebar %>
+      <button class="tapin-hamburger ms-auto" type="button"
+              data-bs-toggle="offcanvas" data-bs-target="#tapinSidebar"
+              aria-controls="tapinSidebar" aria-label="Open menu">
+        <span></span>
+        <span></span>
+        <span></span>
       </button>
 
-      <div class="collapse navbar-collapse" id="navbarMain">
-        <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-1">
-
-          <%# User dropdown %>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle d-flex align-items-center gap-2"
-               href="#" id="userMenu" role="button"
-               data-bs-toggle="dropdown" aria-expanded="false">
-              <span class="navbar-avatar">
-                <%= current_user.email.first.upcase %>
-              </span>
-              <span class="d-none d-lg-inline"><%= current_user.email %></span>
-            </a>
-            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu">
-              <li>
-                <span class="dropdown-header"><%= current_user.email %></span>
-              </li>
-              <li><hr class="dropdown-divider"></li>
-              <li>
-                <%= link_to "Dashboard", dashboard_path, class: "dropdown-item" %>
-              </li>
-              <li><hr class="dropdown-divider"></li>
-              <li>
-                <%= button_to "Log Out", destroy_user_session_path,
-                              method: :delete,
-                              class: "dropdown-item dropdown-item-logout border-0 w-100 text-start bg-transparent" %>
-              </li>
-            </ul>
-          </li>
-
-        </ul>
-      </div>
     </div>
   </nav>
+
+  <%# ── Sidebar (offcanvas) ──────────────────────────────────────────── %>
+  <div class="offcanvas offcanvas-end tapin-sidebar" tabindex="-1"
+       id="tapinSidebar" aria-labelledby="tapinSidebarLabel">
+
+    <div class="offcanvas-header tapin-sidebar-header">
+      <div class="d-flex align-items-center gap-3">
+        <div class="tapin-sidebar-avatar">
+          <%= current_user.email.first.upcase %>
+        </div>
+        <div>
+          <div class="tapin-sidebar-name">My Account</div>
+          <div class="tapin-sidebar-email"><%= current_user.email %></div>
+        </div>
+      </div>
+      <button type="button" class="tapin-sidebar-close" data-bs-dismiss="offcanvas" aria-label="Close">
+        &#x2715;
+      </button>
+    </div>
+
+    <div class="offcanvas-body tapin-sidebar-body">
+      <nav class="tapin-sidebar-nav">
+        <%= link_to dashboard_path, class: "tapin-sidebar-link" do %>
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M8 4a.5.5 0 0 1 .5.5V6a.5.5 0 0 1-1 0V4.5A.5.5 0 0 1 8 4zM3.732 5.732a.5.5 0 0 1 .707 0l.915.914a.5.5 0 1 1-.708.708l-.914-.915a.5.5 0 0 1 0-.707zM2 10a.5.5 0 0 1 .5-.5h1.586a.5.5 0 0 1 0 1H2.5A.5.5 0 0 1 2 10zm9.5 0a.5.5 0 0 1 .5-.5h1.5a.5.5 0 0 1 0 1H12a.5.5 0 0 1-.5-.5zm.754-4.246a.389.389 0 0 0-.527-.02L7.547 9.31a.91.91 0 1 0 1.302 1.258l3.434-4.297a.389.389 0 0 0-.029-.518z"/>
+            <path fill-rule="evenodd" d="M0 10a8 8 0 1 1 15.547 2.661c-.442 1.253-1.845 1.602-2.932 1.25C11.309 13.488 9.475 13 8 13c-1.474 0-3.31.488-4.615.911-1.087.352-2.49.003-2.932-1.25A7.988 7.988 0 0 1 0 10zm8-7a7 7 0 0 0-6.603 9.329c.203.575.923.876 1.68.63C4.397 12.533 6.358 12 8 12s3.604.532 4.923.96c.757.245 1.477-.056 1.68-.631A7 7 0 0 0 8 3z"/>
+          </svg>
+          Dashboard
+        <% end %>
+      </nav>
+
+      <div class="tapin-sidebar-footer">
+        <%= button_to "Log Out", destroy_user_session_path,
+                      method: :delete,
+                      class: "tapin-sidebar-logout" %>
+      </div>
+    </div>
+
+  </div>
 
 <% else %>
   <%# ── Pre-login navbar — logo centered ────────────────────────────── %>
@@ -64,9 +72,8 @@
       </button>
 
       <%# Logo — centered %>
-      <%= link_to root_path, class: "navbar-brand d-flex align-items-center gap-2 mx-auto mx-lg-0" do %>
-        <img src="/icon.png" alt="TapIn" height="32">
-        <span>TapIn</span>
+      <%= link_to root_path, class: "navbar-brand mx-auto mx-lg-0" do %>
+        <span class="tapin-logo">TapIn<span>.</span></span>
       <% end %>
 
       <%# Desktop links — right side, hidden on mobile (handled by collapse below) %>
