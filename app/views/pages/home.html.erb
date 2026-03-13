@@ -7,7 +7,10 @@
 
     <div class="home-actions">
       <% if user_signed_in? %>
-        <%= link_to "Go to Dashboard", dashboard_path, class: "btn-primary" %>
+        <% first_studio = Studio.joins(:visits).where(visits: { user: current_user }).first %>
+        <% if first_studio %>
+          <%= link_to "Go to Dashboard", dashboard_path(studio_slug: first_studio.slug), class: "btn-primary" %>
+        <% end %>
       <% else %>
         <%= link_to "Sign In", new_user_session_path, class: "btn-primary" %>
         <%= link_to "Sign Up", new_user_registration_path, class: "btn-secondary" %>

@@ -22,9 +22,9 @@ Rails.application.routes.draw do
     resources :bookings, only: [ :index, :show, :destroy ]
 
     resources :mindbody_links, only: [ :new ]
-  end
 
-  resource :dashboard, only: [:show]
+    resource :dashboard, only: [:show]
+  end
 
   resources :visits, only: [:create]
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
