@@ -3,6 +3,9 @@
 # The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
 
 puts "Cleaning database..."
+MindbodyClient.destroy_all
+MindbodyLink.destroy_all
+Referral.destroy_all
 Message.destroy_all
 Chat.destroy_all
 RewardRedemption.destroy_all
@@ -64,7 +67,8 @@ owner = User.create!(
   last_name: "Lopez",
   phone: 610001111,
   referred_by: nil,
-  last_visit_at: nil
+  last_visit_at: nil,
+  role: :admin
 )
 
 puts "Creating studios..."
@@ -438,6 +442,57 @@ Message.create!(
   sentiment: "neutral",
   content: "You have 9 visits — just 1 more to unlock your free class!",
   summary: "Assistant shared reward progress"
+)
+
+puts "Creating mock Mindbody clients..."
+
+# Scenario 1: Exact phone match with Alice — auto-links on visit 1
+MindbodyClient.create!(
+  studio: studio,
+  mindbody_client_id: "MB-1001",
+  first_name: "Alice",
+  last_name: "Martin",
+  phone: "611234567",
+  email: "alice.martin@gmail.com"
+)
+
+# Scenario 2: No phone match for Bob, but name matches — triggers at visit 10
+MindbodyClient.create!(
+  studio: studio,
+  mindbody_client_id: "MB-1002",
+  first_name: "Bob",
+  last_name: "Chen",
+  phone: "699999999",
+  email: "bob.chen@gmail.com"
+)
+
+# Scenario 3: Client exists in Mindbody but has no TapIn account yet
+MindbodyClient.create!(
+  studio: studio,
+  mindbody_client_id: "MB-1003",
+  first_name: "Diana",
+  last_name: "Rivera",
+  phone: "615551234",
+  email: "diana.r@gmail.com"
+)
+
+# Scenario 4: Duplicate phone — two Mindbody clients with same number (conflict)
+MindbodyClient.create!(
+  studio: studio,
+  mindbody_client_id: "MB-1004",
+  first_name: "Carol",
+  last_name: "Park",
+  phone: "612345678",
+  email: "carol.park@gmail.com"
+)
+
+MindbodyClient.create!(
+  studio: studio,
+  mindbody_client_id: "MB-1005",
+  first_name: "Caroline",
+  last_name: "Parker",
+  phone: "612345678",
+  email: "caroline.p@gmail.com"
 )
 
 puts "Done! Seed data created successfully."

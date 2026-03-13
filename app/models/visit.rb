@@ -1,4 +1,8 @@
 class Visit < ApplicationRecord
+  include ReferralCompletable
+  include MindbodyMatchable
+  include NotifiableVisit
+
   belongs_to :user
   belongs_to :studio
   belongs_to :class_config

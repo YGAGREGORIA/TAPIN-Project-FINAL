@@ -10,7 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema[8.1].define(version: 2026_03_13_103000) do
+=======
+ActiveRecord::Schema[8.1].define(version: 2026_03_12_115821) do
+>>>>>>> edadfae12e779043a86bfafd0ffdad17e549b892
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -30,10 +34,27 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_13_103000) do
     t.index ["user_id"], name: "index_bookings_on_user_id"
   end
 
+  create_table "broadcasts", force: :cascade do |t|
+    t.string "audience_filter"
+    t.text "body"
+    t.string "channel"
+    t.datetime "created_at", null: false
+    t.datetime "scheduled_at"
+    t.datetime "sent_at"
+    t.bigint "studio_id", null: false
+    t.string "subject"
+    t.integer "total_delivered"
+    t.integer "total_failed"
+    t.integer "total_sent"
+    t.datetime "updated_at", null: false
+    t.index ["studio_id"], name: "index_broadcasts_on_studio_id"
+  end
+
   create_table "chats", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.boolean "status"
     t.bigint "studio_id", null: false
+    t.string "title"
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
     t.index ["studio_id"], name: "index_chats_on_studio_id"
@@ -91,6 +112,20 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_13_103000) do
     t.index ["chat_id"], name: "index_messages_on_chat_id"
   end
 
+  create_table "mindbody_clients", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "email"
+    t.string "first_name"
+    t.string "last_name"
+    t.string "mindbody_client_id"
+    t.string "phone"
+    t.bigint "studio_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["studio_id", "mindbody_client_id"], name: "index_mindbody_clients_on_studio_id_and_mindbody_client_id", unique: true
+    t.index ["studio_id", "phone"], name: "index_mindbody_clients_on_studio_id_and_phone"
+    t.index ["studio_id"], name: "index_mindbody_clients_on_studio_id"
+  end
+
   create_table "mindbody_links", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "linked_at"
@@ -100,6 +135,42 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_13_103000) do
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
     t.index ["user_id"], name: "index_mindbody_links_on_user_id"
+  end
+
+  create_table "notification_templates", force: :cascade do |t|
+    t.string "body_template"
+    t.datetime "created_at", null: false
+    t.boolean "enabled"
+    t.string "event_type"
+    t.bigint "studio_id", null: false
+    t.string "title_template"
+    t.datetime "updated_at", null: false
+    t.index ["studio_id"], name: "index_notification_templates_on_studio_id"
+  end
+
+  create_table "notifications", force: :cascade do |t|
+    t.string "body"
+    t.datetime "created_at", null: false
+    t.string "notification_type"
+    t.string "path"
+    t.datetime "read_at"
+    t.datetime "sent_at"
+    t.bigint "studio_id", null: false
+    t.string "title"
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["studio_id"], name: "index_notifications_on_studio_id"
+    t.index ["user_id"], name: "index_notifications_on_user_id"
+  end
+
+  create_table "push_subscriptions", force: :cascade do |t|
+    t.string "auth_key"
+    t.datetime "created_at", null: false
+    t.string "endpoint"
+    t.string "p256dh_key"
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["user_id"], name: "index_push_subscriptions_on_user_id"
   end
 
   create_table "referrals", force: :cascade do |t|
@@ -210,7 +281,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_13_103000) do
     t.datetime "remember_created_at"
     t.datetime "reset_password_sent_at"
     t.string "reset_password_token"
+<<<<<<< HEAD
     t.string "studio"
+=======
+    t.integer "role", default: 0, null: false
+>>>>>>> edadfae12e779043a86bfafd0ffdad17e549b892
     t.integer "total_points"
     t.integer "total_visits"
     t.string "uid"
@@ -240,6 +315,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_13_103000) do
   add_foreign_key "bookings", "studio_classes"
   add_foreign_key "bookings", "studios"
   add_foreign_key "bookings", "users"
+  add_foreign_key "broadcasts", "studios"
   add_foreign_key "chats", "studios"
   add_foreign_key "chats", "users"
   add_foreign_key "class_configs", "studios"
@@ -248,7 +324,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_13_103000) do
   add_foreign_key "deal_claims", "users"
   add_foreign_key "deals", "studios"
   add_foreign_key "messages", "chats"
+  add_foreign_key "mindbody_clients", "studios"
   add_foreign_key "mindbody_links", "users"
+  add_foreign_key "notification_templates", "studios"
+  add_foreign_key "notifications", "studios"
+  add_foreign_key "notifications", "users"
+  add_foreign_key "push_subscriptions", "users"
   add_foreign_key "referrals", "users", column: "referred_id"
   add_foreign_key "referrals", "users", column: "referrer_id"
   add_foreign_key "reward_redemptions", "rewards"
