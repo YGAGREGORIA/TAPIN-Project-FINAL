@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>TapIn Admin — <%= content_for(:title) || "Dashboard" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body>
+    <div class="d-flex">
+      <!-- Sidebar -->
+      <nav class="bg-dark text-white p-3" style="width: 240px; min-height: 100vh;">
+        <h5 class="mb-4">TapIn Admin</h5>
+        <ul class="nav flex-column">
+          <li class="nav-item">
+            <%= link_to "Home", "#", class: "nav-link text-white" %>
+          </li>
+          <li class="nav-item">
+            <%= link_to "Members", "#", class: "nav-link text-white-50" %>
+          </li>
+          <li class="nav-item">
+            <%= link_to "Loyalty", "#", class: "nav-link text-white-50" %>
+          </li>
+          <li class="nav-item">
+            <%= link_to "Mindbody", "#", class: "nav-link text-white-50" %>
+          </li>
+          <li class="nav-item">
+            <%= link_to "Branding", "#", class: "nav-link text-white-50" %>
+          </li>
+          <li class="nav-item">
+            <%= link_to "Messages", "#", class: "nav-link text-white-50" %>
+          </li>
+          <li class="nav-item">
+            <%= link_to "Settings", "#", class: "nav-link text-white-50" %>
+          </li>
+          <li class="nav-item">
+            <%= link_to "AI Assistant", "#", class: "nav-link text-white-50" %>
+          </li>
+        </ul>
+        <hr class="text-white-50">
+        <small class="text-white-50"><%= current_studio&.name %></small>
+      </nav>
+
+      <!-- Main content -->
+      <main class="flex-grow-1 p-4">
+        <% if notice.present? %>
+          <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <%= notice %>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+        <% end %>
+        <% if alert.present? %>
+          <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <%= alert %>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+        <% end %>
+
+        <%= yield %>
+      </main>
+    </div>
+  </body>
+</html>

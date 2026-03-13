@@ -59,7 +59,8 @@ owner = User.create!(
   last_name: "Lopez",
   phone: 610001111,
   referred_by: nil,
-  last_visit_at: nil
+  last_visit_at: nil,
+  role: :admin
 )
 
 puts "Creating studios..."
