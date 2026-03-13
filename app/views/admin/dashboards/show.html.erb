@@ -1,0 +1,22 @@
+<h1>Admin Dashboard</h1>
+
+<div class="row g-3 mb-4">
+  <div class="col-md-4">
+    <div class="card text-center p-3">
+      <h3><%= @total_members %></h3>
+      <p>Members</p>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card text-center p-3">
+      <h3><%= @total_visits || 0 %></h3>
+      <p>Total Visits</p>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card text-center p-3">
+      <h3><%= @total_deals || 0 %></h3>
+      <p>Active Deals</p>
+    </div>
+  </div>
+</div>

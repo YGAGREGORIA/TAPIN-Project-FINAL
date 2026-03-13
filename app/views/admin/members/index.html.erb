@@ -1,0 +1,28 @@
+<h1>Members</h1>
+
+<p><%= link_to "Export CSV", export_admin_members_path(format: :csv), class: "btn btn-outline-secondary btn-sm" %></p>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Phone</th>
+      <th>Visits</th>
+      <th>Points</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @members.each do |member| %>
+      <tr>
+        <td><%= member.first_name %> <%= member.last_name %></td>
+        <td><%= member.email %></td>
+        <td><%= member.phone %></td>
+        <td><%= member.total_visits || 0 %></td>
+        <td><%= member.available_points || 0 %></td>
+        <td><%= link_to "View", admin_member_path(member) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
