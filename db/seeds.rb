@@ -154,10 +154,10 @@ pilates_desc = "Core-focused movements to improve posture, stability, and total-
   { day: 6, hour: 10, type: "pilates", teacher: teachers[:pilates][0],  config: pilates, name: "Pilates Core" }
 ].each do |c|
   desc = case c[:type]
-         when "yoga"    then yoga_desc
-         when "hiit"    then hiit_desc
-         when "pilates" then pilates_desc
-         end
+  when "yoga"    then yoga_desc
+  when "hiit"    then hiit_desc
+  when "pilates" then pilates_desc
+  end
   capacity = c[:type] == "hiit" ? 15 : 20
 
   StudioClass.create!(
@@ -445,6 +445,15 @@ puts ""
 puts "Login credentials:"
 puts "  Password for all seeded users: Password123"
 puts "  Sign in at: http://localhost:3000/users/sign_in"
+<<<<<<< HEAD
+puts ""
+puts "Test scenarios:"
+
+puts "  alice@example.com  — 10 visits, reward available, Mindbody LINKED (MB-1001)"
+puts "  bob@example.com    — 9 visits, 1 visit remaining, Mindbody PENDING review (name match MB-1002)"
+puts "  carol@example.com  — 23 visits, 1 available reward, Mindbody CONFLICT (MB-1004 vs MB-1005)"
+=======
+>>>>>>> 051493cd5cd428e8f1baf2d6a471f086c213e5e4
 puts ""
 puts "Test scenarios:"
 puts "  alice@example.com  — 10 visits, reward available (+ 1 expired redemption)"

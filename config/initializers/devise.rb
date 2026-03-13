@@ -316,6 +316,12 @@ Devise.setup do |config|
                     pem: apple_private_key
   end
 
+  # In test/CI environments no OAuth credentials are present, so register stub
+  # providers to keep Devise's omniauth_callbacks route mapping valid.
+  if Rails.env.test? && !google_client_id.present?
+    config.omniauth :google_oauth2, "test_google_id", "test_google_secret"
+  end
+
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or
   # change the failure app, you can configure them inside the config.warden block.

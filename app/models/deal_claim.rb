@@ -7,12 +7,24 @@ class DealClaim < ApplicationRecord
 
   before_validation :set_defaults, on: :create
 
+  scope :latest_first, -> { order(created_at: :desc) }
+
+  def expires_at
+    return nil unless claimed_at && deal&.expiry_days
+    claimed_at + deal.expiry_days.days
+  end
+
+  def expired?
+    return false unless expires_at
+    Time.current > expires_at
+  end
+
   private
 
   def set_defaults
     self.code ||= generate_code
     self.claimed_at ||= Time.current
-    self.status = true if status.nil?
+    self.active = true if active.nil?
     self.studio ||= deal&.studio
   end
 
