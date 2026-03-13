@@ -17,28 +17,31 @@
         <h5 class="mb-4">TapIn Admin</h5>
         <ul class="nav flex-column">
           <li class="nav-item">
-            <%= link_to "Home", "#", class: "nav-link text-white" %>
+            <%= link_to "Home", admin_dashboard_path, class: "nav-link text-white" %>
           </li>
           <li class="nav-item">
-            <%= link_to "Members", "#", class: "nav-link text-white-50" %>
+            <%= link_to "Members", admin_members_path, class: "nav-link text-white-50" %>
           </li>
           <li class="nav-item">
-            <%= link_to "Loyalty", "#", class: "nav-link text-white-50" %>
+            <%= link_to "Deals", admin_deals_path, class: "nav-link text-white-50" %>
           </li>
           <li class="nav-item">
-            <%= link_to "Mindbody", "#", class: "nav-link text-white-50" %>
+            <%= link_to "Rewards", admin_rewards_path, class: "nav-link text-white-50" %>
           </li>
           <li class="nav-item">
-            <%= link_to "Branding", "#", class: "nav-link text-white-50" %>
+            <%= link_to "Mindbody", admin_mindbody_matches_path, class: "nav-link text-white-50" %>
           </li>
           <li class="nav-item">
-            <%= link_to "Messages", "#", class: "nav-link text-white-50" %>
+            <%= link_to "Notifications", admin_notification_templates_path, class: "nav-link text-white-50" %>
           </li>
           <li class="nav-item">
-            <%= link_to "Settings", "#", class: "nav-link text-white-50" %>
+            <%= link_to "Broadcasts", admin_broadcasts_path, class: "nav-link text-white-50" %>
           </li>
           <li class="nav-item">
-            <%= link_to "AI Assistant", "#", class: "nav-link text-white-50" %>
+            <%= link_to "Check-in Settings", admin_checkin_settings_path, class: "nav-link text-white-50" %>
+          </li>
+          <li class="nav-item">
+            <%= link_to "AI Assistant", admin_assistant_path, class: "nav-link text-white-50" %>
           </li>
         </ul>
         <hr class="text-white-50">
