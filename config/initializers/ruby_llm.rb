@@ -1,3 +1,5 @@
-RubyLLM.configure do |config|
-  config.openai_api_key = ENV.fetch("OPENAI_API_KEY", nil)
+if defined?(RubyLLM)
+  RubyLLM.configure do |config|
+    config.openai_api_key = ENV.fetch("OPENAI_API_KEY", nil)
+  end
 end

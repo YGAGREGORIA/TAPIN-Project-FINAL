@@ -3,10 +3,6 @@ Rails.application.routes.draw do
   root to: "pages#home"
 
   scope "/s/:studio_slug" do
-    # NFC/QR landing page — Rajesh
-    get "/", to: "studios#show", as: :studio_landing
-    post "checkin", to: "studios#checkin", as: :studio_checkin
-
     resources :rewards, only: [ :index ] do
       post :redeem, to: "reward_redemptions#create", on: :member
     end
@@ -90,13 +86,7 @@ Rails.application.routes.draw do
 
   # Push notification subscription — Rajesh
   resources :push_subscriptions, only: [ :create ]
-
   get "up" => "rails/health#show", as: :rails_health_check
-
-  # PWA manifest and service worker
   get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
   get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
-
-  # Defines the root path route ("/")
-  # root "posts#index"
 end

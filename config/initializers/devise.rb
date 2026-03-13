@@ -9,6 +9,10 @@
 # Use this hook to configure devise mailer, warden hooks and so forth.
 # Many of these configuration options can be set straight in your model.
 Devise.setup do |config|
+  oauth_value = lambda do |provider, credential_key, env_key|
+    ENV[env_key].presence || Rails.application.credentials.dig(:oauth, provider, credential_key).presence
+  end
+
   # The secret key used by Devise. Devise uses this key to generate
   # random tokens. Changing this key will render invalid all existing
   # confirmation, reset password and unlock tokens in the database.
@@ -143,7 +147,7 @@ Devise.setup do |config|
   # without confirming their account.
   # Default is 0.days, meaning the user cannot access the website without
   # confirming their account.
-  # config.allow_unconfirmed_access_for = 2.days
+  config.allow_unconfirmed_access_for = 0.days
 
   # A period that the user is allowed to confirm their account before their
   # token becomes invalid. For example, if set to 3.days, the user can confirm
@@ -181,7 +185,7 @@ Devise.setup do |config|
 
   # ==> Configuration for :validatable
   # Range for password length.
-  config.password_length = 6..128
+  config.password_length = 10..128
 
   # Email regex used to validate email formats. It simply asserts that
   # one (and only one) @ exists in the given string. This is mainly
@@ -191,13 +195,13 @@ Devise.setup do |config|
   # ==> Configuration for :timeoutable
   # The time you want to timeout the user session without activity. After this
   # time the user will be asked for credentials again. Default is 30 minutes.
-  # config.timeout_in = 30.minutes
+  config.timeout_in = 30.minutes
 
   # ==> Configuration for :lockable
   # Defines which strategy will be used to lock an account.
   # :failed_attempts = Locks an account after a number of failed attempts to sign in.
   # :none            = No lock strategy. You should handle locking by yourself.
-  # config.lock_strategy = :failed_attempts
+  config.lock_strategy = :failed_attempts
 
   # Defines which key will be used when locking and unlocking an account
   # config.unlock_keys = [:email]
@@ -207,14 +211,14 @@ Devise.setup do |config|
   # :time  = Re-enables login after a certain amount of time (see :unlock_in below)
   # :both  = Enables both strategies
   # :none  = No unlock strategy. You should handle unlocking by yourself.
-  # config.unlock_strategy = :both
+  config.unlock_strategy = :time
 
   # Number of authentication tries before locking an account if lock_strategy
   # is failed attempts.
-  # config.maximum_attempts = 20
+  config.maximum_attempts = 5
 
   # Time interval to unlock the account if :time is enabled as unlock_strategy.
-  # config.unlock_in = 1.hour
+  config.unlock_in = 30.minutes
 
   # Warn on the last attempt before the account is locked.
   # config.last_attempt_warning = true
@@ -275,6 +279,48 @@ Devise.setup do |config|
   # Add a new OmniAuth provider. Check the wiki for more information on setting
   # up on your models and hooks.
   # config.omniauth :github, 'APP_ID', 'APP_SECRET', scope: 'user,public_repo'
+  google_client_id = oauth_value.call(:google, :client_id, "GOOGLE_CLIENT_ID")
+  google_client_secret = oauth_value.call(:google, :client_secret, "GOOGLE_CLIENT_SECRET")
+
+  if google_client_id.present? && google_client_secret.present?
+    config.omniauth :google_oauth2,
+                    google_client_id,
+                    google_client_secret,
+                    scope: "email,profile",
+                    prompt: "select_account"
+  end
+
+  facebook_app_id = oauth_value.call(:facebook, :app_id, "FACEBOOK_APP_ID") || oauth_value.call(:facebook, :client_id, "FACEBOOK_CLIENT_ID")
+  facebook_app_secret = oauth_value.call(:facebook, :app_secret, "FACEBOOK_APP_SECRET") || oauth_value.call(:facebook, :client_secret, "FACEBOOK_CLIENT_SECRET")
+
+  if facebook_app_id.present? && facebook_app_secret.present?
+    config.omniauth :facebook,
+                    facebook_app_id,
+                    facebook_app_secret,
+                    scope: "email",
+                    info_fields: "name,email"
+  end
+
+  apple_client_id = oauth_value.call(:apple, :client_id, "APPLE_CLIENT_ID")
+  apple_team_id = oauth_value.call(:apple, :team_id, "APPLE_TEAM_ID")
+  apple_key_id = oauth_value.call(:apple, :key_id, "APPLE_KEY_ID")
+  apple_private_key = oauth_value.call(:apple, :private_key, "APPLE_PRIVATE_KEY")&.gsub('\n', "\n")
+
+  if apple_client_id.present? && apple_team_id.present? && apple_key_id.present? && apple_private_key.present?
+    config.omniauth :apple,
+                    apple_client_id,
+                    "",
+                    scope: "email name",
+                    team_id: apple_team_id,
+                    key_id: apple_key_id,
+                    pem: apple_private_key
+  end
+
+  # In test/CI environments no OAuth credentials are present, so register stub
+  # providers to keep Devise's omniauth_callbacks route mapping valid.
+  if Rails.env.test? && !google_client_id.present?
+    config.omniauth :google_oauth2, "test_google_id", "test_google_secret"
+  end
 
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or
