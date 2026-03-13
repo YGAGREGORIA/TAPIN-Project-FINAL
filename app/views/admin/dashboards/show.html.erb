@@ -1,22 +1,209 @@
-<h1>Admin Dashboard</h1>
+<% content_for :title, "Dashboard" %>
+
+<%# ── Header ── %>
+<div class="d-flex align-items-center justify-content-between mb-4">
+  <div>
+    <h1 class="admin-page-title mb-1">Dashboard</h1>
+    <p class="text-muted mb-0">Welcome back! Here's what's happening at <%= @studio&.name || "your studio" %>.</p>
+  </div>
+  <% if @studio %>
+    <div class="d-flex gap-2">
+      <%= link_to "Analytics", admin_analytics_path, class: "btn btn-sm btn-admin-outline" %>
+      <%= link_to "Members", admin_members_path, class: "btn btn-sm btn-admin-outline" %>
+    </div>
+  <% end %>
+</div>
+
+<%# ── KPI Cards ── %>
+<div class="row g-3 mb-4">
+  <div class="col-6 col-md-3">
+    <div class="admin-stat-card">
+      <div class="admin-stat-icon"><i class="fa fa-users"></i></div>
+      <div class="admin-stat-value"><%= @total_members %></div>
+      <div class="admin-stat-label">Total Members</div>
+      <% if @new_members_this_week > 0 %>
+        <div class="admin-stat-delta">+<%= @new_members_this_week %> this week</div>
+      <% end %>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="admin-stat-card">
+      <div class="admin-stat-icon"><i class="fa fa-check-circle"></i></div>
+      <div class="admin-stat-value"><%= @total_visits %></div>
+      <div class="admin-stat-label">Total Check-ins</div>
+      <% if @visits_this_week > 0 %>
+        <div class="admin-stat-delta">+<%= @visits_this_week %> this week</div>
+      <% end %>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="admin-stat-card">
+      <div class="admin-stat-icon"><i class="fa fa-tag"></i></div>
+      <div class="admin-stat-value"><%= @active_deals %></div>
+      <div class="admin-stat-label">Active Deals</div>
+      <div class="admin-stat-delta"><%= @total_deal_claims %> claimed</div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="admin-stat-card">
+      <div class="admin-stat-icon"><i class="fa fa-gift"></i></div>
+      <div class="admin-stat-value"><%= @active_rewards %></div>
+      <div class="admin-stat-label">Active Rewards</div>
+      <div class="admin-stat-delta"><%= @total_redemptions %> redeemed</div>
+    </div>
+  </div>
+</div>
+
+<%# ── Feature Showcase ── %>
+<div class="admin-section-title mb-3">
+  <span>What you can manage</span>
+  <span class="admin-section-subtitle">Every step below is fully customizable from the menu</span>
+</div>
 
 <div class="row g-3 mb-4">
   <div class="col-md-4">
-    <div class="card text-center p-3">
-      <h3><%= @total_members %></h3>
-      <p>Members</p>
-    </div>
+    <%= link_to admin_members_path, class: "admin-feature-card" do %>
+      <div class="admin-feature-icon"><i class="fa fa-users"></i></div>
+      <div class="admin-feature-body">
+        <div class="admin-feature-title">Members</div>
+        <div class="admin-feature-desc">View profiles, grant bonus points, and issue reward codes manually to any member.</div>
+      </div>
+      <i class="fa fa-chevron-right admin-feature-arrow"></i>
+    <% end %>
   </div>
   <div class="col-md-4">
-    <div class="card text-center p-3">
-      <h3><%= @total_visits || 0 %></h3>
-      <p>Total Visits</p>
-    </div>
+    <%= link_to admin_deals_path, class: "admin-feature-card" do %>
+      <div class="admin-feature-icon"><i class="fa fa-tag"></i></div>
+      <div class="admin-feature-body">
+        <div class="admin-feature-title">Deals</div>
+        <div class="admin-feature-desc">Create discount deals triggered by first visit, referrals, or custom conditions. Fully customizable.</div>
+      </div>
+      <i class="fa fa-chevron-right admin-feature-arrow"></i>
+    <% end %>
   </div>
   <div class="col-md-4">
-    <div class="card text-center p-3">
-      <h3><%= @total_deals || 0 %></h3>
-      <p>Active Deals</p>
+    <%= link_to admin_rewards_path, class: "admin-feature-card" do %>
+      <div class="admin-feature-icon"><i class="fa fa-gift"></i></div>
+      <div class="admin-feature-body">
+        <div class="admin-feature-title">Rewards</div>
+        <div class="admin-feature-desc">Configure free class rewards that unlock automatically at visit milestones — fully customizable.</div>
+      </div>
+      <i class="fa fa-chevron-right admin-feature-arrow"></i>
+    <% end %>
+  </div>
+  <div class="col-md-4">
+    <%= link_to admin_class_configs_path, class: "admin-feature-card" do %>
+      <div class="admin-feature-icon"><i class="fa fa-star"></i></div>
+      <div class="admin-feature-body">
+        <div class="admin-feature-title">Class Points</div>
+        <div class="admin-feature-desc">Customize how many points each class type awards. Mark classes as premium to boost engagement.</div>
+      </div>
+      <i class="fa fa-chevron-right admin-feature-arrow"></i>
+    <% end %>
+  </div>
+  <div class="col-md-4">
+    <%= link_to admin_notification_templates_path, class: "admin-feature-card" do %>
+      <div class="admin-feature-icon"><i class="fa fa-bell"></i></div>
+      <div class="admin-feature-body">
+        <div class="admin-feature-title">Notifications</div>
+        <div class="admin-feature-desc">Edit every message your members receive — reward unlocked, deal available, booking reminders, and more.</div>
+      </div>
+      <i class="fa fa-chevron-right admin-feature-arrow"></i>
+    <% end %>
+  </div>
+  <div class="col-md-4">
+    <%= link_to admin_broadcasts_path, class: "admin-feature-card" do %>
+      <div class="admin-feature-icon"><i class="fa fa-bullhorn"></i></div>
+      <div class="admin-feature-body">
+        <div class="admin-feature-title">Broadcasts</div>
+        <div class="admin-feature-desc">Send targeted messages to your entire member base or specific segments. Schedule for the right moment.</div>
+      </div>
+      <i class="fa fa-chevron-right admin-feature-arrow"></i>
+    <% end %>
+  </div>
+  <div class="col-md-4">
+    <%= link_to admin_checkin_settings_path, class: "admin-feature-card" do %>
+      <div class="admin-feature-icon"><i class="fa fa-wifi"></i></div>
+      <div class="admin-feature-body">
+        <div class="admin-feature-title">Check-in Settings</div>
+        <div class="admin-feature-desc">Set your studio's check-in URL and configure NFC tags for tap-to-check-in at the front desk.</div>
+      </div>
+      <i class="fa fa-chevron-right admin-feature-arrow"></i>
+    <% end %>
+  </div>
+  <div class="col-md-4">
+    <%= link_to admin_analytics_path, class: "admin-feature-card" do %>
+      <div class="admin-feature-icon"><i class="fa fa-bar-chart"></i></div>
+      <div class="admin-feature-body">
+        <div class="admin-feature-title">Analytics</div>
+        <div class="admin-feature-desc">Track member growth, check-in trends, points economy, and loyalty conversion — all with date range filters.</div>
+      </div>
+      <i class="fa fa-chevron-right admin-feature-arrow"></i>
+    <% end %>
+  </div>
+  <div class="col-md-4">
+    <%= link_to admin_assistant_path, class: "admin-feature-card" do %>
+      <div class="admin-feature-icon"><i class="fa fa-magic"></i></div>
+      <div class="admin-feature-body">
+        <div class="admin-feature-title">AI Assistant</div>
+        <div class="admin-feature-desc">Ask who's close to a reward, get deal suggestions, or request a full retention report — powered by AI.</div>
+      </div>
+      <i class="fa fa-chevron-right admin-feature-arrow"></i>
+    <% end %>
+  </div>
+</div>
+
+<%# ── Recent Activity ── %>
+<div class="row g-3">
+  <div class="col-md-6">
+    <div class="admin-card">
+      <div class="admin-card-header">
+        <span>Recent Check-ins</span>
+        <%= link_to "View Analytics", admin_analytics_path, class: "admin-card-link" %>
+      </div>
+      <% if @recent_visits.any? %>
+        <% @recent_visits.each do |visit| %>
+          <div class="admin-activity-row">
+            <div class="admin-activity-avatar">
+              <%= visit.user.first_name&.first&.upcase || "?" %>
+            </div>
+            <div class="admin-activity-details">
+              <div class="admin-activity-name"><%= visit.user.first_name %> <%= visit.user.last_name %></div>
+              <div class="admin-activity-meta"><%= visit.class_config&.class_name || "Class visit" %> &middot; <%= visit.visited_at.strftime("%b %-d") %></div>
+            </div>
+            <% if visit.points_earned.to_i > 0 %>
+              <div class="admin-activity-points">+<%= visit.points_earned %> pts</div>
+            <% end %>
+          </div>
+        <% end %>
+      <% else %>
+        <div class="admin-empty-state">No check-ins yet</div>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="admin-card">
+      <div class="admin-card-header">
+        <span>New Members</span>
+        <%= link_to "View All", admin_members_path, class: "admin-card-link" %>
+      </div>
+      <% if @recent_members.any? %>
+        <% @recent_members.each do |member| %>
+          <div class="admin-activity-row">
+            <div class="admin-activity-avatar">
+              <%= member.first_name&.first&.upcase || "?" %>
+            </div>
+            <div class="admin-activity-details">
+              <div class="admin-activity-name"><%= member.first_name %> <%= member.last_name %></div>
+              <div class="admin-activity-meta"><%= member.email %> &middot; joined <%= member.created_at.strftime("%b %-d") %></div>
+            </div>
+            <%= link_to "View", admin_member_path(member), class: "admin-activity-link" %>
+          </div>
+        <% end %>
+      <% else %>
+        <div class="admin-empty-state">No members yet</div>
+      <% end %>
     </div>
   </div>
 </div>
