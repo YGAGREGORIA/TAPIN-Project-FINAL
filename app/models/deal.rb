@@ -2,6 +2,9 @@ class Deal < ApplicationRecord
   belongs_to :studio
   has_many :deal_claims, dependent: :destroy
 
+  enum :deal_type, { discount: "discount" }
+  enum :trigger_condition, { first_visit: "first_visit", referral: "referral" }
+
   validates :name, presence: true
 
   scope :active, -> { where(active: true) }
@@ -15,11 +18,10 @@ class Deal < ApplicationRecord
     return :inactive unless active?
     return :already_claimed if user.has_claimed_deal?(self)
 
-    case trigger_condition
-    when "first_visit"
+    if first_visit?
       user.visits_count_for(studio) >= 1 ? :eligible : :not_unlocked_yet
-    else
-      :not_eligible
+    elsif referral?
+      :requires_referral
     end
   end
 end

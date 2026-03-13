@@ -66,6 +66,11 @@ group :test do
 end
 
 gem "devise", "~> 5.0"
+gem "omniauth"
+gem "omniauth-apple"
+gem "omniauth-facebook"
+gem "omniauth-google-oauth2"
+gem "omniauth-rails_csrf_protection"
 gem "sassc-rails"
 gem "bootstrap", "~> 5.3"
 gem "autoprefixer-rails"

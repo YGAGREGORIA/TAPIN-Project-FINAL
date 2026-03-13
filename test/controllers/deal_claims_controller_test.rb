@@ -4,14 +4,14 @@ class DealClaimsControllerTest < ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers
 
   setup do
-    @owner = User.create!(email: "owner@claims-ctrl.com", password: "password")
+    @owner = User.create!(email: "owner@claims-ctrl.com", password: "Password123", confirmed_at: Time.current)
     @studio = Studio.create!(
       user: @owner,
       name: "Claims Ctrl Studio",
       slug: "claims-ctrl-studio",
       active: true
     )
-    @user = User.create!(email: "user@claims-ctrl.com", password: "password")
+    @user = User.create!(email: "user@claims-ctrl.com", password: "Password123", confirmed_at: Time.current)
     @class_config = ClassConfig.create!(
       studio: @studio,
       mindbody_class_id: 701,
@@ -133,7 +133,7 @@ class DealClaimsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "user cannot view another user's claim" do
-    other_user  = User.create!(email: "other@claims-ctrl.com", password: "password")
+    other_user  = User.create!(email: "other@claims-ctrl.com", password: "Password123", confirmed_at: Time.current)
     other_deal  = Deal.create!(studio: @studio, name: "Other Deal", deal_type: "discount",
                                trigger_condition: "first_visit", active: true)
     other_claim = DealClaim.create!(user: other_user, deal: other_deal, studio: @studio)

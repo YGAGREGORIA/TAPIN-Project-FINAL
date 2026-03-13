@@ -10,9 +10,9 @@ Reward.destroy_all
 DealClaim.destroy_all
 Deal.destroy_all
 Visit.destroy_all
-ClassConfig.destroy_all
 Booking.destroy_all
 StudioClass.destroy_all
+ClassConfig.destroy_all
 StudioBrand.destroy_all
 Studio.destroy_all
 User.destroy_all
@@ -22,9 +22,11 @@ puts "Creating users..."
 # alice: 10 visits → reward available (10/10, 1 milestone, 0 redemptions)
 alice = User.create!(
   email: "alice@example.com",
-  password: "password",
+  password: "Password123",
+  confirmed_at: Time.current,
   first_name: "Alice",
   last_name: "Martin",
+  admin: true,
   phone: 611234567,
   referred_by: nil,
   last_visit_at: 1.day.ago
@@ -33,7 +35,8 @@ alice = User.create!(
 # bob: 9 visits → almost there (9/10)
 bob = User.create!(
   email: "bob@example.com",
-  password: "password",
+  password: "Password123",
+  confirmed_at: Time.current,
   first_name: "Bob",
   last_name: "Chen",
   phone: 619876543,
@@ -44,7 +47,8 @@ bob = User.create!(
 # carol: 20 visits → 2 milestones, 1 redemption used, 1 available reward, 2 deals claimed, 2 upcoming bookings
 carol = User.create!(
   email: "carol@example.com",
-  password: "password",
+  password: "Password123",
+  confirmed_at: Time.current,
   first_name: "Carol",
   last_name: "Park",
   phone: 612345678,
@@ -54,7 +58,8 @@ carol = User.create!(
 
 owner = User.create!(
   email: "owner@tapinstudio.com",
-  password: "password",
+  password: "Password123",
+  confirmed_at: Time.current,
   first_name: "Sara",
   last_name: "Lopez",
   phone: 610001111,
@@ -65,7 +70,7 @@ owner = User.create!(
 puts "Creating studios..."
 
 studio = Studio.create!(
-  user: owner,
+  user: alice,
   name: "TAPIN Fitness",
   slug: "tapin-fitness",
   mindbody_site_id: "12345",
@@ -184,10 +189,10 @@ deal1 = Deal.create!(
 
 deal2 = Deal.create!(
   studio: studio,
-  name: "10% Off Next Class",
+  name: "Refer a Friend — 10% Off",
   deal_type: "discount",
   discount_percent: 10,
-  trigger_condition: "5th_visit",
+  trigger_condition: "referral",
   usage_limit: 1,
   expiry_days: 14,
   active: true
@@ -325,7 +330,7 @@ DealClaim.create!(
   deal: deal1,
   studio: studio,
   code: "FIRST-ALICE-001",
-  status: true,
+  active: true,
   claimed_at: 10.weeks.ago
 )
 
@@ -334,7 +339,7 @@ DealClaim.create!(
   deal: deal1,
   studio: studio,
   code: "FIRST-BOB-001",
-  status: true,
+  active: true,
   claimed_at: 9.weeks.ago
 )
 
@@ -343,7 +348,7 @@ DealClaim.create!(
   deal: deal1,
   studio: studio,
   code: "FIRST-CAROL-001",
-  status: true,
+  active: true,
   claimed_at: 5.weeks.ago
 )
 
@@ -352,7 +357,7 @@ DealClaim.create!(
   deal: deal2,
   studio: studio,
   code: "10OFF-CAROL-001",
-  status: true,
+  active: true,
   claimed_at: 1.week.ago
 )
 
@@ -437,7 +442,12 @@ Message.create!(
 
 puts "Done! Seed data created successfully."
 puts ""
+puts "Login credentials:"
+puts "  Password for all seeded users: Password123"
+puts "  Sign in at: http://localhost:3000/users/sign_in"
+puts ""
 puts "Test scenarios:"
 puts "  alice@example.com  — 10 visits, reward available (+ 1 expired redemption)"
 puts "  bob@example.com    — 9 visits, 1 visit remaining"
 puts "  carol@example.com  — 20 visits, 1 available reward, 2 upcoming bookings, 2 deal claims, active reward redemption"
+puts "  owner@tapinstudio.com — studio owner account"

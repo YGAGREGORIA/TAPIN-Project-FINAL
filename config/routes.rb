@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  devise_for :users
+  devise_for :users, controllers: { omniauth_callbacks: "users/omniauth_callbacks" }
   root to: "pages#home"
 
   scope "/s/:studio_slug" do
@@ -28,17 +28,16 @@ Rails.application.routes.draw do
 
   resources :visits, only: [:create]
 
-  
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+  namespace :admin do
+    namespace :loyalty do
+      patch "deals/referral", to: "deals#update_referral", as: :deals_referral
+      resources :deals, only: [:index, :create, :update, :destroy]
 
-  # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
-  # Can be used by load balancers and uptime monitors to verify that the app is live.
+      resources :rewards, only: [:index, :create, :update] do
+        patch :toggle, on: :member
+      end
+    end
+  end
+
   get "up" => "rails/health#show", as: :rails_health_check
-
-  # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)
-  # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
-  # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
-
-  # Defines the root path route ("/")
-  # root "posts#index"
 end

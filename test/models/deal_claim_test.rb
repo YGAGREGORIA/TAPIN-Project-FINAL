@@ -2,14 +2,14 @@ require "test_helper"
 
 class DealClaimTest < ActiveSupport::TestCase
   setup do
-    @owner = User.create!(email: "owner@claim-test.com", password: "password")
+    @owner = User.create!(email: "owner@claim-test.com", password: "Password123", confirmed_at: Time.current)
     @studio = Studio.create!(
       user: @owner,
       name: "Claim Test Studio",
       slug: "claim-test-studio",
       active: true
     )
-    @user = User.create!(email: "user@claim-test.com", password: "password")
+    @user = User.create!(email: "user@claim-test.com", password: "Password123", confirmed_at: Time.current)
     @deal = Deal.create!(
       studio: @studio,
       name: "Test Deal",
@@ -58,9 +58,9 @@ class DealClaimTest < ActiveSupport::TestCase
     end
   end
 
-  test "status defaults to true on create" do
+  test "active defaults to true on create" do
     claim = create_claim
-    assert claim.status
+    assert claim.active
   end
 
   test "studio is inherited from deal when not explicitly set" do
@@ -70,7 +70,7 @@ class DealClaimTest < ActiveSupport::TestCase
 
   test "two claims get different codes" do
     claim1 = create_claim
-    other_user = User.create!(email: "other@claim-test.com", password: "password")
+    other_user = User.create!(email: "other@claim-test.com", password: "Password123", confirmed_at: Time.current)
     other_deal = Deal.create!(
       studio: @studio,
       name: "Another Deal",
@@ -133,7 +133,7 @@ class DealClaimTest < ActiveSupport::TestCase
 
   test "latest_first scope orders by created_at descending" do
     claim1 = create_claim
-    other_user = User.create!(email: "scope@claim-test.com", password: "password")
+    other_user = User.create!(email: "scope@claim-test.com", password: "Password123", confirmed_at: Time.current)
     other_deal = Deal.create!(
       studio: @studio,
       name: "Scope Deal",

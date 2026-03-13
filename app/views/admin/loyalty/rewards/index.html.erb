@@ -1,0 +1,108 @@
+<% content_for :title, "Admin — Rewards" %>
+
+<div class="bookings-page">
+
+  <div class="bookings-header">
+    <h1 class="schedule-title">Rewards</h1>
+  </div>
+
+  <div class="bookings-section">
+
+    <%# ── Create new reward ── %>
+    <p class="section-title">New Reward</p>
+    <div class="dashboard-card mb-3">
+      <%= form_with model: [:admin, :loyalty, @reward], url: admin_loyalty_rewards_path, local: true do |f| %>
+        <p>
+          <%= f.label :name %>
+          <%= f.text_field :name, class: "form-control" %>
+        </p>
+        <p>
+          <%= f.label :points_cost, "Points cost" %>
+          <%= f.number_field :points_cost, class: "form-control" %>
+        </p>
+        <p>
+          <%= f.label :image_url, "Image URL" %>
+          <%= f.text_field :image_url, class: "form-control" %>
+        </p>
+        <p>
+          <%= f.label :description %>
+          <%= f.text_area :description, class: "form-control" %>
+        </p>
+        <p>
+          <%= f.label :reward_type, "Type" %>
+          <%= f.select :reward_type, Reward.reward_types.keys.map { |k| [k.humanize, k] }, {}, class: "form-select" %>
+        </p>
+        <p>
+          <%= f.label :active, "Enabled" %>
+          <%= f.check_box :active %>
+        </p>
+        <p><%= f.submit "Create reward", class: "btn-claim" %></p>
+      <% end %>
+    </div>
+
+    <%# ── Existing rewards ── %>
+    <p class="section-title">Existing Rewards</p>
+
+    <% if @rewards.any? %>
+      <% @rewards.each do |reward| %>
+        <div class="reward-card mb-3">
+          <div class="d-flex justify-content-between align-items-start mb-2">
+            <div>
+              <div class="reward-card-name"><%= reward.name %></div>
+              <div class="reward-card-meta">
+                <%= reward.reward_type&.humanize %> &middot; <%= reward.points_cost %> pts
+                &middot; <%= reward.active? ? "Enabled" : "Disabled" %>
+              </div>
+            </div>
+            <% if reward.image_url.present? %>
+              <img src="<%= reward.image_url %>" alt="<%= reward.name %>" width="60" style="border-radius: 6px;">
+            <% end %>
+          </div>
+
+          <%= form_with model: [:admin, :loyalty, reward], local: true, method: :patch do |f| %>
+            <p>
+              <%= f.label :name %>
+              <%= f.text_field :name, class: "form-control" %>
+            </p>
+            <p>
+              <%= f.label :points_cost, "Points cost" %>
+              <%= f.number_field :points_cost, class: "form-control" %>
+            </p>
+            <p>
+              <%= f.label :image_url, "Image URL" %>
+              <%= f.text_field :image_url, class: "form-control" %>
+            </p>
+            <p>
+              <%= f.label :description %>
+              <%= f.text_area :description, class: "form-control" %>
+            </p>
+            <p>
+              <%= f.label :reward_type, "Type" %>
+              <%= f.select :reward_type, Reward.reward_types.keys.map { |k| [k.humanize, k] }, {}, class: "form-select" %>
+            </p>
+            <p>
+              <%= f.label :active, "Enabled" %>
+              <%= f.check_box :active %>
+            </p>
+            <p><%= f.submit "Save changes", class: "btn-claim" %></p>
+          <% end %>
+
+          <%= button_to(
+            reward.active? ? "Disable" : "Enable",
+            toggle_admin_loyalty_reward_path(reward),
+            method: :patch,
+            class: "btn-secondary-action mt-1"
+          ) %>
+        </div>
+      <% end %>
+    <% else %>
+      <div class="dashboard-card">
+        <div class="empty-state">
+          <i class="fa fa-gift"></i>
+          <p>No rewards configured yet.</p>
+        </div>
+      </div>
+    <% end %>
+
+  </div>
+</div>

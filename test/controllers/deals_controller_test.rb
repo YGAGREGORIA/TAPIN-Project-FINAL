@@ -4,14 +4,14 @@ class DealsControllerTest < ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers
 
   setup do
-    @owner = User.create!(email: "owner@deals-ctrl.com", password: "password")
+    @owner = User.create!(email: "owner@deals-ctrl.com", password: "Password123", confirmed_at: Time.current)
     @studio = Studio.create!(
       user: @owner,
       name: "Deals Ctrl Studio",
       slug: "deals-ctrl-studio",
       active: true
     )
-    @user = User.create!(email: "user@deals-ctrl.com", password: "password")
+    @user = User.create!(email: "user@deals-ctrl.com", password: "Password123", confirmed_at: Time.current)
     @class_config = ClassConfig.create!(
       studio: @studio,
       mindbody_class_id: 701,

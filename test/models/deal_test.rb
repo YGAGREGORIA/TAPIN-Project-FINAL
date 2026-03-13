@@ -2,14 +2,14 @@ require "test_helper"
 
 class DealTest < ActiveSupport::TestCase
   setup do
-    @owner = User.create!(email: "owner@deal-test.com", password: "password")
+    @owner = User.create!(email: "owner@deal-test.com", password: "Password123", confirmed_at: Time.current)
     @studio = Studio.create!(
       user: @owner,
       name: "Deal Test Studio",
       slug: "deal-test-studio",
       active: true
     )
-    @user = User.create!(email: "user@deal-test.com", password: "password")
+    @user = User.create!(email: "user@deal-test.com", password: "Password123", confirmed_at: Time.current)
     @class_config = ClassConfig.create!(
       studio: @studio,
       mindbody_class_id: 801,
@@ -96,10 +96,9 @@ class DealTest < ActiveSupport::TestCase
     assert_equal :eligible, deal.eligibility_status_for(@user)
   end
 
-  test "returns :not_eligible for unknown trigger_condition" do
-    deal = create_deal(trigger_condition: "unknown_condition")
-    create_visit_for(@user)
-    assert_equal :not_eligible, deal.eligibility_status_for(@user)
+  test "returns :requires_referral for referral trigger_condition" do
+    deal = create_deal(trigger_condition: "referral")
+    assert_equal :requires_referral, deal.eligibility_status_for(@user)
   end
 
   test "returns :not_unlocked_yet when visits are at a different studio" do

@@ -2,14 +2,14 @@ require "test_helper"
 
 class VisitTest < ActiveSupport::TestCase
   setup do
-    @owner = User.create!(email: "owner@visit-test.com", password: "password")
+    @owner = User.create!(email: "owner@visit-test.com", password: "Password123", confirmed_at: Time.current)
     @studio = Studio.create!(
       user: @owner,
       name: "Visit Test Studio",
       slug: "visit-test-studio",
       active: true
     )
-    @user = User.create!(email: "subject@visit-test.com", password: "password")
+    @user = User.create!(email: "subject@visit-test.com", password: "Password123", confirmed_at: Time.current)
     @class_config = ClassConfig.create!(
       studio: @studio,
       mindbody_class_id: 901,

@@ -24,7 +24,7 @@ class DealClaim < ApplicationRecord
   def set_defaults
     self.code ||= generate_code
     self.claimed_at ||= Time.current
-    self.status = true if status.nil?
+    self.active = true if active.nil?
     self.studio ||= deal&.studio
   end
 

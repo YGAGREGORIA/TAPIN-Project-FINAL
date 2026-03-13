@@ -71,6 +71,10 @@
               <div class="deal-card-meta mt-2">
                 <i class="fa fa-lock"></i> This deal will unlock after your first visit.
               </div>
+            <% elsif status == :requires_referral %>
+              <div class="deal-card-meta mt-2">
+                <i class="fa fa-users"></i> This deal is unlocked through a referral.
+              </div>
             <% end %>
           </div>
         <% end %>
