@@ -1,0 +1,71 @@
+<% content_for(:title) { "AI Assistant" } %>
+
+<h2 class="mb-4">AI Assistant</h2>
+
+<div class="row" style="height: calc(100vh - 200px);">
+  <!-- Chat sidebar -->
+  <div class="col-md-3">
+    <div class="card h-100">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h6 class="mb-0">Conversations</h6>
+        <%= link_to "+", admin_assistant_path, class: "btn btn-sm btn-outline-primary" %>
+      </div>
+      <div class="card-body p-0 overflow-auto">
+        <% @chats.each do |chat| %>
+          <%= link_to admin_assistant_path(chat_id: chat.id), class: "list-group-item list-group-item-action #{'active' if @current_chat&.id == chat.id}" do %>
+            <div class="fw-bold small"><%= chat.title || "Conversation" %></div>
+            <small class="text-muted"><%= time_ago_in_words(chat.updated_at) %> ago</small>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chat area -->
+  <div class="col-md-9">
+    <div class="card h-100 d-flex flex-column">
+      <div class="card-body overflow-auto flex-grow-1" id="chat-messages">
+        <% if @messages.any? %>
+          <% @messages.each do |msg| %>
+            <div class="mb-3 d-flex <%= msg.role == 'user' ? 'justify-content-end' : 'justify-content-start' %>">
+              <div class="p-3 rounded-3 <%= msg.role == 'user' ? 'bg-primary text-white' : 'bg-light' %>" style="max-width: 75%;">
+                <div class="small"><%= simple_format(msg.content) %></div>
+              </div>
+            </div>
+          <% end %>
+        <% else %>
+          <div class="text-center text-muted mt-5">
+            <h5>How can I help?</h5>
+            <p>Try asking:</p>
+            <div class="d-flex flex-wrap gap-2 justify-content-center">
+              <% ["Who is close to a reward?", "Suggest deals for my studio", "How can I improve retention?", "Show me visit stats"].each do |suggestion| %>
+                <button class="btn btn-sm btn-outline-secondary suggestion-chip" onclick="document.getElementById('message-input').value='<%= suggestion %>'; document.getElementById('chat-form').requestSubmit();">
+                  <%= suggestion %>
+                </button>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+
+      <!-- Input -->
+      <div class="card-footer">
+        <%= form_with url: respond_admin_assistant_path, method: :post, id: "chat-form" do |f| %>
+          <% if @current_chat %>
+            <input type="hidden" name="chat_id" value="<%= @current_chat.id %>">
+          <% end %>
+          <div class="input-group">
+            <input type="text" name="message" id="message-input" class="form-control" placeholder="Ask about your studio..." autocomplete="off" required>
+            <button type="submit" class="btn btn-primary">Send</button>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Auto-scroll to bottom of chat
+  const chatMessages = document.getElementById('chat-messages');
+  if (chatMessages) chatMessages.scrollTop = chatMessages.scrollHeight;
+</script>
