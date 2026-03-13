@@ -2,22 +2,7 @@
 # development, test). The code here should be idempotent so that it can be executed at any point in every environment.
 # The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
 
-# Use inline queue adapter during seeding (SolidQueue tables may not exist on Heroku)
-Rails.application.config.active_job.queue_adapter = :async
-
-# Suppress job-enqueuing callbacks during seeding to avoid unnecessary background work
-Visit.skip_callback(:create, :after, :enqueue_mindbody_match) if Visit.method_defined?(:enqueue_mindbody_match)
-Visit.skip_callback(:create, :after, :notify_reward_unlocked) if Visit.method_defined?(:notify_reward_unlocked)
-Visit.skip_callback(:create, :after, :complete_referral_if_first_visit) if Visit.method_defined?(:complete_referral_if_first_visit)
-
 puts "Cleaning database..."
-Notification.destroy_all if defined?(Notification)
-PushSubscription.destroy_all if defined?(PushSubscription)
-NotificationTemplate.destroy_all if defined?(NotificationTemplate)
-Broadcast.destroy_all if defined?(Broadcast)
-MindbodyClient.destroy_all
-MindbodyLink.destroy_all
-Referral.destroy_all
 Message.destroy_all
 Chat.destroy_all
 RewardRedemption.destroy_all
@@ -37,9 +22,11 @@ puts "Creating users..."
 # alice: 10 visits → reward available (10/10, 1 milestone, 0 redemptions)
 alice = User.create!(
   email: "alice@example.com",
-  password: "password",
+  password: "Password123",
+  confirmed_at: Time.current,
   first_name: "Alice",
   last_name: "Martin",
+  admin: true,
   phone: 611234567,
   referred_by: nil,
   last_visit_at: 1.day.ago
@@ -48,7 +35,8 @@ alice = User.create!(
 # bob: 9 visits → almost there (9/10)
 bob = User.create!(
   email: "bob@example.com",
-  password: "password",
+  password: "Password123",
+  confirmed_at: Time.current,
   first_name: "Bob",
   last_name: "Chen",
   phone: 619876543,
@@ -59,7 +47,8 @@ bob = User.create!(
 # carol: 20 visits → 2 milestones, 1 redemption used, 1 available reward, 2 deals claimed, 2 upcoming bookings
 carol = User.create!(
   email: "carol@example.com",
-  password: "password",
+  password: "Password123",
+  confirmed_at: Time.current,
   first_name: "Carol",
   last_name: "Park",
   phone: 612345678,
@@ -69,19 +58,19 @@ carol = User.create!(
 
 owner = User.create!(
   email: "owner@tapinstudio.com",
-  password: "password",
+  password: "Password123",
+  confirmed_at: Time.current,
   first_name: "Sara",
   last_name: "Lopez",
   phone: 610001111,
   referred_by: nil,
-  last_visit_at: nil,
-  role: :admin
+  last_visit_at: nil
 )
 
 puts "Creating studios..."
 
 studio = Studio.create!(
-  user: owner,
+  user: alice,
   name: "TAPIN Fitness",
   slug: "tapin-fitness",
   mindbody_site_id: "12345",
@@ -200,10 +189,10 @@ deal1 = Deal.create!(
 
 deal2 = Deal.create!(
   studio: studio,
-  name: "10% Off Next Class",
+  name: "Refer a Friend — 10% Off",
   deal_type: "discount",
   discount_percent: 10,
-  trigger_condition: "5th_visit",
+  trigger_condition: "referral",
   usage_limit: 1,
   expiry_days: 14,
   active: true
@@ -341,7 +330,7 @@ DealClaim.create!(
   deal: deal1,
   studio: studio,
   code: "FIRST-ALICE-001",
-  status: true,
+  active: true,
   claimed_at: 10.weeks.ago
 )
 
@@ -350,7 +339,7 @@ DealClaim.create!(
   deal: deal1,
   studio: studio,
   code: "FIRST-BOB-001",
-  status: true,
+  active: true,
   claimed_at: 9.weeks.ago
 )
 
@@ -359,7 +348,7 @@ DealClaim.create!(
   deal: deal1,
   studio: studio,
   code: "FIRST-CAROL-001",
-  status: true,
+  active: true,
   claimed_at: 5.weeks.ago
 )
 
@@ -368,7 +357,7 @@ DealClaim.create!(
   deal: deal2,
   studio: studio,
   code: "10OFF-CAROL-001",
-  status: true,
+  active: true,
   claimed_at: 1.week.ago
 )
 
@@ -451,154 +440,14 @@ Message.create!(
   summary: "Assistant shared reward progress"
 )
 
-puts "Updating user point totals..."
-[ alice, bob, carol ].each(&:recalculate_points!)
-
-puts "Creating notification templates..."
-NotificationTemplate::VALID_EVENT_TYPES.each do |event_type|
-  title, body = case event_type
-  when "reward_unlocked"
-    [ "Reward Unlocked!", "Congrats {{first_name}}! You've earned a free class at {{studio_name}}." ]
-  when "deal_available"
-    [ "New Deal Available", "Hey {{first_name}}, a new deal is waiting for you at {{studio_name}}!" ]
-  when "booking_reminder"
-    [ "Class Reminder", "Don't forget — {{class_name}} starts in 1 hour at {{studio_name}}." ]
-  when "inactive_user"
-    [ "We Miss You!", "Hey {{first_name}}, it's been a while. Come back to {{studio_name}} and keep your streak going!" ]
-  when "deal_expiry"
-    [ "Deal Expiring Soon", "Your deal at {{studio_name}} expires tomorrow — don't miss out!" ]
-  end
-
-  NotificationTemplate.create!(
-    studio: studio,
-    event_type: event_type,
-    title_template: title,
-    body_template: body,
-    enabled: true
-  )
-end
-
-puts "Creating broadcasts..."
-Broadcast.create!(
-  studio: studio,
-  subject: "Welcome to TAPIN Fitness!",
-  body: "Thanks for joining our community. Check in at reception to start earning rewards!",
-  channel: "push",
-  audience_filter: "all",
-  scheduled_at: 1.day.ago,
-  sent_at: 1.day.ago,
-  total_sent: 3,
-  total_delivered: 3,
-  total_failed: 0
-)
-
-puts "Creating referrals..."
-# Alice has an active referral code she can share
-Referral.create!(
-  referrer: alice,
-  status: "pending"
-)
-
-# Carol referred Bob (completed)
-Referral.create!(
-  referrer: carol,
-  referred: bob,
-  status: "completed",
-  completed_at: 8.weeks.ago
-)
-
-puts "Creating mock Mindbody clients..."
-
-# Scenario 1: Exact phone match with Alice — auto-links on visit 1
-MindbodyClient.create!(
-  studio: studio,
-  mindbody_client_id: "MB-1001",
-  first_name: "Alice",
-  last_name: "Martin",
-  phone: "611234567",
-  email: "alice.martin@gmail.com"
-)
-
-# Scenario 2: No phone match for Bob, but name matches — triggers at visit 10
-MindbodyClient.create!(
-  studio: studio,
-  mindbody_client_id: "MB-1002",
-  first_name: "Bob",
-  last_name: "Chen",
-  phone: "699999999",
-  email: "bob.chen@gmail.com"
-)
-
-# Scenario 3: Client exists in Mindbody but has no TapIn account yet
-MindbodyClient.create!(
-  studio: studio,
-  mindbody_client_id: "MB-1003",
-  first_name: "Diana",
-  last_name: "Rivera",
-  phone: "615551234",
-  email: "diana.r@gmail.com"
-)
-
-# Scenario 4: Duplicate phone — two Mindbody clients with same number (conflict)
-MindbodyClient.create!(
-  studio: studio,
-  mindbody_client_id: "MB-1004",
-  first_name: "Carol",
-  last_name: "Park",
-  phone: "612345678",
-  email: "carol.park@gmail.com"
-)
-
-MindbodyClient.create!(
-  studio: studio,
-  mindbody_client_id: "MB-1005",
-  first_name: "Caroline",
-  last_name: "Parker",
-  phone: "612345678",
-  email: "caroline.p@gmail.com"
-)
-
-puts "Creating Mindbody links (simulated match results)..."
-
-# Alice: phone matched MB-1001 on visit 1 → auto-linked
-MindbodyLink.create!(
-  user: alice,
-  mindbody_client_id: "MB-1001",
-  status: "linked",
-  linked_at: 10.weeks.ago,
-  match_data: { "matched_by" => "phone", "name" => "Alice Martin" }
-)
-
-# Bob: no phone match on visit 1, name match found MB-1002 at visit 9 → pending admin review
-MindbodyLink.create!(
-  user: bob,
-  mindbody_client_id: "MB-1002",
-  status: "pending",
-  match_data: { "match_type" => "name", "matched_by" => "name", "name" => "Bob Chen" }
-)
-
-# Carol: phone matched two Mindbody clients (MB-1004 + MB-1005) → conflict
-MindbodyLink.create!(
-  user: carol,
-  status: "conflict",
-  match_data: {
-    "conflicting_client_ids" => [ "MB-1004", "MB-1005" ],
-    "clients" => [
-      { "mindbody_client_id" => "MB-1004", "name" => "Carol Park", "phone" => "612345678" },
-      { "mindbody_client_id" => "MB-1005", "name" => "Caroline Parker", "phone" => "612345678" }
-    ]
-  }
-)
-
-# Owner has no Mindbody link (admin, not a customer)
-
 puts "Done! Seed data created successfully."
 puts ""
-puts "Test scenarios:"
-puts "  alice@example.com  — 10 visits, reward available, Mindbody LINKED (MB-1001)"
-puts "  bob@example.com    — 9 visits, 1 visit remaining, Mindbody PENDING review (name match MB-1002)"
-puts "  carol@example.com  — 23 visits, 1 available reward, Mindbody CONFLICT (MB-1004 vs MB-1005)"
+puts "Login credentials:"
+puts "  Password for all seeded users: Password123"
+puts "  Sign in at: http://localhost:3000/users/sign_in"
 puts ""
-puts "Admin Mindbody pages:"
-puts "  /admin/mindbody_matches — 1 pending (Bob), 2 recent (Alice linked, Carol conflict)"
-puts "  /admin/mindbody_conflicts/#{MindbodyLink.find_by(status: 'conflict')&.id} — Carol's conflict"
+puts "Test scenarios:"
+puts "  alice@example.com  — 10 visits, reward available (+ 1 expired redemption)"
+puts "  bob@example.com    — 9 visits, 1 visit remaining"
+puts "  carol@example.com  — 20 visits, 1 available reward, 2 upcoming bookings, 2 deal claims, active reward redemption"
+puts "  owner@tapinstudio.com — studio owner account"
