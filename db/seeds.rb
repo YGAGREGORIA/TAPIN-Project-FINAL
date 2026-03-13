@@ -2,9 +2,13 @@
 # development, test). The code here should be idempotent so that it can be executed at any point in every environment.
 # The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
 
-# Suppress job-enqueuing callbacks during seeding (SolidQueue may not be available)
+# Use inline queue adapter during seeding (SolidQueue tables may not exist on Heroku)
+Rails.application.config.active_job.queue_adapter = :async
+
+# Suppress job-enqueuing callbacks during seeding to avoid unnecessary background work
 Visit.skip_callback(:create, :after, :enqueue_mindbody_match) if Visit.method_defined?(:enqueue_mindbody_match)
 Visit.skip_callback(:create, :after, :notify_reward_unlocked) if Visit.method_defined?(:notify_reward_unlocked)
+Visit.skip_callback(:create, :after, :complete_referral_if_first_visit) if Visit.method_defined?(:complete_referral_if_first_visit)
 
 puts "Cleaning database..."
 Notification.destroy_all if defined?(Notification)
