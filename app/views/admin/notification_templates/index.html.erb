@@ -1,0 +1,40 @@
+<% content_for(:title) { "Notification Templates" } %>
+
+<h2 class="mb-4">Notification Templates</h2>
+<p class="text-muted">Customise the messages your members receive for each event. Use <code>[name]</code>, <code>[points]</code>, <code>[reward]</code> as variables.</p>
+
+<div class="row">
+  <% @templates.each do |template| %>
+    <div class="col-md-6 mb-4">
+      <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h6 class="mb-0"><%= template.event_type.titleize %></h6>
+          <% if template.enabled? %>
+            <span class="badge bg-success">Active</span>
+          <% else %>
+            <span class="badge bg-secondary">Disabled</span>
+          <% end %>
+        </div>
+        <div class="card-body">
+          <%= form_with(model: template, url: admin_notification_template_path(template), method: :patch) do |f| %>
+            <div class="mb-2">
+              <label class="form-label small">Title</label>
+              <%= f.text_field :title_template, class: "form-control form-control-sm" %>
+            </div>
+            <div class="mb-2">
+              <label class="form-label small">Body</label>
+              <%= f.text_area :body_template, class: "form-control form-control-sm", rows: 3 %>
+            </div>
+            <div class="d-flex justify-content-between align-items-center">
+              <div class="form-check form-switch">
+                <%= f.check_box :enabled, class: "form-check-input", id: "enabled_#{template.id}" %>
+                <label class="form-check-label small" for="enabled_<%= template.id %>">Enabled</label>
+              </div>
+              <%= f.submit "Save", class: "btn btn-sm btn-primary" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
