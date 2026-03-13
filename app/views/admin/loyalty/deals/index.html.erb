@@ -1,0 +1,124 @@
+<% content_for :title, "Admin — Deals" %>
+
+<div class="bookings-page">
+
+  <div class="bookings-header">
+    <h1 class="schedule-title">Deals</h1>
+  </div>
+
+  <div class="bookings-section">
+
+    <%# ── Create new deal ── %>
+    <p class="section-title">New Deal</p>
+    <div class="dashboard-card mb-3">
+      <%= form_with model: [:admin, :loyalty, @new_deal], url: admin_loyalty_deals_path, local: true do |f| %>
+        <p>
+          <%= f.label :name %>
+          <%= f.text_field :name, class: "form-control" %>
+        </p>
+        <p>
+          <%= f.label :deal_type, "Type" %>
+          <%= f.select :deal_type, Deal.deal_types.keys.map { |k| [k.humanize, k] }, {}, class: "form-select" %>
+        </p>
+        <p>
+          <%= f.label :trigger_condition, "Trigger" %>
+          <%= f.select :trigger_condition, Deal.trigger_conditions.keys.map { |k| [k.humanize, k] }, {}, class: "form-select" %>
+        </p>
+        <p>
+          <%= f.label :discount_percent, "Discount %" %>
+          <%= f.number_field :discount_percent, class: "form-control" %>
+        </p>
+        <p>
+          <%= f.label :expiry_days, "Expiry (days)" %>
+          <%= f.number_field :expiry_days, class: "form-control" %>
+        </p>
+        <p>
+          <%= f.label :usage_limit, "Usage limit (optional)" %>
+          <%= f.number_field :usage_limit, class: "form-control" %>
+        </p>
+        <p>
+          <%= f.label :active, "Enabled" %>
+          <%= f.check_box :active %>
+        </p>
+        <p><%= f.submit "Create deal", class: "btn-claim" %></p>
+      <% end %>
+    </div>
+
+    <%# ── Existing deals ── %>
+    <p class="section-title">Existing Deals</p>
+
+    <% if @deals.any? %>
+      <% @deals.each do |deal| %>
+        <div class="deal-card mb-3">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <div>
+              <div class="deal-card-name"><%= deal.name %></div>
+              <div class="deal-card-meta">
+                <%= deal.trigger_condition&.humanize %> &middot; <%= deal.deal_type&.humanize %>
+                &middot; <%= deal.active? ? "Enabled" : "Disabled" %>
+              </div>
+            </div>
+            <% if deal.discount_percent.present? && deal.discount_percent > 0 %>
+              <div class="deal-big-discount"><%= deal.discount_percent %>%<br><span>off</span></div>
+            <% end %>
+          </div>
+
+          <%= form_with model: [:admin, :loyalty, deal], local: true, method: :patch do |f| %>
+            <p>
+              <%= f.label :active, "Enabled" %>
+              <%= f.check_box :active %>
+            </p>
+            <p>
+              <%= f.label :discount_percent, "Discount %" %>
+              <%= f.number_field :discount_percent, class: "form-control" %>
+            </p>
+            <p>
+              <%= f.label :expiry_days, "Expiry (days)" %>
+              <%= f.number_field :expiry_days, class: "form-control" %>
+            </p>
+            <p><%= f.submit "Save", class: "btn-claim" %></p>
+          <% end %>
+
+          <%= button_to "Delete", admin_loyalty_deal_path(deal),
+                method: :delete,
+                data: { confirm: "Delete \"#{deal.name}\"? This cannot be undone." },
+                class: "btn-secondary-action mt-1" %>
+        </div>
+      <% end %>
+    <% else %>
+      <div class="dashboard-card">
+        <div class="empty-state">
+          <i class="fa fa-tag"></i>
+          <p>No deals configured yet.</p>
+        </div>
+      </div>
+    <% end %>
+
+    <%# ── Referral settings ── %>
+    <% if @referral_deal.present? %>
+      <p class="section-title">Referral Settings</p>
+      <div class="deal-card mb-3">
+        <%= form_with url: admin_loyalty_deals_referral_path, method: :patch, local: true do |f| %>
+          <p>
+            <label for="deal_active">Enabled</label>
+            <%= check_box_tag "deal[active]", "1", @referral_deal.active %>
+          </p>
+          <p>
+            <label for="deal_discount_percent">Split discount %</label>
+            <%= number_field_tag "deal[discount_percent]", @referral_deal.discount_percent, class: "form-control" %>
+          </p>
+          <p>
+            <label for="deal_expiry_days">Expiry (days)</label>
+            <%= number_field_tag "deal[expiry_days]", @referral_deal.expiry_days, class: "form-control" %>
+          </p>
+          <p>
+            <label for="deal_usage_limit">Max active codes</label>
+            <%= number_field_tag "deal[usage_limit]", @referral_deal.usage_limit, class: "form-control" %>
+          </p>
+          <p><%= submit_tag "Save referral settings", class: "btn-claim" %></p>
+        <% end %>
+      </div>
+    <% end %>
+
+  </div>
+</div>

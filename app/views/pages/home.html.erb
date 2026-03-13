@@ -1,17 +1,96 @@
-<% content_for :title, "Welcome to Tapin" %>
+<% content_for :title, "TapIn – The Smarter Way to Run Your Studio" %>
 
-<div class="home-page">
-  <div class="home-hero">
-    <h1 class="home-title">Welcome to Tapin</h1>
-    <p class="home-subtitle">Track your classes, earn rewards, and discover deals at your favourite studios.</p>
+<div class="landing-page">
 
-    <div class="home-actions">
+  <%# ── Hero ──────────────────────────────────────────────────────── %>
+  <section class="landing-hero">
+    <div class="landing-hero__inner animate-fade-up">
+      <p class="landing-eyebrow">Built for fitness studios</p>
+      <h1 class="landing-headline">Check-ins, rewards &amp; deals — all with one tap.</h1>
+      <p class="landing-sub">
+        TapIn lets your members check into class by tapping their phone on an NFC tag, earn loyalty stamps, and unlock exclusive deals — no app download required. Give your studio a seamless, modern experience your members will love.
+      </p>
       <% if user_signed_in? %>
-        <%= link_to "Go to Dashboard", dashboard_path, class: "btn-primary" %>
+        <%= link_to "Go to Dashboard", dashboard_path, class: "landing-btn landing-btn--primary" %>
       <% else %>
-        <%= link_to "Sign In", new_user_session_path, class: "btn-primary" %>
-        <%= link_to "Sign Up", new_user_registration_path, class: "btn-secondary" %>
+        <%= link_to "Get Started", new_user_registration_path, class: "landing-btn landing-btn--primary" %>
+        <%= link_to "Sign In", new_user_session_path, class: "landing-btn landing-btn--ghost" %>
       <% end %>
     </div>
-  </div>
+  </section>
+
+  <%# ── How it works ───────────────────────────────────────────────── %>
+  <section class="landing-section">
+    <p class="landing-section__label">How it works</p>
+    <h2 class="landing-section__title">Three steps. Zero friction.</h2>
+    <div class="landing-steps">
+      <div class="landing-step">
+        <div class="landing-step__icon"><i class="fa-solid fa-wifi"></i></div>
+        <h3 class="landing-step__heading">1. Tap to Check In</h3>
+        <p class="landing-step__body">Members tap their phone on your studio's NFC tag at the front desk. Instant check-in, every time.</p>
+      </div>
+      <div class="landing-step">
+        <div class="landing-step__icon"><i class="fa-solid fa-stamp"></i></div>
+        <h3 class="landing-step__heading">2. Earn Stamps</h3>
+        <p class="landing-step__body">Every visit adds a stamp to their loyalty card. Members track their progress and stay motivated to keep coming back.</p>
+      </div>
+      <div class="landing-step">
+        <div class="landing-step__icon"><i class="fa-solid fa-tag"></i></div>
+        <h3 class="landing-step__heading">3. Unlock Deals &amp; Rewards</h3>
+        <p class="landing-step__body">Complete a card, earn a reward. Studios can also post exclusive deals to keep members engaged between classes.</p>
+      </div>
+    </div>
+  </section>
+
+  <%# ── Why studios love TapIn ─────────────────────────────────────── %>
+  <section class="landing-section landing-section--dark">
+    <p class="landing-section__label landing-section__label--light">For studio owners</p>
+    <h2 class="landing-section__title landing-section__title--light">Everything you need to keep members coming back.</h2>
+    <div class="landing-features">
+      <div class="landing-feature">
+        <i class="fa-solid fa-bolt landing-feature__icon"></i>
+        <h4 class="landing-feature__heading">Instant setup</h4>
+        <p class="landing-feature__body">Get up and running in minutes. Place your NFC tag, configure your rewards, and you're live.</p>
+      </div>
+      <div class="landing-feature">
+        <i class="fa-solid fa-chart-line landing-feature__icon"></i>
+        <h4 class="landing-feature__heading">Attendance insights</h4>
+        <p class="landing-feature__body">See who's showing up, how often, and which classes are most popular — all from your dashboard.</p>
+      </div>
+      <div class="landing-feature">
+        <i class="fa-solid fa-gift landing-feature__icon"></i>
+        <h4 class="landing-feature__heading">Custom rewards</h4>
+        <p class="landing-feature__body">Set your own loyalty milestones. Free class, discount, merch — you decide what keeps members motivated.</p>
+      </div>
+      <div class="landing-feature">
+        <i class="fa-solid fa-percent landing-feature__icon"></i>
+        <h4 class="landing-feature__heading">Deals &amp; promos</h4>
+        <p class="landing-feature__body">Push time-limited deals directly to your members. Drive bookings during quiet periods in seconds.</p>
+      </div>
+      <div class="landing-feature">
+        <i class="fa-solid fa-share-nodes landing-feature__icon"></i>
+        <h4 class="landing-feature__heading">Built-in referrals</h4>
+        <p class="landing-feature__body">Members share a personal link, new signups get a discount, and your community grows organically.</p>
+      </div>
+      <div class="landing-feature">
+        <i class="fa-solid fa-mobile-screen landing-feature__icon"></i>
+        <h4 class="landing-feature__heading">No app required</h4>
+        <p class="landing-feature__body">Members use TapIn entirely from their phone browser. No downloads, no friction — just tap and go.</p>
+      </div>
+    </div>
+  </section>
+
+  <%# ── CTA ────────────────────────────────────────────────────────── %>
+  <section class="landing-cta">
+    <div class="landing-cta__inner animate-fade-up">
+      <h2 class="landing-cta__title">Ready to bring your studio into the future?</h2>
+      <p class="landing-cta__sub">Join studios already using TapIn to reward loyal members and grow their community. Setup takes less than 10 minutes.</p>
+      <% if user_signed_in? %>
+        <%= link_to "Go to Dashboard", dashboard_path, class: "landing-btn landing-btn--primary" %>
+      <% else %>
+        <%= link_to "Join as a Studio", new_user_registration_path, class: "landing-btn landing-btn--primary" %>
+      <% end %>
+    </div>
+  </section>
+
 </div>

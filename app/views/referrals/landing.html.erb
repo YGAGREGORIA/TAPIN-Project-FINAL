@@ -1,68 +1,30 @@
 <% content_for(:title) { "Join #{@studio.name}" } %>
 
-<div class="referral-landing">
-  <% if @brand&.logo_url.present? %>
-    <img src="<%= @brand.logo_url %>" alt="<%= @studio.name %>" class="referral-landing__logo">
-  <% end %>
+<div class="schedule-page">
 
-  <h1>You've been invited!</h1>
-  <p>
-    <strong><%= @referrer.first_name || "Your friend" %></strong> wants you to join
-    <strong><%= @studio.name %></strong>.
-  </p>
-
-  <div class="referral-landing__offer">
-    <h2>50% off</h2>
-    <p>for both of you after your first visit</p>
+  <%# ── Header ── %>
+  <div class="schedule-header">
+    <% if @brand&.logo_url.present? %>
+      <img src="<%= @brand.logo_url %>" alt="<%= @studio.name %>" style="max-width: 80px; margin-bottom: 0.75rem; border-radius: 0.5rem;">
+    <% end %>
+    <h1 class="schedule-title">You've been invited!</h1>
+    <p class="schedule-subtitle">
+      <strong><%= @referrer.first_name || "Your friend" %></strong> wants you to join
+      <strong><%= @studio.name %></strong>.
+    </p>
   </div>
 
-  <p>
-    <!-- Links to Navid's phone entry/sign-up flow (stores referral_code in session) -->
-    <%= link_to "Get Started", studio_landing_path(studio_slug: @studio.slug), class: "referral-landing__cta" %>
-  </p>
+  <section class="dashboard-section">
+    <div class="reward-card" style="text-align: center;">
+      <div class="reward-name" style="font-size: 2rem;">50% off</div>
+      <p class="reward-description">for both of you after your first visit</p>
+    </div>
+  </section>
+
+  <section class="dashboard-section pb-5" style="text-align: center;">
+    <%= link_to studio_landing_path(studio_slug: @studio.slug), class: "btn-book", style: "display: inline-block;" do %>
+      Get Started <i class="fa fa-arrow-right"></i>
+    <% end %>
+  </section>
+
 </div>
-
-<style>
-  .referral-landing {
-    max-width: 480px;
-    margin: 2rem auto;
-    padding: 2rem;
-    text-align: center;
-    font-family: <%= @brand&.font_body || 'system-ui, sans-serif' %>;
-  }
-
-  .referral-landing__logo {
-    max-width: 100px;
-    margin-bottom: 1rem;
-  }
-
-  .referral-landing__offer {
-    background: <%= @brand&.primary_color || '#FF5733' %>;
-    color: white;
-    padding: 1.5rem;
-    border-radius: 12px;
-    margin: 1.5rem 0;
-  }
-
-  .referral-landing__offer h2 {
-    font-size: 2rem;
-    margin: 0;
-    font-family: <%= @brand&.font_heading || 'system-ui, sans-serif' %>;
-  }
-
-  .referral-landing__offer p {
-    margin: 0.25rem 0 0;
-    opacity: 0.9;
-  }
-
-  .referral-landing__cta {
-    display: inline-block;
-    padding: 0.875rem 2rem;
-    background: <%= @brand&.primary_color || '#FF5733' %>;
-    color: white;
-    text-decoration: none;
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 1.1rem;
-  }
-</style>

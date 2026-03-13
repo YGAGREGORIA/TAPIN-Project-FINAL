@@ -1,0 +1,29 @@
+<h1>Rewards</h1>
+
+<p><%= link_to "New Reward", new_admin_reward_path, class: "btn btn-primary btn-sm" %></p>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Points Cost</th>
+      <th>Active</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @rewards.each do |reward| %>
+      <tr>
+        <td><%= reward.name %></td>
+        <td><%= reward.reward_type %></td>
+        <td><%= reward.points_cost %></td>
+        <td><%= reward.active? ? "Yes" : "No" %></td>
+        <td>
+          <%= link_to "Edit", edit_admin_reward_path(reward) %>
+          <%= button_to "Delete", admin_reward_path(reward), method: :delete, class: "btn btn-link btn-sm text-danger", data: { turbo_confirm: "Are you sure?" } %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

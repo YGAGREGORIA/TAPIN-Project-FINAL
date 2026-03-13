@@ -5,7 +5,7 @@ one:
   deal: one
   studio: one
   code: DEAL-FIXTURE01
-  status: false
+  active: false
   claimed_at: 2026-03-10 12:52:15
 
 two:
@@ -13,5 +13,5 @@ two:
   deal: two
   studio: two
   code: DEAL-FIXTURE02
-  status: false
+  active: false
   claimed_at: 2026-03-10 12:52:15

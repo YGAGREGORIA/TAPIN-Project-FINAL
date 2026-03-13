@@ -3,7 +3,8 @@ class MindbodyLinksController < ApplicationController
   before_action :set_studio
 
   def new
-    @redirect_back_to = params[:return_to]
+    raw = params[:return_to].to_s
+    session[:mindbody_return_to] = raw if raw.start_with?("/")
   end
 
   private

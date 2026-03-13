@@ -3,9 +3,6 @@
 # The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
 
 puts "Cleaning database..."
-MindbodyClient.destroy_all
-MindbodyLink.destroy_all
-Referral.destroy_all
 Message.destroy_all
 Chat.destroy_all
 RewardRedemption.destroy_all
@@ -13,9 +10,9 @@ Reward.destroy_all
 DealClaim.destroy_all
 Deal.destroy_all
 Visit.destroy_all
-ClassConfig.destroy_all
 Booking.destroy_all
 StudioClass.destroy_all
+ClassConfig.destroy_all
 StudioBrand.destroy_all
 Studio.destroy_all
 User.destroy_all
@@ -25,9 +22,11 @@ puts "Creating users..."
 # alice: 10 visits → reward available (10/10, 1 milestone, 0 redemptions)
 alice = User.create!(
   email: "alice@example.com",
-  password: "password",
+  password: "Password123",
+  confirmed_at: Time.current,
   first_name: "Alice",
   last_name: "Martin",
+  admin: true,
   phone: 611234567,
   referred_by: nil,
   last_visit_at: 1.day.ago
@@ -36,7 +35,8 @@ alice = User.create!(
 # bob: 9 visits → almost there (9/10)
 bob = User.create!(
   email: "bob@example.com",
-  password: "password",
+  password: "Password123",
+  confirmed_at: Time.current,
   first_name: "Bob",
   last_name: "Chen",
   phone: 619876543,
@@ -47,7 +47,8 @@ bob = User.create!(
 # carol: 20 visits → 2 milestones, 1 redemption used, 1 available reward, 2 deals claimed, 2 upcoming bookings
 carol = User.create!(
   email: "carol@example.com",
-  password: "password",
+  password: "Password123",
+  confirmed_at: Time.current,
   first_name: "Carol",
   last_name: "Park",
   phone: 612345678,
@@ -57,19 +58,43 @@ carol = User.create!(
 
 owner = User.create!(
   email: "owner@tapinstudio.com",
-  password: "password",
+  password: "Password123",
+  confirmed_at: Time.current,
   first_name: "Sara",
   last_name: "Lopez",
   phone: 610001111,
   referred_by: nil,
-  last_visit_at: nil,
-  role: :admin
+  last_visit_at: nil
 )
+
+# Demo members — variety of engagement levels for admin dashboard
+demo_members = [
+  { first_name: "Lena",    last_name: "Rossi",    email: "lena@example.com",    phone: 611000001, visits: 7,  weeks_ago: 3 },
+  { first_name: "Marcus",  last_name: "Webb",     email: "marcus@example.com",  phone: 611000002, visits: 15, weeks_ago: 1 },
+  { first_name: "Priya",   last_name: "Sharma",   email: "priya@example.com",   phone: 611000003, visits: 3,  weeks_ago: 2 },
+  { first_name: "Jaden",   last_name: "Torres",   email: "jaden@example.com",   phone: 611000004, visits: 20, weeks_ago: 1 },
+  { first_name: "Sofia",   last_name: "Nguyen",   email: "sofia@example.com",   phone: 611000005, visits: 1,  weeks_ago: 0 },
+  { first_name: "Owen",    last_name: "Blake",    email: "owen@example.com",    phone: 611000006, visits: 12, weeks_ago: 2 },
+  { first_name: "Aisha",   last_name: "Patel",    email: "aisha@example.com",   phone: 611000007, visits: 5,  weeks_ago: 1 },
+]
+
+demo_users = demo_members.each_with_object([]) do |m, arr|
+  arr << User.create!(
+    email: m[:email],
+    password: "Password123",
+    confirmed_at: Time.current,
+    first_name: m[:first_name],
+    last_name: m[:last_name],
+    phone: m[:phone],
+    referred_by: nil,
+    last_visit_at: m[:weeks_ago].weeks.ago
+  )
+end
 
 puts "Creating studios..."
 
 studio = Studio.create!(
-  user: owner,
+  user: alice,
   name: "TAPIN Fitness",
   slug: "tapin-fitness",
   mindbody_site_id: "12345",
@@ -153,10 +178,10 @@ pilates_desc = "Core-focused movements to improve posture, stability, and total-
   { day: 6, hour: 10, type: "pilates", teacher: teachers[:pilates][0],  config: pilates, name: "Pilates Core" }
 ].each do |c|
   desc = case c[:type]
-         when "yoga"    then yoga_desc
-         when "hiit"    then hiit_desc
-         when "pilates" then pilates_desc
-         end
+  when "yoga"    then yoga_desc
+  when "hiit"    then hiit_desc
+  when "pilates" then pilates_desc
+  end
   capacity = c[:type] == "hiit" ? 15 : 20
 
   StudioClass.create!(
@@ -188,10 +213,10 @@ deal1 = Deal.create!(
 
 deal2 = Deal.create!(
   studio: studio,
-  name: "10% Off Next Class",
+  name: "Refer a Friend — 10% Off",
   deal_type: "discount",
   discount_percent: 10,
-  trigger_condition: "5th_visit",
+  trigger_condition: "referral",
   usage_limit: 1,
   expiry_days: 14,
   active: true
@@ -269,6 +294,22 @@ carol_configs = [ yoga, pilates, hiit, yoga, pilates, yoga, hiit, pilates, yoga,
   )
 end
 
+# Demo members: varied visit histories for admin dashboard activity feed
+all_configs = [yoga, hiit, pilates, yoga, hiit, pilates, yoga, hiit, pilates, yoga,
+               pilates, yoga, hiit, pilates, yoga, hiit, pilates, yoga, pilates, hiit]
+demo_members.each_with_index do |m, idx|
+  user = demo_users[idx]
+  m[:visits].times do |i|
+    Visit.create!(
+      user: user,
+      studio: studio,
+      class_config: all_configs[i % all_configs.length],
+      points_earned: all_configs[i % all_configs.length].point_value,
+      visited_at: (m[:visits] - i + m[:weeks_ago]).days.ago
+    )
+  end
+end
+
 puts "Creating bookings..."
 
 # Link bookings to studio classes where possible
@@ -329,7 +370,7 @@ DealClaim.create!(
   deal: deal1,
   studio: studio,
   code: "FIRST-ALICE-001",
-  status: true,
+  active: true,
   claimed_at: 10.weeks.ago
 )
 
@@ -338,7 +379,7 @@ DealClaim.create!(
   deal: deal1,
   studio: studio,
   code: "FIRST-BOB-001",
-  status: true,
+  active: true,
   claimed_at: 9.weeks.ago
 )
 
@@ -347,7 +388,7 @@ DealClaim.create!(
   deal: deal1,
   studio: studio,
   code: "FIRST-CAROL-001",
-  status: true,
+  active: true,
   claimed_at: 5.weeks.ago
 )
 
@@ -356,7 +397,7 @@ DealClaim.create!(
   deal: deal2,
   studio: studio,
   code: "10OFF-CAROL-001",
-  status: true,
+  active: true,
   claimed_at: 1.week.ago
 )
 
@@ -401,6 +442,12 @@ chat2 = Chat.create!(
   status: true
 )
 
+chat3 = Chat.create!(
+  user: carol,
+  studio: studio,
+  status: true
+)
+
 puts "Creating messages..."
 
 Message.create!(
@@ -439,60 +486,33 @@ Message.create!(
   summary: "Assistant shared reward progress"
 )
 
-puts "Creating mock Mindbody clients..."
-
-# Scenario 1: Exact phone match with Alice — auto-links on visit 1
-MindbodyClient.create!(
-  studio: studio,
-  mindbody_client_id: "MB-1001",
-  first_name: "Alice",
-  last_name: "Martin",
-  phone: "611234567",
-  email: "alice.martin@gmail.com"
+Message.create!(
+  chat: chat3,
+  role: "user",
+  tag: "inquiry",
+  sentiment: "positive",
+  content: "I just hit 23 visits! Can I use my free class reward this week?",
+  summary: "User asking about redeeming free class reward"
 )
 
-# Scenario 2: No phone match for Bob, but name matches — triggers at visit 10
-MindbodyClient.create!(
-  studio: studio,
-  mindbody_client_id: "MB-1002",
-  first_name: "Bob",
-  last_name: "Chen",
-  phone: "699999999",
-  email: "bob.chen@gmail.com"
-)
-
-# Scenario 3: Client exists in Mindbody but has no TapIn account yet
-MindbodyClient.create!(
-  studio: studio,
-  mindbody_client_id: "MB-1003",
-  first_name: "Diana",
-  last_name: "Rivera",
-  phone: "615551234",
-  email: "diana.r@gmail.com"
-)
-
-# Scenario 4: Duplicate phone — two Mindbody clients with same number (conflict)
-MindbodyClient.create!(
-  studio: studio,
-  mindbody_client_id: "MB-1004",
-  first_name: "Carol",
-  last_name: "Park",
-  phone: "612345678",
-  email: "carol.park@gmail.com"
-)
-
-MindbodyClient.create!(
-  studio: studio,
-  mindbody_client_id: "MB-1005",
-  first_name: "Caroline",
-  last_name: "Parker",
-  phone: "612345678",
-  email: "caroline.p@gmail.com"
+Message.create!(
+  chat: chat3,
+  role: "assistant",
+  tag: "response",
+  sentiment: "positive",
+  content: "Congrats on 23 visits! Yes, your free class reward is ready to redeem — just tap 'Redeem Now' on your dashboard. You also have a Pilates Core class booked tomorrow and a HIIT Blast coming up in 5 days!",
+  summary: "Assistant confirmed reward is redeemable and recapped upcoming bookings"
 )
 
 puts "Done! Seed data created successfully."
 puts ""
+puts "Login credentials:"
+puts "  Password for all seeded users: Password123"
+puts "  Sign in at: http://localhost:3000/users/sign_in"
+puts ""
 puts "Test scenarios:"
-puts "  alice@example.com  — 10 visits, reward available (+ 1 expired redemption)"
-puts "  bob@example.com    — 9 visits, 1 visit remaining"
-puts "  carol@example.com  — 20 visits, 1 available reward, 2 upcoming bookings, 2 deal claims, active reward redemption"
+puts "  alice@example.com       — admin, 10 visits, reward available"
+puts "  bob@example.com         — 9 visits, 1 visit remaining"
+puts "  carol@example.com       — 23 visits, 1 available reward, 2 bookings, 2 deal claims, active redemption"
+puts "  owner@tapinstudio.com   — studio owner account"
+puts "  lena/marcus/priya/...   — 7 additional demo members with varied visit history"
