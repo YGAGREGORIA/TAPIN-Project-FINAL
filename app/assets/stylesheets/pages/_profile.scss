@@ -40,8 +40,12 @@
   align-items: center;
 }
 
-.profile-avatar {
+.profile-avatar-wrap {
   position: relative;
+  display: inline-block;
+}
+
+.profile-avatar {
   width: 8rem;
   height: 8rem;
   border-radius: 50%;
@@ -54,6 +58,13 @@
   overflow: hidden;
 }
 
+.profile-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
 .profile-avatar-initials {
   font-family: 'Space Grotesk', sans-serif;
   font-size: 2.25rem;
@@ -61,16 +72,29 @@
   color: var(--primary);
 }
 
-// Hide fallback when initials are present
-.profile-avatar-initials:not(:empty) ~ .profile-avatar-fallback {
-  display: none;
+.profile-avatar-camera {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  border: 2px solid var(--card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba($terracotta, 0.35);
+  transition: background 0.15s;
+
+  &:hover { background: darken($terracotta, 6%); }
 }
 
-.profile-avatar-fallback {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 2.25rem;
-  font-weight: 600;
-  color: var(--primary);
+.profile-avatar-input {
+  display: none; // hidden — label triggers it
 }
 
 .profile-avatar-hint {

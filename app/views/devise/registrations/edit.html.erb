@@ -7,20 +7,31 @@
     <h3 class="profile-hero-title">Profile</h3>
   </div>
 
-  <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, class: "profile-form" }) do |f| %>
+  <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, class: "profile-form", multipart: true }) do |f| %>
     <%= render "devise/shared/error_messages", resource: resource %>
 
     <div class="profile-body">
 
       <%# ── Avatar ── %>
       <div class="profile-avatar-section">
-        <div class="profile-avatar">
-          <span class="profile-avatar-initials">
-            <%= current_user.first_name&.first&.upcase %><%= current_user.last_name&.first&.upcase %>
-          </span>
-          <span class="profile-avatar-fallback"><%= current_user.email.first.upcase %></span>
+        <div class="profile-avatar-wrap">
+          <div class="profile-avatar">
+            <% if current_user.avatar.attached? %>
+              <%= image_tag current_user.avatar, class: "profile-avatar-img", alt: "Profile photo" %>
+            <% elsif current_user.first_name.present? || current_user.last_name.present? %>
+              <span class="profile-avatar-initials">
+                <%= current_user.first_name&.first&.upcase %><%= current_user.last_name&.first&.upcase %>
+              </span>
+            <% else %>
+              <span class="profile-avatar-initials"><%= current_user.email.first.upcase %></span>
+            <% end %>
+          </div>
+          <label class="profile-avatar-camera" aria-label="Upload photo">
+            <i class="fa fa-camera"></i>
+            <%= f.file_field :avatar, accept: "image/*", class: "profile-avatar-input" %>
+          </label>
         </div>
-        <p class="profile-avatar-hint">Tap to upload photo</p>
+        <p class="profile-avatar-hint">Tap camera to upload photo</p>
       </div>
 
       <%# ── Personal Information ── %>
