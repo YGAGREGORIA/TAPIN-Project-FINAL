@@ -1,0 +1,326 @@
+<% content_for :title, "Onboarding" %>
+
+<div class="d-flex align-items-center justify-content-between mb-4">
+  <div>
+    <h1 class="admin-page-title mb-1">Studio Onboarding</h1>
+    <p class="text-muted mb-0">Set up Mindbody sync, preview your imported data, and finish your check-in flow.</p>
+  </div>
+  <div class="d-flex gap-2">
+    <%= button_to "Reset Flow", reset_admin_onboarding_path, method: :patch, class: "btn btn-sm btn-outline-secondary" %>
+    <%= link_to "Back to Dashboard", admin_dashboard_path, class: "btn btn-sm btn-admin-outline admin-onboarding-toplink" %>
+  </div>
+</div>
+
+<div class="admin-onboarding-shell">
+  <aside class="admin-onboarding-sidebar">
+    <div class="admin-onboarding-brand">
+      <div class="admin-onboarding-brand__icon">
+        <i class="fa fa-building"></i>
+      </div>
+      <div>
+        <h2>Studio Setup</h2>
+        <p><%= @studio.name %></p>
+      </div>
+    </div>
+
+    <div class="admin-onboarding-steps">
+      <% @step_definitions.each do |step| %>
+        <% is_active = @current_step == step[:number] %>
+        <% is_completed = @completed_steps.include?(step[:number]) %>
+
+        <%= button_to go_to_step_admin_onboarding_path(step: step[:number]), method: :patch, class: "admin-onboarding-step #{'is-active' if is_active} #{'is-complete' if is_completed}" do %>
+          <span class="admin-onboarding-step__badge">
+            <% if is_completed %>
+              <i class="fa fa-check"></i>
+            <% else %>
+              <%= step[:number] %>
+            <% end %>
+          </span>
+          <span class="admin-onboarding-step__body">
+            <span class="admin-onboarding-step__icon"><i class="fa <%= step[:icon] %>"></i></span>
+            <span class="admin-onboarding-step__label"><%= step[:label] %></span>
+          </span>
+        <% end %>
+      <% end %>
+    </div>
+  </aside>
+
+  <section class="admin-onboarding-content">
+    <% case @current_step %>
+    <% when 1 %>
+      <div class="admin-card admin-onboarding-card">
+        <div class="admin-onboarding-hero">
+          <div>
+            <span class="admin-onboarding-eyebrow">Step 1</span>
+            <h2>Connect your Mindbody account</h2>
+            <p>Use your existing studio credentials to unlock import previews for studio info, teachers, classes, and members.</p>
+          </div>
+          <div class="admin-onboarding-status <%= @mindbody_ready ? 'is-ready' : '' %>">
+            <i class="fa <%= @mindbody_ready ? 'fa-check-circle' : 'fa-clock-o' %>"></i>
+            <span><%= @mindbody_ready ? 'Connection details found' : 'No live credentials detected' %></span>
+          </div>
+        </div>
+
+        <div class="row g-3 mb-4">
+          <% ["Studio Information", "Teachers", "Classes", "Members"].each do |item| %>
+            <div class="col-md-6">
+              <div class="admin-onboarding-mini">
+                <i class="fa fa-check-circle"></i>
+                <span><%= item %></span>
+              </div>
+            </div>
+          <% end %>
+        </div>
+
+        <div class="admin-onboarding-note mb-4">
+          <strong>Current studio config:</strong>
+          Site ID: <%= @studio.mindbody_site_id.presence || "not set" %>,
+          API key: <%= @studio.mindbody_api_key.present? ? "configured" : "not set" %>.
+        </div>
+
+        <div class="d-flex justify-content-end gap-2 flex-wrap">
+          <%= link_to "Open Mindbody Matches", admin_mindbody_matches_path, class: "btn btn-outline-secondary" %>
+          <%= button_to(@mindbody_ready ? "Use current Mindbody setup" : "Continue with demo connection", advance_admin_onboarding_path(step: 1), method: :patch, class: "btn btn-dark") %>
+        </div>
+      </div>
+    <% when 2 %>
+      <div class="admin-card admin-onboarding-card">
+        <span class="admin-onboarding-eyebrow">Step 2</span>
+        <h2>Import studio information</h2>
+        <p class="text-muted">This preview uses your existing studio record so the flow stays connected to real app data.</p>
+
+        <div class="admin-onboarding-profile mb-4">
+          <div class="admin-onboarding-profile__header">
+            <h3><%= @studio.name %></h3>
+            <span class="badge text-bg-light">Slug: <%= @studio.slug %></span>
+          </div>
+          <div class="row g-3">
+            <div class="col-md-4">
+              <div class="admin-onboarding-info">
+                <span class="admin-onboarding-info__label">Mindbody Site ID</span>
+                <strong><%= @studio.mindbody_site_id.presence || "Add in Studio settings" %></strong>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="admin-onboarding-info">
+                <span class="admin-onboarding-info__label">API Key</span>
+                <strong><%= @studio.mindbody_api_key.present? ? "Configured" : "Missing" %></strong>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="admin-onboarding-info">
+                <span class="admin-onboarding-info__label">Branding</span>
+                <strong><%= @studio.studio_brand.present? ? "Brand profile available" : "Can be added later" %></strong>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-end gap-2 flex-wrap">
+          <%= link_to "Check Check-in URL", admin_checkin_settings_path, class: "btn btn-outline-secondary" %>
+          <%= button_to "Import studio information", advance_admin_onboarding_path(step: 2), method: :patch, class: "btn btn-dark" %>
+        </div>
+      </div>
+    <% when 3 %>
+      <div class="admin-card admin-onboarding-card">
+        <span class="admin-onboarding-eyebrow">Step 3</span>
+        <h2>Import your teachers</h2>
+        <p class="text-muted mb-1">Teachers are inferred from the class schedule already stored for your studio.</p>
+        <p class="admin-onboarding-count"><%= @teacher_rows.count %> teachers found</p>
+
+        <% if @teacher_rows.any? %>
+          <div class="table-responsive mb-4">
+            <table class="table admin-onboarding-table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Focus</th>
+                  <th>Classes</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @teacher_rows.each do |teacher| %>
+                  <tr>
+                    <td><strong><%= teacher[:name] %></strong></td>
+                    <td><%= teacher[:focus].join(", ") %></td>
+                    <td><%= teacher[:class_count] %></td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        <% else %>
+          <div class="admin-empty-state">No teacher names found yet. Add classes first and return to this step.</div>
+        <% end %>
+
+        <div class="d-flex justify-content-end">
+          <%= button_to "Import teachers", advance_admin_onboarding_path(step: 3), method: :patch, class: "btn btn-dark" %>
+        </div>
+      </div>
+    <% when 4 %>
+      <div class="admin-card admin-onboarding-card">
+        <span class="admin-onboarding-eyebrow">Step 4</span>
+        <h2>Import your classes</h2>
+        <p class="text-muted mb-1">These classes come from your existing `studio_classes` records.</p>
+        <p class="admin-onboarding-count"><%= @studio.studio_classes.count %> classes found</p>
+
+        <% if @class_rows.any? %>
+          <div class="table-responsive mb-4">
+            <table class="table admin-onboarding-table">
+              <thead>
+                <tr>
+                  <th>Class</th>
+                  <th>Teacher</th>
+                  <th>Duration</th>
+                  <th>Capacity</th>
+                  <th>Schedule</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @class_rows.each do |studio_class| %>
+                  <tr>
+                    <td><strong><%= studio_class.name %></strong></td>
+                    <td><%= studio_class.teacher_name %></td>
+                    <td><%= studio_class.duration_minutes %> min</td>
+                    <td><%= studio_class.capacity %></td>
+                    <td><%= studio_class.scheduled_at&.strftime("%a, %d %b · %H:%M") || "Not scheduled" %></td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        <% else %>
+          <div class="admin-empty-state">No classes available yet. Populate `studio_classes` to preview this step.</div>
+        <% end %>
+
+        <div class="d-flex justify-content-end gap-2 flex-wrap">
+          <%= link_to "Manage class points", admin_class_configs_path, class: "btn btn-outline-secondary" %>
+          <%= button_to "Import classes", advance_admin_onboarding_path(step: 4), method: :patch, class: "btn btn-dark" %>
+        </div>
+      </div>
+    <% when 5 %>
+      <div class="admin-card admin-onboarding-card">
+        <span class="admin-onboarding-eyebrow">Step 5</span>
+        <h2>Import your members</h2>
+        <p class="text-muted mb-1">Member previews are pulled from `mindbody_clients` so you can review what will come across from Mindbody.</p>
+        <p class="admin-onboarding-count"><%= @studio.mindbody_clients.count %> members found</p>
+
+        <% if @member_rows.any? %>
+          <div class="table-responsive mb-4">
+            <table class="table admin-onboarding-table">
+              <thead>
+                <tr>
+                  <th>Member</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+                  <th>Mindbody ID</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @member_rows.each do |member| %>
+                  <tr>
+                    <td><strong><%= [member.first_name, member.last_name].compact.join(" ") %></strong></td>
+                    <td><%= member.email.presence || "No email" %></td>
+                    <td><%= member.phone.presence || "No phone" %></td>
+                    <td><%= member.mindbody_client_id %></td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        <% else %>
+          <div class="admin-empty-state">No Mindbody clients available yet. Once synced, they will appear here.</div>
+        <% end %>
+
+        <div class="d-flex justify-content-end gap-2 flex-wrap">
+          <%= link_to "View admin members", admin_members_path, class: "btn btn-outline-secondary" %>
+          <%= button_to "Import members", advance_admin_onboarding_path(step: 5), method: :patch, class: "btn btn-dark" %>
+        </div>
+      </div>
+    <% when 6 %>
+      <div class="admin-card admin-onboarding-card">
+        <span class="admin-onboarding-eyebrow">Step 6</span>
+        <h2>Studio check-in setup</h2>
+        <p class="text-muted">Share this QR code at the front desk so customers can scan or tap into the check-in flow.</p>
+
+        <div class="row g-4 align-items-stretch">
+          <div class="col-lg-6">
+            <div class="admin-onboarding-checklist">
+              <% ["Customers scan the QR code at the studio entrance", "The visit is recorded in the app", "Rewards and loyalty points update automatically"].each_with_index do |line, index| %>
+                <div class="admin-onboarding-checklist__item">
+                  <span><%= index + 1 %></span>
+                  <p><%= line %></p>
+                </div>
+              <% end %>
+            </div>
+
+            <div class="admin-onboarding-note mt-4">
+              <strong>Check-in URL:</strong>
+              <a href="<%= @checkin_url %>" target="_blank" rel="noreferrer"><%= @checkin_url %></a>
+            </div>
+          </div>
+
+          <div class="col-lg-6">
+            <div class="admin-onboarding-qr">
+              <img src="https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=<%= CGI.escape(@checkin_url) %>" alt="Studio check-in QR code" class="img-fluid">
+              <p>Studio Check-in QR Code</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-end gap-2 flex-wrap mt-4">
+          <%= link_to "Open Check-in Settings", admin_checkin_settings_path, class: "btn btn-outline-secondary" %>
+          <%= button_to "Continue", advance_admin_onboarding_path(step: 6), method: :patch, class: "btn btn-dark" %>
+        </div>
+      </div>
+    <% when 7 %>
+      <div class="admin-card admin-onboarding-card admin-onboarding-card--success">
+        <div class="admin-onboarding-finish">
+          <div class="admin-onboarding-finish__icon">
+            <i class="fa fa-check"></i>
+          </div>
+          <span class="admin-onboarding-eyebrow">Step 7</span>
+          <h2>You are ready to go</h2>
+          <p>Your studio setup is complete. From here you can fine-tune the experience in the rest of the admin area.</p>
+        </div>
+
+        <div class="row g-3 mb-4">
+          <div class="col-md-4">
+            <%= link_to admin_dashboard_path, class: "admin-feature-card" do %>
+              <div class="admin-feature-icon"><i class="fa fa-home"></i></div>
+              <div class="admin-feature-body">
+                <div class="admin-feature-title">Dashboard</div>
+                <div class="admin-feature-desc">Track activity and key studio metrics.</div>
+              </div>
+              <i class="fa fa-chevron-right admin-feature-arrow"></i>
+            <% end %>
+          </div>
+          <div class="col-md-4">
+            <%= link_to admin_rewards_path, class: "admin-feature-card" do %>
+              <div class="admin-feature-icon"><i class="fa fa-gift"></i></div>
+              <div class="admin-feature-body">
+                <div class="admin-feature-title">Rewards</div>
+                <div class="admin-feature-desc">Create loyalty milestones and redemption flows.</div>
+              </div>
+              <i class="fa fa-chevron-right admin-feature-arrow"></i>
+            <% end %>
+          </div>
+          <div class="col-md-4">
+            <%= link_to admin_deals_path, class: "admin-feature-card" do %>
+              <div class="admin-feature-icon"><i class="fa fa-tag"></i></div>
+              <div class="admin-feature-body">
+                <div class="admin-feature-title">Deals</div>
+                <div class="admin-feature-desc">Launch promotions once onboarding is finished.</div>
+              </div>
+              <i class="fa fa-chevron-right admin-feature-arrow"></i>
+            <% end %>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-end">
+          <%= link_to "Go to dashboard", admin_dashboard_path, class: "btn btn-dark" %>
+        </div>
+      </div>
+    <% end %>
+  </section>
+</div>

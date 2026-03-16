@@ -1,0 +1,59 @@
+<% content_for :title, "Deal Claimed — #{@studio.name}" %>
+
+<div class="booking-confirm-page">
+
+  <%# ── Hero ── %>
+  <div class="confirm-hero">
+    <div class="confirm-check-icon">
+      <i class="fa fa-tag"></i>
+    </div>
+    <h1 class="confirm-title">Deal Claimed!</h1>
+    <p class="confirm-subtitle"><%= @studio.name %></p>
+  </div>
+
+  <%# ── Card ── %>
+  <div class="confirm-body">
+    <div class="confirm-card">
+
+      <div class="confirm-booking-id mb-1">Your discount code</div>
+      <div class="confirm-class-name"><%= @deal_claim.code %></div>
+
+      <div class="confirm-detail-row">
+        <i class="fa fa-tag"></i>
+        <span><%= @deal_claim.deal.name %></span>
+      </div>
+
+      <div class="confirm-detail-row">
+        <i class="fa fa-calendar-check-o"></i>
+        <span>Claimed <%= @deal_claim.claimed_at&.strftime("%d.%m.%Y") %></span>
+      </div>
+
+      <% if @deal_claim.expires_at.present? %>
+        <div class="confirm-detail-row">
+          <i class="fa fa-clock-o"></i>
+          <span>Expires <%= @deal_claim.expires_at.strftime("%d.%m.%Y") %></span>
+        </div>
+      <% end %>
+
+      <div class="confirm-divider"></div>
+
+      <% if @deal_claim.expired? %>
+        <div class="confirm-booking-id" style="color: #B4533C;">
+          <i class="fa fa-exclamation-circle"></i> This deal has expired.
+        </div>
+      <% else %>
+        <div class="confirm-booking-id">
+          Show this code when booking or at reception to apply your discount.
+        </div>
+      <% end %>
+
+    </div>
+
+    <div class="confirm-actions">
+      <%= link_to "Back to Deals",
+            deals_path(studio_slug: @studio.slug),
+            class: "btn-secondary-action" %>
+    </div>
+  </div>
+
+</div>

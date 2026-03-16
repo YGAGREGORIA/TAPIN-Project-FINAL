@@ -1,63 +1,65 @@
 <% content_for(:title) { "Your Conversations" } %>
 
-<div class="chat-list-container">
-  <div class="chat-list-header">
-    <div>
-      <h2>Your conversations</h2>
-      <p>Chat with your TapIn AI assistant</p>
-    </div>
-    <%= button_to chats_path, method: :post, class: "chat-new-btn" do %>
-      + New chat
-    <% end %>
+<div class="schedule-page">
+
+  <%# ── Header ── %>
+  <div class="schedule-header">
+    <h1 class="schedule-title">Your Conversations</h1>
+    <p class="schedule-subtitle">Chat with your TapIn AI assistant</p>
   </div>
 
-  <% if @chats.present? %>
-    <div class="chat-list">
+  <section class="dashboard-section">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <p class="section-title mb-0">Chats</p>
+      <%= button_to chats_path, method: :post, class: "btn-redeem" do %>
+        + New Chat
+      <% end %>
+    </div>
+
+    <% if @chats.present? %>
       <% @chats.reverse.each do |chat| %>
-        <%= link_to chat_path(chat), class: "chat-list-item" do %>
-          <div class="chat-list-item__avatar">AI</div>
-          <div class="chat-list-item__content">
-            <div class="chat-list-item__top">
-              <span class="chat-list-item__title"><%= chat.title %></span>
-              <span class="chat-list-item__time"><%= time_ago_in_words(chat.updated_at) %> ago</span>
+        <%= link_to chat_path(chat), class: "dashboard-card d-flex gap-3 align-items-center mb-2", style: "text-decoration: none; color: inherit;" do %>
+          <div class="chat-avatar-tapin">AI</div>
+          <div style="flex: 1; min-width: 0;">
+            <div class="d-flex justify-content-between">
+              <span style="font-weight: 600; font-family: 'Space Grotesk', sans-serif;"><%= chat.title %></span>
+              <span style="color: rgba(43,33,24,0.4); font-size: 0.8rem; flex-shrink: 0;"><%= time_ago_in_words(chat.updated_at) %> ago</span>
             </div>
             <% last_msg = chat.messages.order(created_at: :desc).first %>
-            <p class="chat-list-item__preview">
+            <p style="color: rgba(43,33,24,0.5); font-size: 0.875rem; margin: 0.25rem 0 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
               <%= last_msg ? truncate(last_msg.content, length: 80) : "No messages yet" %>
             </p>
           </div>
         <% end %>
       <% end %>
-    </div>
-  <% else %>
-    <div class="chat-empty">
-      <div class="chat-empty__avatar">AI</div>
-      <h3>Start your first conversation</h3>
-      <p>Ask about visits, rewards, classes, deals, and more.</p>
-      <%= button_to chats_path, method: :post, class: "chat-new-btn" do %>
-        Start chatting
-      <% end %>
-    </div>
-  <% end %>
+    <% else %>
+      <div class="dashboard-card">
+        <div class="empty-state">
+          <div class="chat-avatar-tapin" style="width: 56px; height: 56px; font-size: 1rem; margin: 0 auto 1rem;">AI</div>
+          <p>Start your first conversation</p>
+          <p style="font-size: 0.875rem;">Ask about visits, rewards, classes, deals, and more.</p>
+          <%= button_to chats_path, method: :post, class: "btn-book" do %>
+            Start Chatting
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </section>
 </div>
 
 <style>
-  .chat-list-container { max-width: 720px; margin: 2rem auto; padding: 0 1rem; }
-  .chat-list-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
-  .chat-list-header h2 { margin: 0; font-size: 1.5rem; }
-  .chat-list-header p { margin: 0; color: #666; font-size: 0.875rem; }
-  .chat-new-btn { padding: 0.5rem 1.25rem; background: #4F46E5; color: white; border: none; border-radius: 20px; cursor: pointer; font-weight: 600; }
-  .chat-list { display: flex; flex-direction: column; gap: 0.5rem; }
-  .chat-list-item { display: flex; gap: 0.75rem; padding: 1rem; background: white; border-radius: 12px; text-decoration: none; color: inherit; border: 1px solid #eee; }
-  .chat-list-item:hover { border-color: #4F46E5; }
-  .chat-list-item__avatar { width: 40px; height: 40px; border-radius: 50%; background: #4F46E5; color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.8rem; flex-shrink: 0; }
-  .chat-list-item__content { flex: 1; min-width: 0; }
-  .chat-list-item__top { display: flex; justify-content: space-between; }
-  .chat-list-item__title { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .chat-list-item__time { color: #999; font-size: 0.8rem; flex-shrink: 0; }
-  .chat-list-item__preview { color: #666; font-size: 0.875rem; margin: 0.25rem 0 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .chat-empty { text-align: center; padding: 3rem 0; }
-  .chat-empty__avatar { width: 56px; height: 56px; border-radius: 50%; background: #4F46E5; color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; margin: 0 auto 1rem; }
-  .chat-empty h3 { margin-bottom: 0.5rem; }
-  .chat-empty p { color: #666; margin-bottom: 1.5rem; }
+  .chat-avatar-tapin {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--espresso-brown, #2B2118);
+    color: var(--oat, #F6F1EB);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.8rem;
+    font-family: 'Space Grotesk', sans-serif;
+    flex-shrink: 0;
+  }
 </style>

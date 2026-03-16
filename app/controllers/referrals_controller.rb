@@ -1,5 +1,5 @@
 class ReferralsController < ApplicationController
-  before_action :authenticate_user!, only: [:create, :share]
+  before_action :authenticate_user!, only: [ :create, :share ]
   before_action :set_studio
 
   # POST /s/:studio_slug/referrals

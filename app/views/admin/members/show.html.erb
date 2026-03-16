@@ -1,0 +1,22 @@
+<h1><%= @member.first_name %> <%= @member.last_name %></h1>
+
+<dl>
+  <dt>Email</dt>
+  <dd><%= @member.email %></dd>
+  <dt>Phone</dt>
+  <dd><%= @member.phone %></dd>
+  <dt>Points</dt>
+  <dd><%= @member.available_points || 0 %></dd>
+  <dt>Total Visits</dt>
+  <dd><%= @member.total_visits || 0 %></dd>
+  <dt>Joined</dt>
+  <dd><%= @member.created_at.strftime("%b %-d, %Y") %></dd>
+</dl>
+
+<h3>Add Points</h3>
+<%= form_with url: points_admin_member_path(@member), method: :post, class: "d-flex gap-2 mb-4" do |f| %>
+  <%= f.number_field :points, value: 10, min: 1, class: "form-control", style: "max-width: 120px" %>
+  <%= f.submit "Add Points", class: "btn btn-primary btn-sm" %>
+<% end %>
+
+<p><%= link_to "Back to Members", admin_members_path %></p>

@@ -2,14 +2,14 @@ require "test_helper"
 
 class UserTest < ActiveSupport::TestCase
   setup do
-    @owner = User.create!(email: "owner@user-test.com", password: "password")
+    @owner = User.create!(email: "owner@user-test.com", password: "Password123", confirmed_at: Time.current)
     @studio = Studio.create!(
       user: @owner,
       name: "User Test Studio",
       slug: "user-test-studio",
       active: true
     )
-    @user = User.create!(email: "subject@user-test.com", password: "password")
+    @user = User.create!(email: "subject@user-test.com", password: "Password123", confirmed_at: Time.current)
     @class_config = ClassConfig.create!(
       studio: @studio,
       mindbody_class_id: 900,
@@ -87,5 +87,18 @@ class UserTest < ActiveSupport::TestCase
     add_redemption
     add_redemption
     assert_not @user.free_class_reward_available_for?(@studio)
+  end
+
+  test "normalizes email before validation" do
+    user = User.create!(email: "  CASE@Test.COM ", password: "Password123", confirmed_at: Time.current)
+
+    assert_equal "case@test.com", user.email
+  end
+
+  test "requires strong passwords" do
+    user = User.new(email: "weak@test.com", password: "password123")
+
+    assert_not user.valid?
+    assert_includes user.errors[:password], "must include at least one lowercase letter, one uppercase letter, and one number"
   end
 end

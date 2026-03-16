@@ -66,6 +66,11 @@ group :test do
 end
 
 gem "devise", "~> 5.0"
+gem "omniauth"
+gem "omniauth-apple"
+gem "omniauth-facebook"
+gem "omniauth-google-oauth2"
+gem "omniauth-rails_csrf_protection"
 gem "sassc-rails"
 gem "bootstrap", "~> 5.3"
 gem "autoprefixer-rails"
@@ -75,3 +80,5 @@ gem "simple_form"
 gem "web-push", "~> 3.1"
 
 gem "ruby_llm", "~> 1.13"
+
+gem "dotenv-rails", groups: [:development, :test]

@@ -1,39 +1,53 @@
-<h1>My Reward Redemptions</h1>
+<% content_for :title, "Reward History — #{@studio.name}" %>
 
-<p>
-  Studio: <%= @studio.name %>
-</p>
+<div class="schedule-page">
 
-<% if @reward_redemptions.any? %>
-  <ul>
-    <% @reward_redemptions.each do |reward_redemption| %>
-      <li style="margin-bottom: 20px;">
-        <p>
-          Reward:
-          <%= reward_redemption.reward.name %>
-        </p>
+  <%# ── Header ── %>
+  <div class="schedule-header">
+    <p class="schedule-studio-name"><%= @studio.name %></p>
+    <h1 class="schedule-title">Reward History</h1>
+  </div>
 
-        <p>
-          Code:
-          <%= reward_redemption.code %>
-        </p>
+  <section class="dashboard-section">
+    <p class="section-title">Your Redemptions</p>
 
-        <p>
-          Redeemed at:
-          <%= reward_redemption.redeemed_at&.strftime("%d.%m.%Y %H:%M") %>
-        </p>
-
-        <p>
-          <%= link_to "View details",
-            reward_redemption_path(studio_slug: @studio.slug, id: reward_redemption.id) %>
-        </p>
-      </li>
+    <% if @reward_redemptions.any? %>
+      <div class="dashboard-card">
+        <% @reward_redemptions.each do |redemption| %>
+          <div class="activity-row">
+            <div class="activity-icon">
+              <i class="fa fa-gift"></i>
+            </div>
+            <div class="activity-details">
+              <div class="activity-title"><%= redemption.reward.name %></div>
+              <div class="activity-subtitle">
+                Code: <span style="font-weight: 600;"><%= redemption.code %></span>
+                &middot;
+                <%= redemption.redeemed_at&.strftime("%b %-d, %Y") %>
+              </div>
+            </div>
+            <%= link_to "View",
+                  reward_redemption_path(studio_slug: @studio.slug, id: redemption.id),
+                  class: "btn-claim" %>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="dashboard-card">
+        <div class="empty-state">
+          <i class="fa fa-gift"></i>
+          <p>You haven't redeemed any rewards yet.</p>
+        </div>
+      </div>
     <% end %>
-  </ul>
-<% else %>
-  <p>You have not redeemed any rewards yet.</p>
-<% end %>
+  </section>
 
-<p>
-  <%= link_to "Back to rewards", rewards_path(studio_slug: @studio.slug) %>
-</p>
+  <section class="dashboard-section pb-5">
+    <div class="dashboard-card" style="text-align: center;">
+      <%= link_to rewards_path(studio_slug: @studio.slug), class: "btn-secondary-action" do %>
+        <i class="fa fa-arrow-left"></i> Back to Rewards
+      <% end %>
+    </div>
+  </section>
+
+</div>

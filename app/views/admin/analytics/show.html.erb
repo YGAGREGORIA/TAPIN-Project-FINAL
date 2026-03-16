@@ -1,0 +1,102 @@
+<% content_for(:title) { "Analytics — Overview" } %>
+
+<h1>Analytics</h1>
+
+<%= render "date_range" %>
+
+<%# ── Summary Cards ── %>
+<div class="row g-3 mb-4">
+  <div class="col-md-3">
+    <div class="card text-center p-3">
+      <h3><%= @total_members %></h3>
+      <p class="text-muted mb-0">Total Members</p>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card text-center p-3">
+      <h3><%= @new_members_this_week %></h3>
+      <p class="text-muted mb-0">New Members</p>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card text-center p-3">
+      <h3><%= @check_ins_in_range %></h3>
+      <p class="text-muted mb-0">Check-ins</p>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card text-center p-3">
+      <h3><%= @active_members %></h3>
+      <p class="text-muted mb-0">Active Members</p>
+    </div>
+  </div>
+</div>
+
+<%# ── Engagement Stats ── %>
+<div class="row g-3 mb-4">
+  <div class="col-md-4">
+    <div class="card p-3">
+      <h5>Avg Visits / Member</h5>
+      <h2><%= @avg_visits_per_member %></h2>
+      <p class="text-muted mb-0">in selected period</p>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card p-3">
+      <h5>Total Check-ins (All Time)</h5>
+      <h2><%= @total_check_ins %></h2>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card p-3">
+      <h5>Check-ins / Day</h5>
+      <% days_in_range = [(@end_date.to_date - @start_date.to_date).to_i, 1].max %>
+      <h2><%= (@check_ins_in_range.to_f / days_in_range).round(1) %></h2>
+      <p class="text-muted mb-0">avg per day</p>
+    </div>
+  </div>
+</div>
+
+<%# ── Weekly Trends ── %>
+<div class="row g-3">
+  <div class="col-md-6">
+    <div class="card p-3">
+      <h5>New Members by Week</h5>
+      <% if @weekly_signups.any? %>
+        <table class="table table-sm">
+          <thead><tr><th>Week of</th><th class="text-end">Signups</th></tr></thead>
+          <tbody>
+            <% @weekly_signups.each do |week, count| %>
+              <tr>
+                <td><%= week %></td>
+                <td class="text-end"><%= count %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      <% else %>
+        <p class="text-muted">No signups in this period.</p>
+      <% end %>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card p-3">
+      <h5>Check-ins by Week</h5>
+      <% if @weekly_checkins.any? %>
+        <table class="table table-sm">
+          <thead><tr><th>Week of</th><th class="text-end">Check-ins</th></tr></thead>
+          <tbody>
+            <% @weekly_checkins.each do |week, count| %>
+              <tr>
+                <td><%= week %></td>
+                <td class="text-end"><%= count %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      <% else %>
+        <p class="text-muted">No check-ins in this period.</p>
+      <% end %>
+    </div>
+  </div>
+</div>

@@ -1,23 +1,41 @@
-<h1>Reward Redemption</h1>
+<% content_for :title, "Redemption — #{@reward_redemption.reward.name}" %>
 
-<p>Studio: <%= @studio.name %></p>
+<div class="schedule-page">
 
-<p>Reward: <%= @reward_redemption.reward.name %></p>
+  <%# ── Header ── %>
+  <div class="schedule-header">
+    <p class="schedule-studio-name"><%= @studio.name %></p>
+    <h1 class="schedule-title"><%= @reward_redemption.reward.name %></h1>
+  </div>
 
-<p>Code: <%= @reward_redemption.code %></p>
+  <section class="dashboard-section">
+    <p class="section-title">Redemption Details</p>
 
-<p>Redeemed at: <%= @reward_redemption.redeemed_at&.strftime("%d.%m.%Y %H:%M") %></p>
+    <div class="reward-card">
+      <div class="reward-name" style="font-size: 1.5rem;"><%= @reward_redemption.code %></div>
+      <p class="reward-description">Show this code at reception to claim your reward.</p>
 
-<% if @reward_redemption.expires_at.present? %>
-  <p>Expires at: <%= @reward_redemption.expires_at.strftime("%d.%m.%Y %H:%M") %></p>
-<% end %>
+      <div style="margin-top: 1rem; font-size: 0.875rem; opacity: 0.8;">
+        <p>Redeemed: <%= @reward_redemption.redeemed_at&.strftime("%b %-d, %Y at %-I:%M %p") %></p>
+        <% if @reward_redemption.expires_at.present? %>
+          <p>Expires: <%= @reward_redemption.expires_at.strftime("%b %-d, %Y") %></p>
+        <% end %>
+      </div>
 
-<% if @reward_redemption.expired? %>
-  <p>This reward has expired.</p>
-<% else %>
-  <p>Show this code at reception to claim your reward.</p>
-<% end %>
+      <% if @reward_redemption.expired? %>
+        <div class="visits-remaining-text" style="margin-top: 0.75rem;">
+          This reward has expired.
+        </div>
+      <% end %>
+    </div>
+  </section>
 
-<p>
-  <%= link_to "Back to reward history", reward_redemptions_path(studio_slug: @studio.slug) %>
-</p>
+  <section class="dashboard-section pb-5">
+    <div class="dashboard-card" style="text-align: center;">
+      <%= link_to reward_redemptions_path(studio_slug: @studio.slug), class: "btn-secondary-action" do %>
+        <i class="fa fa-arrow-left"></i> Back to History
+      <% end %>
+    </div>
+  </section>
+
+</div>

@@ -1,0 +1,27 @@
+<% provider_meta = {
+  google_oauth2: { label: "Google", icon: "fa-brands fa-google" },
+  facebook: { label: "Facebook", icon: "fa-brands fa-facebook-f" },
+  apple: { label: "Apple", icon: "fa-brands fa-apple" }
+} %>
+
+<% enabled_providers = User.enabled_omniauth_providers %>
+
+<div class="d-grid gap-2 mb-4">
+  <% enabled_providers.each do |provider| %>
+    <% meta = provider_meta.fetch(provider) %>
+    <% authorize_path = public_send("#{resource_name}_#{provider}_omniauth_authorize_path") %>
+    <%= button_to authorize_path,
+                  method: :post,
+                  data: { turbo: false },
+                  class: "btn btn-outline-secondary d-flex align-items-center justify-content-center gap-2" do %>
+      <i class="<%= meta[:icon] %>"></i>
+      <span><%= mode == :sign_up ? "Sign up with #{meta[:label]}" : "Continue with #{meta[:label]}" %></span>
+    <% end %>
+  <% end %>
+</div>
+
+<% if enabled_providers.empty? %>
+  <p class="small text-center text-muted mb-4">
+    Add provider credentials to enable Google, Facebook, and Apple sign in.
+  </p>
+<% end %>

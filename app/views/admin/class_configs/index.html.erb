@@ -1,0 +1,27 @@
+<h1>Class Configurations</h1>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Class Name</th>
+      <th>Point Value</th>
+      <th>Premium</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @class_configs.each do |config| %>
+      <tr>
+        <td><%= config.class_name %></td>
+        <td><%= config.point_value %></td>
+        <td><%= config.is_premium? ? "Yes" : "No" %></td>
+        <td>
+          <%= form_with model: [:admin, config], method: :patch, class: "d-flex gap-2" do |f| %>
+            <%= f.number_field :point_value, value: config.point_value, class: "form-control form-control-sm", style: "max-width: 80px" %>
+            <%= f.submit "Update", class: "btn btn-outline-primary btn-sm" %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
