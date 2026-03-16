@@ -1,0 +1,31 @@
+<nav class="bottom-nav">
+  <%= link_to root_path, class: "bottom-nav-item #{controller_name == 'dashboards' ? 'bottom-nav-item--active' : ''}" do %>
+    <i class="fa fa-home"></i>
+    <span>Home</span>
+  <% end %>
+
+  <% _studio_slug = current_user.visits.last&.studio&.slug %>
+  <% if _studio_slug %>
+    <%= link_to classes_path(studio_slug: _studio_slug),
+          class: "bottom-nav-item #{controller_name == 'classes' ? 'bottom-nav-item--active' : ''}" do %>
+      <i class="fa fa-calendar"></i>
+      <span>Classes</span>
+    <% end %>
+  <% else %>
+    <span class="bottom-nav-item bottom-nav-item--disabled">
+      <i class="fa fa-calendar"></i>
+      <span>Classes</span>
+    </span>
+  <% end %>
+
+  <%= link_to edit_user_registration_path, class: "bottom-nav-item" do %>
+    <i class="fa fa-user"></i>
+    <span>Profile</span>
+  <% end %>
+
+  <%= button_to destroy_user_session_path, method: :delete,
+        class: "bottom-nav-item bottom-nav-logout" do %>
+    <i class="fa fa-sign-out"></i>
+    <span>Log Out</span>
+  <% end %>
+</nav>

@@ -14,7 +14,7 @@ $nav-height: 60px;
   text-decoration: none;
 
   span {
-    color: #D4A017;
+    color: $accent-gold;
   }
 }
 
@@ -344,7 +344,7 @@ $nav-height: 60px;
     transition: background 0.15s ease;
 
     &:hover {
-      background: #d2a63c;
+      background: darken($accent-gold, 6%);
     }
   }
 }
@@ -361,7 +361,7 @@ $nav-height: 60px;
   transition: background 0.15s, transform 0.1s;
 
   &:hover {
-    background-color: #d2a63c;
+    background-color: darken($accent-gold, 6%);
     color: $espresso-brown;
     transform: translateY(-1px);
   }

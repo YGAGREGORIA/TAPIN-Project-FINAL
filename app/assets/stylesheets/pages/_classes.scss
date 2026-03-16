@@ -359,11 +359,6 @@ $bp-wide:    1200px;
   letter-spacing: 0.05em;
 }
 
-// ── Spot indicators ───────────────────────────────────────────────
-.spots-ok   { color: rgba($espresso-brown, 0.45); }
-.spots-low  { color: $clay-red; font-weight: 600; }
-.spots-full { color: rgba($espresso-brown, 0.35); font-style: italic; }
-
 // ── Empty state ───────────────────────────────────────────────────
 .schedule-empty {
   text-align: center;
@@ -393,223 +388,194 @@ $bp-wide:    1200px;
 }
 
 // ── Class detail page ─────────────────────────────────────────────
-.detail-nav {
-  background: $espresso-brown;
-  padding: 1rem 1.25rem 0;
+.class-detail-page {
+  background: var(--background);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: calc(62px + 5rem); // bottom-nav + CTA bar
+}
 
-  @media (min-width: $bp-tablet)  { padding: 1.25rem 2rem 0; }
-  @media (min-width: $bp-desktop) { padding: 1.25rem calc((100% - 960px) / 2 + 1.25rem) 0; }
-  @media (min-width: $bp-wide)    { padding: 1.25rem calc((100% - 1100px) / 2 + 1.25rem) 0; }
+.detail-hero {
+  background: var(--primary);
+  color: var(--primary-foreground);
+  padding: 1.25rem 1.5rem 2rem;
+  text-align: center;
+  flex-shrink: 0;
 }
 
 .detail-back-link {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  color: rgba($oat, 0.65);
+  gap: 0.375rem;
+  color: rgba(255, 255, 255, 0.7);
   font-size: 0.875rem;
   font-weight: 500;
   text-decoration: none;
-  transition: color 0.18s ease;
+  transition: color 0.15s;
+  margin-bottom: 1.25rem;
 
-  &:hover { color: $oat; }
+  &:hover { color: var(--primary-foreground); }
 }
 
-.detail-hero {
-  background: $espresso-brown;
-  color: $oat;
-  padding: 1.25rem 1.25rem 2rem;
-  text-align: center;
-
-  @media (min-width: $bp-tablet)  { padding: 1.75rem 2rem 2.5rem; }
-  @media (min-width: $bp-desktop) { padding: 2rem 2rem 3rem; }
+.detail-hero-badge-wrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 0.875rem;
 }
 
 .class-type-badge {
   display: inline-block;
-  background: rgba($oat, 0.12);
-  color: rgba($oat, 0.75);
-  font-size: 0.6875rem;
+  background: rgba(255, 255, 255, 0.2);
+  color: var(--primary-foreground);
+  font-size: 0.75rem;
   font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  padding: 0.25rem 0.75rem;
+  letter-spacing: 0.08em;
+  padding: 0.375rem 1rem;
   border-radius: 2rem;
-  margin-bottom: 0.75rem;
 }
 
 .detail-class-name {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: $oat;
+  font-size: 1.625rem;
+  font-weight: 600;
+  color: var(--primary-foreground);
   margin-bottom: 0.25rem;
   line-height: 1.2;
-
-  @media (min-width: $bp-tablet)  { font-size: 2.25rem; }
-  @media (min-width: $bp-desktop) { font-size: 2.75rem; }
 }
 
 .detail-studio-name {
-  font-size: 0.8125rem;
-  color: rgba($oat, 0.5);
-
-  @media (min-width: $bp-tablet) { font-size: 0.9375rem; }
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.65);
+  margin: 0;
 }
 
-// ── Detail body layout ────────────────────────────────────────────
+// ── Detail body ───────────────────────────────────────────────────
 .detail-body {
-  padding: 1.25rem;
-
-  @media (min-width: $bp-tablet) {
-    padding: 1.75rem 2rem;
-    max-width: 720px;
-    margin: 0 auto;
-  }
-
-  @media (min-width: $bp-desktop) {
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 2rem 2rem;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: auto auto 1fr;
-    column-gap: 1.5rem;
-    align-items: start;
-  }
-
-  @media (min-width: $bp-wide) {
-    padding: 2rem 3rem;
-  }
-}
-
-.detail-info-card {
-  background: white;
-  border-radius: 0.875rem;
-  padding: 0.5rem 1.25rem;
-  box-shadow: 0 1px 4px rgba($espresso-brown, 0.07);
-  margin-bottom: 1rem;
-
-  @media (min-width: $bp-desktop) {
-    grid-column: 1 / 4;
-    grid-row: 1;
-    margin-bottom: 1rem;
-  }
-}
-
-.detail-description {
-  background: white;
-  border-radius: 0.875rem;
-  padding: 1.125rem 1.25rem;
-  box-shadow: 0 1px 4px rgba($espresso-brown, 0.07);
-  margin-bottom: 1.25rem;
-
-  .detail-desc-title {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: rgba($espresso-brown, 0.4);
-    margin-bottom: 0.5rem;
-  }
-
-  .detail-desc-body {
-    font-size: 0.9375rem;
-    line-height: 1.6;
-    color: rgba($espresso-brown, 0.8);
-    margin: 0;
-  }
-
-  @media (min-width: $bp-desktop) {
-    grid-column: 1 / 4;
-    grid-row: 2;
-  }
+  padding: 1.5rem 1.5rem 0;
+  max-width: 640px;
+  margin: 0 auto;
+  width: 100%;
 }
 
 .detail-info-row {
   display: flex;
   align-items: flex-start;
-  gap: 0.875rem;
-  padding: 0.875rem 0;
-  border-bottom: 1px solid rgba($espresso-brown, 0.06);
+  gap: 1rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--border);
 
-  &:last-child {
+  &:last-of-type {
     border-bottom: none;
-    padding-bottom: 0.5rem;
-  }
-
-  .detail-info-icon {
-    width: 2rem;
-    height: 2rem;
-    border-radius: 50%;
-    background: rgba($espresso-brown, 0.06);
-    color: rgba($espresso-brown, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.8125rem;
-    flex-shrink: 0;
-    margin-top: 0.125rem;
-  }
-
-  .detail-info-content {
-    flex: 1;
-
-    .detail-info-label {
-      font-size: 0.6875rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.07em;
-      color: rgba($espresso-brown, 0.4);
-      margin-bottom: 0.2rem;
-    }
-
-    .detail-info-value {
-      font-size: 0.9375rem;
-      font-weight: 500;
-      color: $espresso-brown;
-    }
   }
 }
 
+.detail-info-icon {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  background: var(--muted);
+  color: var(--muted-foreground);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.detail-info-content {
+  flex: 1;
+  padding-top: 0.25rem;
+
+  &--full { width: 100%; }
+}
+
+.detail-info-label {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted-foreground);
+  margin: 0 0 0.25rem;
+}
+
+.detail-info-value {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--foreground);
+  margin: 0;
+}
+
 .spots-bar {
-  height: 5px;
-  background: rgba($espresso-brown, 0.1);
+  height: 6px;
+  background: var(--muted);
   border-radius: 3px;
-  margin-top: 0.5rem;
+  margin-top: 0.625rem;
   overflow: hidden;
 
   .spots-bar-fill {
     height: 100%;
-    background: $clay-red;
+    background: var(--destructive);
     border-radius: 3px;
     transition: width 0.4s ease;
   }
 }
 
-.detail-cta {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  gap: 0.75rem;
+.detail-description {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 0.875rem;
+  padding: 1.25rem;
+  margin-top: 1.5rem;
 
-  @media (min-width: $bp-desktop) {
-    grid-column: 4;
-    grid-row: 1 / 3;
-    position: sticky;
-    top: 1.5rem;
+  .detail-desc-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--foreground);
+    margin-bottom: 0.625rem;
+  }
+
+  .detail-desc-body {
+    font-size: 0.9375rem;
+    line-height: 1.65;
+    color: var(--muted-foreground);
+    margin: 0;
   }
 }
 
-// ── Shared booking buttons ────────────────────────────────────────
+// ── Fixed CTA bar ─────────────────────────────────────────────────
+.detail-cta-bar {
+  position: fixed;
+  bottom: 62px; // sits above the bottom nav
+  left: 0;
+  right: 0;
+  background: var(--card);
+  border-top: 1px solid var(--border);
+  padding: 0.875rem 1.25rem;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+
+  @include media-breakpoint-up(lg) {
+    position: static;
+    background: transparent;
+    border-top: none;
+    padding: 1.5rem 0 0;
+    max-width: 640px;
+    margin: 0 auto;
+  }
+}
+
+// ── Booking buttons ───────────────────────────────────────────────
 .btn-book {
   display: block;
   width: 100%;
-  background: $espresso-brown;
-  color: $oat;
+  background: var(--primary);
+  color: var(--primary-foreground);
   font-family: 'Space Grotesk', sans-serif;
-  font-weight: 700;
+  font-weight: 600;
   font-size: 1rem;
   padding: 0.875rem 1.5rem;
   border-radius: 0.75rem;
@@ -617,47 +583,34 @@ $bp-wide:    1200px;
   cursor: pointer;
   text-align: center;
   text-decoration: none;
-  transition: background 0.18s ease, transform 0.15s ease;
+  transition: opacity 0.18s ease, transform 0.15s ease;
+  box-shadow: 0 4px 12px rgba($sage-green, 0.3);
 
   &:hover {
-    background: lighten($espresso-brown, 8%);
-    color: $oat;
+    opacity: 0.92;
+    color: var(--primary-foreground);
   }
 
   &:active { transform: scale(0.98); }
 
   &--disabled {
-    background: rgba($espresso-brown, 0.25);
-    color: rgba($espresso-brown, 0.45);
+    background: var(--muted);
+    color: var(--muted-foreground);
+    box-shadow: none;
     cursor: not-allowed;
     pointer-events: none;
   }
 
-  @media (min-width: $bp-tablet) {
-    font-size: 1.0625rem;
-    padding: 1rem 1.5rem;
-  }
-}
+  &--secondary {
+    background: transparent;
+    color: var(--primary);
+    border: 1.5px solid var(--border);
+    box-shadow: none;
 
-.btn-secondary-action {
-  display: block;
-  width: 100%;
-  background: transparent;
-  color: $espresso-brown;
-  font-family: 'Space Grotesk', sans-serif;
-  font-weight: 600;
-  font-size: 0.9375rem;
-  padding: 0.75rem 1.5rem;
-  border-radius: 0.75rem;
-  border: 1.5px solid rgba($espresso-brown, 0.2);
-  text-align: center;
-  text-decoration: none;
-  transition: border-color 0.18s ease, background 0.18s ease;
-
-  &:hover {
-    border-color: $espresso-brown;
-    background: rgba($espresso-brown, 0.04);
-    color: $espresso-brown;
+    &:hover {
+      background: var(--muted);
+      color: var(--primary);
+    }
   }
 }
 
@@ -665,10 +618,15 @@ $bp-wide:    1200px;
   background: rgba($accent-gold, 0.15);
   color: darken($accent-gold, 18%);
   border-radius: 0.75rem;
-  padding: 0.875rem 1.25rem;
+  padding: 0.75rem 1rem;
   font-weight: 600;
-  font-size: 0.9375rem;
+  font-size: 0.875rem;
   text-align: center;
 
   i { margin-right: 0.375rem; }
 }
+
+// ── Spot indicators ───────────────────────────────────────────────
+.spots-ok   { color: var(--muted-foreground); }
+.spots-low  { color: var(--destructive); font-weight: 600; }
+.spots-full { color: var(--muted-foreground); font-style: italic; }

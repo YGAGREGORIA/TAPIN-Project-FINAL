@@ -38,5 +38,12 @@
     <% end %>
 
     <%= yield %>
+
+    <% if user_signed_in? && !request.path.start_with?('/admin') %>
+      <%= link_to chats_path, class: "ai-bubble", "aria-label": "AI Assistant" do %>
+        <i class="fa fa-magic"></i>
+      <% end %>
+      <%= render 'shared/bottom_nav' %>
+    <% end %>
   </body>
 </html>

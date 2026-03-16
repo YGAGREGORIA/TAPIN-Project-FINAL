@@ -1,3 +1,9 @@
+// h1 is 500 weight per design system (h2–h5 inherit 600 from $headings-font-weight)
+h1 {
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
 .btn-secondary {
   color: $espresso-brown;
   &:hover { color: $espresso-brown; }
