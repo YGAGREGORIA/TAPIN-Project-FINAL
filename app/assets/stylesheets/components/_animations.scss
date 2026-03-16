@@ -1,0 +1,79 @@
+// =============================================================================
+// CSS-only animation library — adapted from UnlockAnimation design package
+// =============================================================================
+
+// ── Keyframes ─────────────────────────────────────────────────────────────
+
+// Stamp pop (booking confirmed check icon)
+@keyframes stampPop {
+  0%   { transform: scale(0.4) rotate(-12deg); opacity: 0; }
+  70%  { transform: scale(1.1) rotate(4deg);  opacity: 1; }
+  100% { transform: scale(1)   rotate(0deg);  opacity: 1; }
+}
+
+// Fade + slide up (cards, list items)
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+// Glow pulse — used on reward unlock, AI bubble, active badge
+@keyframes glowPulse {
+  0%, 100% { box-shadow: 0 0 0   0   rgba($terracotta, 0.4); }
+  50%       { box-shadow: 0 0 16px 6px rgba($terracotta, 0.25); }
+}
+
+// Sparkle scale-in — for achievement / unlock moment
+@keyframes sparkleIn {
+  0%   { opacity: 0; transform: scale(0) rotate(-30deg); }
+  60%  { opacity: 1; transform: scale(1.2) rotate(5deg); }
+  100% { opacity: 1; transform: scale(1)   rotate(0deg); }
+}
+
+// Confetti drop — lightweight CSS confetti particle
+@keyframes confettiFall {
+  0%   { transform: translateY(-8px) rotate(0deg);   opacity: 1; }
+  100% { transform: translateY(40px) rotate(360deg); opacity: 0; }
+}
+
+// Soft bounce — stamp/icon gentle loop
+@keyframes softBounce {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-5px); }
+}
+
+// ── Utility animation classes ──────────────────────────────────────────────
+
+.anim-stamp-pop   { animation: stampPop   0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) both; }
+.anim-fade-up     { animation: fadeSlideUp 0.35s ease both; }
+.anim-glow-pulse  { animation: glowPulse  2s ease-in-out infinite; }
+.anim-sparkle-in  { animation: sparkleIn  0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275) both; }
+.anim-soft-bounce { animation: softBounce 1.6s ease-in-out infinite; }
+
+// Staggered fade-up for lists — add .anim-fade-up to each child,
+// override --delay on each item via style attribute
+.anim-fade-up { animation-delay: var(--delay, 0s); }
+
+// ── Confetti burst helper ─────────────────────────────────────────────────
+// Add .confetti-container (position:relative) around trigger element,
+// then JS or Turbo Streams can inject .confetti-dot spans
+
+.confetti-container {
+  position: relative;
+  overflow: visible;
+}
+
+.confetti-dot {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-radius: 2px;
+  animation: confettiFall 0.8s ease-out forwards;
+  animation-delay: var(--delay, 0s);
+
+  &--1 { background: $terracotta;    top: 0; left: 20%; }
+  &--2 { background: $sage-green;    top: 0; left: 50%; }
+  &--3 { background: $sandy-orange;  top: 0; left: 75%; }
+  &--4 { background: $terracotta;    top: 0; left: 35%; --delay: 0.1s; }
+  &--5 { background: $sage-green;    top: 0; left: 60%; --delay: 0.15s; }
+}

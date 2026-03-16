@@ -1,8 +1,21 @@
-// h1 is 500 weight per design system (h2–h5 inherit 600 from $headings-font-weight)
+// =============================================================================
+// Typography overrides
+// =============================================================================
+
+// H1 → Bold (700) per TypographyShowcase spec
 h1 {
-  font-weight: 500;
+  font-weight: 700;
   letter-spacing: -0.02em;
 }
+
+// Body text uses muted foreground token
+p {
+  color: var(--muted-foreground);
+}
+
+// =============================================================================
+// Bootstrap overrides — keep existing secondary/warning text colours
+// =============================================================================
 
 .btn-secondary {
   color: $espresso-brown;
@@ -12,4 +25,86 @@ h1 {
 .btn-warning {
   color: $espresso-brown;
   &:hover { color: $espresso-brown; }
+}
+
+// =============================================================================
+// Design-system button classes
+// Used alongside or instead of Bootstrap .btn-* in custom UI sections
+// =============================================================================
+
+// Base shared styles
+%btn-tapin-base {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;        // Button = Inter 16px Medium per TypographyShowcase
+  font-size: 1rem;
+  line-height: 1;
+  padding: 0.75rem 1.5rem; // md size default
+  border-radius: 0.75rem;  // rounded-lg
+  border: none;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  transition: opacity 0.18s ease, transform 0.15s ease;
+
+  &:hover  { opacity: 0.9; }
+  &:active { transform: scale(0.97); }
+
+  &:disabled,
+  &.disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+}
+
+// -- Size modifiers --
+.btn-tapin-sm {
+  font-size: 0.875rem; // Label = 14px
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+}
+
+.btn-tapin-lg {
+  font-size: 1.125rem;
+  padding: 1rem 2rem;
+  border-radius: 0.875rem;
+}
+
+// -- Primary --
+.btn-tapin-primary {
+  @extend %btn-tapin-base;
+  background: var(--primary);
+  color: var(--primary-foreground);
+  box-shadow: 0 4px 12px rgba($sage-green, 0.3);
+
+  &:hover { color: var(--primary-foreground); }
+}
+
+// -- Accent --
+.btn-tapin-accent {
+  @extend %btn-tapin-base;
+  background: var(--accent);
+  color: var(--accent-foreground);
+  box-shadow: 0 4px 12px rgba($terracotta, 0.3);
+
+  &:hover { color: var(--accent-foreground); }
+}
+
+// -- Outline --
+.btn-tapin-outline {
+  @extend %btn-tapin-base;
+  background: transparent;
+  color: var(--primary);
+  border: 2px solid var(--primary);
+  box-shadow: none;
+
+  &:hover {
+    background: var(--primary);
+    color: var(--primary-foreground);
+    opacity: 1;
+  }
 }
