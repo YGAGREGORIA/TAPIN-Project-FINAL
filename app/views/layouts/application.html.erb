@@ -41,7 +41,7 @@
     <%= yield %>
 
     <% if user_signed_in? && !request.path.start_with?('/admin') %>
-      <%= link_to chats_path, class: "ai-bubble position-relative", "aria-label": "AI Assistant" do %>
+      <%= link_to chats_path, class: "ai-bubble", "aria-label": "AI Assistant" do %>
         <i class="bi bi-stars"></i>
         <span class="badge rounded-pill bg-success position-absolute top-0 end-0">2</span>
       <% end %>
