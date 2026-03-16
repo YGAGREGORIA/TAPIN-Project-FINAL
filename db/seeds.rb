@@ -446,6 +446,247 @@ puts "Updating user point totals..."
   )
 end
 
+# =============================================================================
+# FAKE MINDBODY SYSTEM (mb_ tables)
+# These replicate what Mindbody's API would return, so we can develop
+# and test without a real Mindbody connection.
+# =============================================================================
+
+SITE_ID = "12345" # matches studio.mindbody_site_id
+
+puts "Seeding Mindbody system — mb_clients..."
+
+mb_client_data = [
+  # These 5 match the existing mindbody_clients bridge table
+  { id: "MB-1001", first: "Alice",    last: "Martin",  email: "alice@example.com",      phone: "611234567",  gender: "Female", birth: "1990-03-15", status: "Active",   created: 14.months.ago },
+  { id: "MB-1002", first: "Bob",      last: "Chen",    email: "bob.chen@gmail.com",     phone: "619999999",  gender: "Male",   birth: "1988-07-22", status: "Active",   created: 11.months.ago },
+  { id: "MB-1003", first: "Robert",   last: "Chen",    email: "robert.chen@gmail.com",  phone: "619876543",  gender: "Male",   birth: "1985-01-10", status: "Active",   created: 10.months.ago },
+  { id: "MB-1004", first: "Carol",    last: "Park",    email: "carol.park@gmail.com",   phone: "612345678",  gender: "Female", birth: "1992-11-05", status: "Active",   created: 8.months.ago },
+  { id: "MB-1005", first: "Caroline", last: "Parker",  email: "caroline.p@gmail.com",   phone: "612345678",  gender: "Female", birth: "1991-06-18", status: "Active",   created: 6.months.ago },
+  # These 5 are Mindbody-only (haven't signed up for TapIn)
+  { id: "MB-1006", first: "Derek",    last: "Hoffman", email: "derek.h@gmail.com",      phone: "615550101",  gender: "Male",   birth: "1987-09-30", status: "Active",   created: 18.months.ago },
+  { id: "MB-1007", first: "Yuki",     last: "Tanaka",  email: "yuki.t@outlook.com",     phone: "615550102",  gender: "Female", birth: "1995-04-12", status: "Active",   created: 12.months.ago },
+  { id: "MB-1008", first: "Raj",      last: "Mehta",   email: "raj.mehta@gmail.com",    phone: "615550103",  gender: "Male",   birth: "1993-08-20", status: "Active",   created: 9.months.ago },
+  { id: "MB-1009", first: "Tanya",    last: "Brooks",  email: "tanya.b@yahoo.com",      phone: "615550104",  gender: "Female", birth: "1989-12-01", status: "Inactive", created: 20.months.ago },
+  { id: "MB-1010", first: "Sam",      last: "Rivera",  email: "sam.rivera@gmail.com",   phone: "615550105",  gender: "Male",   birth: "1996-02-14", status: "Active",   created: 4.months.ago },
+]
+
+mb_clients = mb_client_data.map do |d|
+  Mb::Client.find_or_create_by!(mb_site_id: SITE_ID, mb_client_id: d[:id]) do |c|
+    c.first_name = d[:first]
+    c.last_name = d[:last]
+    c.email = d[:email]
+    c.phone = d[:phone]
+    c.gender = d[:gender]
+    c.birth_date = Date.parse(d[:birth])
+    c.status = d[:status]
+    c.creation_date = d[:created]
+    c.address = "#{rand(100..999)} Main St"
+    c.city = "Fitville"
+    c.state = "CA"
+    c.zip = "90210"
+  end
+end
+
+puts "Seeding Mindbody system — mb_staff..."
+
+staff_data = [
+  { id: "STF-001", first: "Sarah",  last: "Chen",   email: "sarah.chen@tapinfitness.com",  bio: "RYT-500 certified yoga instructor with 8 years of experience. Specializes in vinyasa and restorative yoga." },
+  { id: "STF-002", first: "Maya",   last: "Patel",  email: "maya.patel@tapinfitness.com",  bio: "Passionate yoga teacher focused on mindfulness and breath work. Teaches all levels." },
+  { id: "STF-003", first: "Jordan", last: "Blake",  email: "jordan.blake@tapinfitness.com", bio: "Former collegiate athlete turned HIIT specialist. High energy, no excuses." },
+  { id: "STF-004", first: "Marcus", last: "Lee",    email: "marcus.lee@tapinfitness.com",  bio: "ACE-certified personal trainer and group fitness instructor. Loves pushing limits." },
+  { id: "STF-005", first: "Emma",   last: "Torres", email: "emma.torres@tapinfitness.com", bio: "Pilates Method Alliance certified. 6 years teaching mat and reformer Pilates." },
+]
+
+mb_staff = staff_data.map do |d|
+  Mb::Staff.find_or_create_by!(mb_site_id: SITE_ID, mb_staff_id: d[:id]) do |s|
+    s.first_name = d[:first]
+    s.last_name = d[:last]
+    s.email = d[:email]
+    s.phone = "61555#{rand(1000..9999)}"
+    s.bio = d[:bio]
+  end
+end
+
+sarah, maya, jordan, marcus, emma = mb_staff
+
+puts "Seeding Mindbody system — mb_class_descriptions..."
+
+cd_yoga = Mb::ClassDescription.find_or_create_by!(mb_site_id: SITE_ID, mb_class_description_id: "CD-101") do |d|
+  d.name = "Morning Yoga"
+  d.description = "Flow through a series of gentle postures designed to build strength and flexibility. Perfect for all levels."
+  d.category = "Yoga"
+  d.duration_minutes = 60
+end
+
+cd_hiit = Mb::ClassDescription.find_or_create_by!(mb_site_id: SITE_ID, mb_class_description_id: "CD-102") do |d|
+  d.name = "HIIT Blast"
+  d.description = "High-intensity interval training that torches calories and builds endurance. Get ready to sweat!"
+  d.category = "Cardio"
+  d.duration_minutes = 45
+end
+
+cd_pilates = Mb::ClassDescription.find_or_create_by!(mb_site_id: SITE_ID, mb_class_description_id: "CD-103") do |d|
+  d.name = "Pilates Core"
+  d.description = "Core-focused movements to improve posture, stability, and total-body strength. Low impact, high reward."
+  d.category = "Pilates"
+  d.duration_minutes = 60
+end
+
+puts "Seeding Mindbody system — mb_classes (schedule)..."
+
+# Build 4 weeks of historical classes + 1 week of future classes
+mb_schedule = [
+  { day_of_week: 0, hour: 7,  desc: cd_yoga,    staff: sarah,  name: "Morning Yoga" },
+  { day_of_week: 0, hour: 12, desc: cd_pilates,  staff: emma,   name: "Pilates Core" },
+  { day_of_week: 0, hour: 18, desc: cd_hiit,     staff: jordan, name: "HIIT Blast" },
+  { day_of_week: 1, hour: 6,  desc: cd_hiit,     staff: marcus, name: "HIIT Blast" },
+  { day_of_week: 1, hour: 9,  desc: cd_yoga,     staff: maya,   name: "Morning Yoga" },
+  { day_of_week: 1, hour: 17, desc: cd_pilates,  staff: emma,   name: "Pilates Core" },
+  { day_of_week: 2, hour: 7,  desc: cd_yoga,     staff: sarah,  name: "Morning Yoga" },
+  { day_of_week: 2, hour: 19, desc: cd_hiit,     staff: jordan, name: "HIIT Blast" },
+  { day_of_week: 3, hour: 8,  desc: cd_pilates,  staff: emma,   name: "Pilates Core" },
+  { day_of_week: 3, hour: 12, desc: cd_yoga,     staff: maya,   name: "Morning Yoga" },
+  { day_of_week: 3, hour: 18, desc: cd_hiit,     staff: marcus, name: "HIIT Blast" },
+  { day_of_week: 4, hour: 7,  desc: cd_yoga,     staff: sarah,  name: "Morning Yoga" },
+  { day_of_week: 4, hour: 10, desc: cd_hiit,     staff: jordan, name: "HIIT Blast" },
+  { day_of_week: 5, hour: 9,  desc: cd_yoga,     staff: maya,   name: "Morning Yoga" },
+  { day_of_week: 5, hour: 11, desc: cd_pilates,  staff: emma,   name: "Pilates Core" },
+  { day_of_week: 5, hour: 17, desc: cd_hiit,     staff: marcus, name: "HIIT Blast" },
+  { day_of_week: 6, hour: 8,  desc: cd_yoga,     staff: sarah,  name: "Morning Yoga" },
+  { day_of_week: 6, hour: 10, desc: cd_pilates,  staff: emma,   name: "Pilates Core" },
+]
+
+mb_all_classes = []
+class_counter = 0
+
+(-4..1).each do |week_offset|
+  week_start = Date.today.beginning_of_week + (week_offset * 7)
+
+  mb_schedule.each do |s|
+    class_date = week_start + s[:day_of_week]
+    start_dt = class_date.to_datetime.change(hour: s[:hour])
+    next if start_dt > 1.week.from_now # don't go too far into future
+
+    class_counter += 1
+    duration = s[:desc].duration_minutes || 60
+    booked = week_offset < 0 ? rand(5..15) : rand(0..8)
+
+    klass = Mb::Klass.find_or_create_by!(mb_site_id: SITE_ID, mb_class_id: "CLS-#{class_counter.to_s.rjust(4, '0')}") do |k|
+      k.class_description = s[:desc]
+      k.staff = s[:staff]
+      k.start_datetime = start_dt
+      k.end_datetime = start_dt + duration.minutes
+      k.max_capacity = duration == 45 ? 15 : 20
+      k.total_booked = booked
+      k.is_canceled = false
+      k.location = "Studio A"
+    end
+
+    mb_all_classes << { klass: klass, week_offset: week_offset, desc: s[:desc] }
+  end
+end
+
+puts "Seeding Mindbody system — mb_client_visits..."
+
+# Historical classes only (past weeks)
+past_classes = mb_all_classes.select { |c| c[:week_offset] < 0 }
+visit_counter = 0
+
+# Distribute visits: Alice ~10, Bob ~9, Carol ~23, others varied
+client_visit_targets = {
+  mb_clients[0] => 10,  # Alice
+  mb_clients[1] => 9,   # Bob
+  mb_clients[3] => 23,  # Carol
+  mb_clients[5] => 14,  # Derek (MB-only)
+  mb_clients[6] => 8,   # Yuki
+  mb_clients[7] => 6,   # Raj
+  mb_clients[9] => 3,   # Sam
+}
+
+client_visit_targets.each do |client, target_visits|
+  shuffled = past_classes.shuffle.first([target_visits, past_classes.size].min)
+  shuffled.each do |cls|
+    visit_counter += 1
+    Mb::ClientVisit.find_or_create_by!(mb_site_id: SITE_ID, mb_visit_id: "VIS-#{visit_counter.to_s.rjust(5, '0')}") do |v|
+      v.client = client
+      v.klass = cls[:klass]
+      v.visit_type = "class"
+      v.signed_in = true
+      v.arrival_datetime = cls[:klass].start_datetime - rand(0..10).minutes
+    end
+  end
+end
+
+puts "Seeding Mindbody system — mb_memberships..."
+
+membership_types = [
+  { name: "Unlimited Monthly",  amount: 149.00, sessions: nil },
+  { name: "10-Class Pack",      amount: 180.00, sessions: 10 },
+  { name: "Drop-In Single",     amount: 25.00,  sessions: 1 },
+]
+
+membership_counter = 0
+
+[
+  { client: mb_clients[0], type: 0, status: "Active",   active: 6.months.ago },  # Alice — Unlimited
+  { client: mb_clients[1], type: 1, status: "Active",   active: 3.months.ago },  # Bob — 10-pack
+  { client: mb_clients[3], type: 0, status: "Active",   active: 8.months.ago },  # Carol — Unlimited
+  { client: mb_clients[5], type: 0, status: "Active",   active: 12.months.ago }, # Derek — Unlimited
+  { client: mb_clients[6], type: 1, status: "Active",   active: 2.months.ago },  # Yuki — 10-pack
+  { client: mb_clients[7], type: 1, status: "Active",   active: 4.months.ago },  # Raj — 10-pack
+  { client: mb_clients[8], type: 0, status: "Expired",  active: 18.months.ago }, # Tanya — Expired
+  { client: mb_clients[9], type: 2, status: "Active",   active: 1.month.ago },   # Sam — Drop-in
+  { client: mb_clients[2], type: 2, status: "Active",   active: 5.months.ago },  # Robert — Drop-in
+  { client: mb_clients[4], type: 1, status: "Active",   active: 3.months.ago },  # Caroline — 10-pack
+].each do |m|
+  membership_counter += 1
+  mt = membership_types[m[:type]]
+  active_date = m[:active].to_date
+  exp_date = mt[:sessions].nil? ? active_date + 1.month : active_date + 6.months
+
+  Mb::Membership.find_or_create_by!(mb_site_id: SITE_ID, mb_membership_id: "MEM-#{membership_counter.to_s.rjust(4, '0')}") do |mem|
+    mem.client = m[:client]
+    mem.name = mt[:name]
+    mem.payment_amount = mt[:amount]
+    mem.remaining_sessions = mt[:sessions] ? [mt[:sessions] - rand(0..5), 0].max : nil
+    mem.active_date = active_date
+    mem.expiration_date = m[:status] == "Expired" ? 6.months.ago.to_date : exp_date
+    mem.status = m[:status]
+  end
+end
+
+puts "Seeding Mindbody system — mb_purchases..."
+
+purchase_counter = 0
+
+[
+  { client: mb_clients[0], desc: "Unlimited Monthly — Mar 2026", amount: 149.00, method: "Credit Card", date: 1.month.ago },
+  { client: mb_clients[0], desc: "Unlimited Monthly — Feb 2026", amount: 149.00, method: "Credit Card", date: 2.months.ago },
+  { client: mb_clients[1], desc: "10-Class Pack",                amount: 180.00, method: "Credit Card", date: 3.months.ago },
+  { client: mb_clients[3], desc: "Unlimited Monthly — Mar 2026", amount: 149.00, method: "Credit Card", date: 1.month.ago },
+  { client: mb_clients[3], desc: "Unlimited Monthly — Feb 2026", amount: 149.00, method: "Credit Card", date: 2.months.ago },
+  { client: mb_clients[3], desc: "Unlimited Monthly — Jan 2026", amount: 149.00, method: "Credit Card", date: 3.months.ago },
+  { client: mb_clients[5], desc: "Unlimited Monthly — Mar 2026", amount: 149.00, method: "Credit Card", date: 1.month.ago },
+  { client: mb_clients[6], desc: "10-Class Pack",                amount: 180.00, method: "Debit Card",  date: 2.months.ago },
+  { client: mb_clients[7], desc: "10-Class Pack",                amount: 180.00, method: "Credit Card", date: 4.months.ago },
+  { client: mb_clients[9], desc: "Drop-In Single",               amount: 25.00,  method: "Apple Pay",   date: 3.weeks.ago },
+  { client: mb_clients[9], desc: "Drop-In Single",               amount: 25.00,  method: "Apple Pay",   date: 1.week.ago },
+  { client: mb_clients[0], desc: "Water Bottle — TAPIN Branded", amount: 18.00,  method: "Credit Card", date: 5.weeks.ago },
+  { client: mb_clients[3], desc: "Yoga Mat — Premium",           amount: 45.00,  method: "Credit Card", date: 6.weeks.ago },
+  { client: mb_clients[5], desc: "Protein Shake",                amount: 8.00,   method: "Cash",        date: 2.weeks.ago },
+  { client: mb_clients[6], desc: "Grip Socks",                   amount: 12.00,  method: "Debit Card",  date: 3.weeks.ago },
+].each do |p|
+  purchase_counter += 1
+  Mb::Purchase.find_or_create_by!(mb_site_id: SITE_ID, mb_purchase_id: "PUR-#{purchase_counter.to_s.rjust(5, '0')}") do |pur|
+    pur.client = p[:client]
+    pur.description = p[:desc]
+    pur.amount = p[:amount]
+    pur.payment_method = p[:method]
+    pur.sale_date = p[:date]
+  end
+end
+
 puts ""
 puts "Done! Seed data created successfully."
 puts ""
@@ -458,6 +699,11 @@ puts "  bob@example.com         — 9 visits, 1 visit remaining"
 puts "  carol@example.com       — 23 visits, 1 available reward, 2 bookings, 2 deal claims"
 puts "  owner@tapinstudio.com   — studio owner/admin account"
 puts "  lena/marcus/priya/...   — 7 demo members with varied visit history"
+puts ""
+puts "Fake Mindbody system (mb_ tables):"
+puts "  #{Mb::Client.count} clients, #{Mb::Staff.count} staff, #{Mb::ClassDescription.count} class types"
+puts "  #{Mb::Klass.count} scheduled classes, #{Mb::ClientVisit.count} attendance records"
+puts "  #{Mb::Membership.count} memberships, #{Mb::Purchase.count} purchases"
 puts ""
 puts "Admin pages:"
 puts "  /admin — Dashboard"

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_13_135733) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_16_100007) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -122,6 +122,118 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_13_135733) do
     t.datetime "updated_at", null: false
     t.integer "usage_limit"
     t.index ["studio_id"], name: "index_deals_on_studio_id"
+  end
+
+  create_table "mb_class_descriptions", force: :cascade do |t|
+    t.string "category"
+    t.datetime "created_at", null: false
+    t.text "description"
+    t.integer "duration_minutes"
+    t.string "mb_class_description_id", null: false
+    t.string "mb_site_id", null: false
+    t.string "name", null: false
+    t.datetime "updated_at", null: false
+    t.index ["mb_site_id", "mb_class_description_id"], name: "idx_mb_class_desc_on_site_and_desc_id", unique: true
+  end
+
+  create_table "mb_classes", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "end_datetime", null: false
+    t.boolean "is_canceled", default: false
+    t.string "location"
+    t.integer "max_capacity", default: 20
+    t.bigint "mb_class_description_id", null: false
+    t.string "mb_class_id", null: false
+    t.string "mb_site_id", null: false
+    t.bigint "mb_staff_id", null: false
+    t.datetime "start_datetime", null: false
+    t.integer "total_booked", default: 0
+    t.datetime "updated_at", null: false
+    t.index ["mb_class_description_id"], name: "index_mb_classes_on_mb_class_description_id"
+    t.index ["mb_site_id", "mb_class_id"], name: "index_mb_classes_on_mb_site_id_and_mb_class_id", unique: true
+    t.index ["mb_staff_id"], name: "index_mb_classes_on_mb_staff_id"
+  end
+
+  create_table "mb_client_visits", force: :cascade do |t|
+    t.datetime "arrival_datetime"
+    t.datetime "created_at", null: false
+    t.bigint "mb_class_id", null: false
+    t.bigint "mb_client_id", null: false
+    t.string "mb_site_id", null: false
+    t.string "mb_visit_id", null: false
+    t.boolean "signed_in", default: true
+    t.datetime "updated_at", null: false
+    t.string "visit_type", default: "class"
+    t.index ["mb_class_id"], name: "index_mb_client_visits_on_mb_class_id"
+    t.index ["mb_client_id", "mb_class_id"], name: "index_mb_client_visits_on_mb_client_id_and_mb_class_id"
+    t.index ["mb_client_id"], name: "index_mb_client_visits_on_mb_client_id"
+    t.index ["mb_site_id", "mb_visit_id"], name: "index_mb_client_visits_on_mb_site_id_and_mb_visit_id", unique: true
+  end
+
+  create_table "mb_clients", force: :cascade do |t|
+    t.string "address"
+    t.date "birth_date"
+    t.string "city"
+    t.datetime "created_at", null: false
+    t.datetime "creation_date"
+    t.string "email"
+    t.string "first_name", null: false
+    t.string "gender"
+    t.string "last_name", null: false
+    t.string "mb_client_id", null: false
+    t.string "mb_site_id", null: false
+    t.string "phone"
+    t.string "state"
+    t.string "status", default: "Active"
+    t.datetime "updated_at", null: false
+    t.string "zip"
+    t.index ["mb_site_id", "email"], name: "index_mb_clients_on_mb_site_id_and_email"
+    t.index ["mb_site_id", "mb_client_id"], name: "index_mb_clients_on_mb_site_id_and_mb_client_id", unique: true
+    t.index ["mb_site_id", "phone"], name: "index_mb_clients_on_mb_site_id_and_phone"
+  end
+
+  create_table "mb_memberships", force: :cascade do |t|
+    t.date "active_date"
+    t.datetime "created_at", null: false
+    t.date "expiration_date"
+    t.bigint "mb_client_id", null: false
+    t.string "mb_membership_id", null: false
+    t.string "mb_site_id", null: false
+    t.string "name", null: false
+    t.decimal "payment_amount", precision: 10, scale: 2
+    t.integer "remaining_sessions"
+    t.string "status", default: "Active"
+    t.datetime "updated_at", null: false
+    t.index ["mb_client_id"], name: "index_mb_memberships_on_mb_client_id"
+    t.index ["mb_site_id", "mb_membership_id"], name: "index_mb_memberships_on_mb_site_id_and_mb_membership_id", unique: true
+  end
+
+  create_table "mb_purchases", force: :cascade do |t|
+    t.decimal "amount", precision: 10, scale: 2
+    t.datetime "created_at", null: false
+    t.string "description"
+    t.bigint "mb_client_id", null: false
+    t.string "mb_purchase_id", null: false
+    t.string "mb_site_id", null: false
+    t.string "payment_method"
+    t.datetime "sale_date"
+    t.datetime "updated_at", null: false
+    t.index ["mb_client_id"], name: "index_mb_purchases_on_mb_client_id"
+    t.index ["mb_site_id", "mb_purchase_id"], name: "index_mb_purchases_on_mb_site_id_and_mb_purchase_id", unique: true
+  end
+
+  create_table "mb_staff", force: :cascade do |t|
+    t.text "bio"
+    t.datetime "created_at", null: false
+    t.string "email"
+    t.string "first_name", null: false
+    t.string "image_url"
+    t.string "last_name", null: false
+    t.string "mb_site_id", null: false
+    t.string "mb_staff_id", null: false
+    t.string "phone"
+    t.datetime "updated_at", null: false
+    t.index ["mb_site_id", "mb_staff_id"], name: "index_mb_staff_on_mb_site_id_and_mb_staff_id", unique: true
   end
 
   create_table "messages", force: :cascade do |t|
@@ -343,6 +455,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_13_135733) do
   add_foreign_key "deal_claims", "studios"
   add_foreign_key "deal_claims", "users"
   add_foreign_key "deals", "studios"
+  add_foreign_key "mb_classes", "mb_class_descriptions"
+  add_foreign_key "mb_classes", "mb_staff"
+  add_foreign_key "mb_client_visits", "mb_classes"
+  add_foreign_key "mb_client_visits", "mb_clients"
+  add_foreign_key "mb_memberships", "mb_clients"
+  add_foreign_key "mb_purchases", "mb_clients"
   add_foreign_key "messages", "chats"
   add_foreign_key "mindbody_clients", "studios"
   add_foreign_key "mindbody_links", "users"
