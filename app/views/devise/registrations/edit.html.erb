@@ -89,6 +89,34 @@
         </div>
       </div>
 
+      <%# ── Social Media ── %>
+      <div class="profile-section">
+        <h4 class="profile-section-title">Social Media</h4>
+
+        <div class="profile-fields">
+          <div class="profile-field">
+            <label class="profile-label profile-label--social profile-label--instagram">
+              <i class="fa-brands fa-instagram"></i> Instagram
+            </label>
+            <%= f.text_field :instagram, class: "profile-input", placeholder: "@username" %>
+          </div>
+
+          <div class="profile-field">
+            <label class="profile-label profile-label--social profile-label--facebook">
+              <i class="fa-brands fa-facebook-f"></i> Facebook
+            </label>
+            <%= f.text_field :facebook, class: "profile-input", placeholder: "username or profile URL" %>
+          </div>
+
+          <div class="profile-field">
+            <label class="profile-label profile-label--social profile-label--linkedin">
+              <i class="fa-brands fa-linkedin-in"></i> LinkedIn
+            </label>
+            <%= f.text_field :linkedin, class: "profile-input", placeholder: "username or profile URL" %>
+          </div>
+        </div>
+      </div>
+
       <%# ── Save ── %>
       <div class="profile-save">
         <%= f.submit "Save Changes", class: "btn-book" %>

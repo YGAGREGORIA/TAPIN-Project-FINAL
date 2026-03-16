@@ -137,6 +137,18 @@
   font-weight: 500;
   color: var(--muted-foreground);
   margin: 0;
+
+  &--social {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+
+    i { font-size: 1rem; }
+  }
+
+  &--instagram i,
+  &--facebook  i,
+  &--linkedin  i { color: var(--accent); }
 }
 
 .profile-input {
