@@ -18,7 +18,8 @@
     </span>
   <% end %>
 
-  <%= link_to edit_user_registration_path, class: "bottom-nav-item" do %>
+  <%= link_to edit_user_registration_path,
+        class: "bottom-nav-item #{controller_name == 'registrations' ? 'bottom-nav-item--active' : ''}" do %>
     <i class="fa fa-user"></i>
     <span>Profile</span>
   <% end %>
