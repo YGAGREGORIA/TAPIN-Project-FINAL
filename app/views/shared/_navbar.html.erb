@@ -1,15 +1,15 @@
 <% if user_signed_in? %>
   <%# ── Logged-in navbar ─────────────────────────────────────────────── %>
   <nav class="navbar navbar-tapin">
-    <div class="container">
+    <div class="container position-relative d-flex align-items-center justify-content-center">
 
-      <%# Logo — left %>
-      <%= link_to root_path, class: "navbar-brand" do %>
-        <span class="tapin-logo">TapIn<span>.</span></span>
+      <%# Logo — centered %>
+      <%= link_to root_path, class: "navbar-brand mx-auto" do %>
+        <span class="tapin-logo">TAPIN<span>.</span></span>
       <% end %>
 
-      <%# Hamburger — always visible, opens sidebar %>
-      <button class="tapin-hamburger ms-auto d-none d-lg-flex" type="button"
+      <%# Hamburger — absolute right, desktop only %>
+      <button class="tapin-hamburger position-absolute end-0 d-none d-lg-flex" type="button"
               data-bs-toggle="offcanvas" data-bs-target="#tapinSidebar"
               aria-controls="tapinSidebar" aria-label="Open menu">
         <span></span>
@@ -88,7 +88,7 @@
 
       <%# Logo — centered %>
       <%= link_to root_path, class: "navbar-brand mx-auto mx-lg-0" do %>
-        <span class="tapin-logo">TapIn<span>.</span></span>
+        <span class="tapin-logo">TAPIN<span>.</span></span>
       <% end %>
 
       <%# Desktop links — right side, hidden on mobile (handled by collapse below) %>
