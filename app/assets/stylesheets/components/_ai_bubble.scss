@@ -16,6 +16,7 @@
   text-decoration: none;
   box-shadow: 0 8px 24px rgba($terracotta, 0.35);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: 2px solid rgba(255, 255, 255, 0.25);
 
   &:hover {
     color: var(--accent-foreground);
