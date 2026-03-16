@@ -1,131 +1,114 @@
-// ── Booking confirmation page ────────────────────────────────────
+// ── Booking confirmation page ─────────────────────────────────────
 .booking-confirm-page {
-  background-color: $oat;
+  background: var(--background);
   min-height: 100vh;
   font-family: 'Inter', sans-serif;
-  padding-bottom: 3rem;
+  padding-bottom: calc(62px + 2rem);
 }
 
 .confirm-hero {
-  background: $espresso-brown;
-  color: $oat;
-  padding: 2.5rem 1.25rem;
+  background: var(--primary);
+  color: var(--primary-foreground);
+  padding: 3rem 1.5rem 2.5rem;
   text-align: center;
-
-  @media (min-width: $bp-tablet)  { padding: 3rem 2rem; }
-  @media (min-width: $bp-desktop) { padding: 4rem 2rem; }
 }
 
 .confirm-check-icon {
-  width: 3.5rem;
-  height: 3.5rem;
+  width: 5rem;
+  height: 5rem;
   border-radius: 50%;
-  background: $accent-gold;
-  color: $espresso-brown;
+  background: var(--accent);
+  color: var(--accent-foreground);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.375rem;
-  margin: 0 auto 1rem;
-  animation: stampPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
-
-  @media (min-width: $bp-desktop) {
-    width: 4.5rem;
-    height: 4.5rem;
-    font-size: 1.75rem;
-  }
+  font-size: 2rem;
+  margin: 0 auto 1.25rem;
+  animation: stampPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
 }
 
 .confirm-title {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 1.625rem;
-  font-weight: 700;
-  color: $oat;
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--primary-foreground);
   margin-bottom: 0.25rem;
-
-  @media (min-width: $bp-tablet)  { font-size: 2rem; }
-  @media (min-width: $bp-desktop) { font-size: 2.5rem; }
 }
 
 .confirm-subtitle {
   font-size: 0.875rem;
-  color: rgba($oat, 0.5);
+  color: rgba(255, 255, 255, 0.6);
   margin: 0;
-
-  @media (min-width: $bp-tablet) { font-size: 1rem; }
 }
 
 .confirm-body {
-  padding: 1.25rem;
-
-  @media (min-width: $bp-tablet) {
-    padding: 2rem;
-    max-width: 560px;
-    margin: 0 auto;
-  }
-
-  @media (min-width: $bp-desktop) {
-    max-width: 640px;
-    padding: 2.5rem 0;
-  }
+  padding: 1.5rem 1.25rem;
+  max-width: 520px;
+  margin: 0 auto;
 }
 
 .confirm-card {
-  background: white;
-  border-radius: 0.875rem;
-  padding: 1.375rem 1.25rem;
-  box-shadow: 0 1px 4px rgba($espresso-brown, 0.07);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  margin-bottom: 1rem;
+}
+
+.confirm-class-name {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 600;
+  color: var(--foreground);
   margin-bottom: 1.25rem;
+}
 
-  @media (min-width: $bp-tablet) {
-    padding: 1.75rem 1.5rem;
-    border-radius: 1rem;
-  }
-
-  .confirm-class-name {
-    font-family: 'Space Grotesk', sans-serif;
-    font-weight: 700;
-    font-size: 1.1875rem;
-    color: $espresso-brown;
-    margin-bottom: 1rem;
-
-    @media (min-width: $bp-tablet) { font-size: 1.375rem; }
-  }
+.confirm-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
 }
 
 .confirm-detail-row {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 0.75rem;
-  font-size: 0.9375rem;
-  color: rgba($espresso-brown, 0.75);
-  padding: 0.375rem 0;
 
   i {
-    width: 1rem;
-    color: rgba($espresso-brown, 0.35);
-    font-size: 0.875rem;
-    text-align: center;
+    font-size: 1.1rem;
+    color: var(--muted-foreground);
+    margin-top: 0.1rem;
     flex-shrink: 0;
   }
+}
 
-  @media (min-width: $bp-tablet) { font-size: 1rem; }
+.confirm-detail-primary {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--foreground);
+  margin: 0;
+}
+
+.confirm-detail-secondary {
+  font-size: 0.875rem;
+  color: var(--foreground);
+  margin: 0.25rem 0 0;
 }
 
 .confirm-divider {
   height: 1px;
-  background: rgba($espresso-brown, 0.07);
-  margin: 1rem 0 0.75rem;
+  background: var(--border);
+  margin: 1.25rem 0 1rem;
 }
 
 .confirm-booking-id {
   font-size: 0.8125rem;
-  color: rgba($espresso-brown, 0.35);
+  color: var(--muted-foreground);
+  margin: 0;
 
   span {
-    font-family: monospace;
-    font-weight: 700;
-    color: rgba($espresso-brown, 0.5);
+    font-weight: 600;
+    color: var(--foreground);
   }
 }
 
@@ -133,38 +116,48 @@
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  margin-bottom: 1.5rem;
-
-  @media (min-width: $bp-tablet) {
-    flex-direction: row;
-
-    .btn-book,
-    .btn-secondary-action { flex: 1; }
-  }
+  margin-bottom: 1rem;
 }
 
 .confirm-cancel-note {
   text-align: center;
-  font-size: 0.8125rem;
-  color: rgba($espresso-brown, 0.4);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.375rem;
+  font-size: 0.875rem;
+  color: var(--muted-foreground);
+  margin-bottom: 1rem;
+
+  p { margin: 0; }
 }
 
 .btn-cancel-link {
   background: none;
   border: none;
   padding: 0;
-  color: $clay-red;
-  font-size: 0.8125rem;
+  color: var(--destructive);
+  font-size: 0.875rem;
   font-weight: 600;
   cursor: pointer;
   text-decoration: underline;
   font-family: 'Inter', sans-serif;
 
-  &:hover { color: darken($clay-red, 10%); }
+  &:hover { opacity: 0.8; }
+}
+
+.confirm-tip {
+  background: rgba($terracotta, 0.08);
+  border: 1px solid rgba($terracotta, 0.18);
+  border-radius: 0.75rem;
+  padding: 1rem 1.125rem;
+
+  p {
+    font-size: 0.875rem;
+    color: var(--foreground);
+    margin: 0;
+    line-height: 1.55;
+  }
+}
+
+.confirm-tip-label {
+  font-weight: 600;
 }
 
 // ── Bookings index page ──────────────────────────────────────────
