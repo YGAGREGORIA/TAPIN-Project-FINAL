@@ -25,6 +25,7 @@ alice = User.find_or_create_by!(email: "alice@example.com") do |u|
   u.confirmed_at = Time.current if u.respond_to?(:confirmed_at=)
 end
 alice.update_columns(admin: true) if alice.respond_to?(:admin) && User.column_names.include?("admin")
+alice.update_columns(role: 1) if User.column_names.include?("role") && alice.role.to_s != "admin"
 alice.update_columns(confirmed_at: Time.current) if User.column_names.include?("confirmed_at") && alice.confirmed_at.nil?
 
 bob = User.find_or_create_by!(email: "bob@example.com") do |u|
@@ -36,6 +37,7 @@ bob = User.find_or_create_by!(email: "bob@example.com") do |u|
   u.last_visit_at = 2.days.ago
   u.confirmed_at = Time.current if u.respond_to?(:confirmed_at=)
 end
+bob.update_columns(role: 0) if User.column_names.include?("role") && bob.role.to_s != "customer"
 bob.update_columns(confirmed_at: Time.current) if User.column_names.include?("confirmed_at") && bob.confirmed_at.nil?
 
 carol = User.find_or_create_by!(email: "carol@example.com") do |u|
@@ -46,6 +48,7 @@ carol = User.find_or_create_by!(email: "carol@example.com") do |u|
   u.last_visit_at = 1.week.ago
   u.confirmed_at = Time.current if u.respond_to?(:confirmed_at=)
 end
+carol.update_columns(role: 0) if User.column_names.include?("role") && carol.role.to_s != "customer"
 carol.update_columns(confirmed_at: Time.current) if User.column_names.include?("confirmed_at") && carol.confirmed_at.nil?
 
 owner = User.find_or_create_by!(email: "owner@tapinstudio.com") do |u|
@@ -68,6 +71,10 @@ demo_members = [
   { first_name: "Sofia",  last_name: "Nguyen",  email: "sofia@example.com",  phone: 611000005, visits: 1,  weeks_ago: 0 },
   { first_name: "Owen",   last_name: "Blake",   email: "owen@example.com",   phone: 611000006, visits: 12, weeks_ago: 2 },
   { first_name: "Aisha",  last_name: "Patel",   email: "aisha@example.com",  phone: 611000007, visits: 5,  weeks_ago: 1 },
+  { first_name: "Mila",   last_name: "Fischer", email: "mila@example.com",   phone: 611000008, visits: 18, weeks_ago: 4 },
+  { first_name: "Noah",   last_name: "Becker",  email: "noah@example.com",   phone: 611000009, visits: 9,  weeks_ago: 1 },
+  { first_name: "Emma",   last_name: "Klein",   email: "emma@example.com",   phone: 611000010, visits: 14, weeks_ago: 2 },
+  { first_name: "Leo",    last_name: "Wagner",  email: "leo@example.com",    phone: 611000011, visits: 6,  weeks_ago: 5 }
 ]
 
 demo_users = demo_members.map do |m|
@@ -79,6 +86,7 @@ demo_users = demo_members.map do |m|
     user.last_visit_at = m[:weeks_ago].weeks.ago
     user.confirmed_at = Time.current if user.respond_to?(:confirmed_at=)
   end
+  u.update_columns(role: 0) if User.column_names.include?("role") && u.role.to_s != "customer"
   u.update_columns(confirmed_at: Time.current) if User.column_names.include?("confirmed_at") && u.confirmed_at.nil?
   u
 end

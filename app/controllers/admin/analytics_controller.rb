@@ -1,10 +1,12 @@
 class Admin::AnalyticsController < Admin::BaseController
+  CUSTOMER_ROLE = 0
+
   before_action :set_date_range
 
   # GET /admin/analytics — Member growth & engagement
   def show
-    @total_members = User.where(role: :customer).count
-    @new_members_this_week = User.where(role: :customer)
+    @total_members = User.where(role: CUSTOMER_ROLE).count
+    @new_members_this_week = User.where(role: CUSTOMER_ROLE)
                                   .where(created_at: @start_date..@end_date)
                                   .count
     @total_check_ins = studio_visits.count
@@ -14,7 +16,7 @@ class Admin::AnalyticsController < Admin::BaseController
     @avg_visits_per_member = @active_members > 0 ? (@check_ins_in_range.to_f / @active_members).round(1) : 0
 
     # Weekly breakdown for the date range
-    @weekly_signups = User.where(role: :customer)
+    @weekly_signups = User.where(role: CUSTOMER_ROLE)
                           .where(created_at: @start_date..@end_date)
                           .group("DATE_TRUNC('week', created_at)")
                           .count
@@ -29,9 +31,9 @@ class Admin::AnalyticsController < Admin::BaseController
   def points
     @total_awarded = studio_visits.where(visited_at: @start_date..@end_date).sum(:points_earned).to_i
     @total_redeemed = studio_redemptions.where(redeemed_at: @start_date..@end_date).sum(:point_spent).to_i
-    @in_circulation = User.where(role: :customer).sum(:available_points).to_i
+    @in_circulation = User.where(role: CUSTOMER_ROLE).sum(:available_points).to_i
 
-    @top_earners = User.where(role: :customer)
+    @top_earners = User.where(role: CUSTOMER_ROLE)
                        .where("available_points > 0")
                        .order(available_points: :desc)
                        .limit(10)
