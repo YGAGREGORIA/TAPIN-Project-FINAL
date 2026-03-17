@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>TapIn — Studio Setup</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body class="onboarding-body">
+    <div class="onboarding-wrapper">
+
+      <header class="onboarding-header">
+        <img src="/icon.png" alt="TapIn" height="32">
+        <span class="onboarding-brand-name">TapIn</span>
+      </header>
+
+      <% if alert.present? %>
+        <div class="alert alert-danger alert-dismissible fade show onboarding-alert" role="alert">
+          <%= alert %>
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+      <% end %>
+
+      <%= yield %>
+
+    </div>
+  </body>
+</html>

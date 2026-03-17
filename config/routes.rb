@@ -35,6 +35,16 @@ Rails.application.routes.draw do
   resources :visits, only: [ :create ]
 
   namespace :admin do
+    resource :onboarding, only: [] do
+      get  :step1
+      get  :step2
+      get  :step3
+      post :complete_step1
+      post :complete_step2
+      patch :complete_step3
+      post :skip_step3
+    end
+
     namespace :loyalty do
       patch "deals/referral", to: "deals#update_referral", as: :deals_referral
       resources :deals, only: [ :index, :create, :update, :destroy ]

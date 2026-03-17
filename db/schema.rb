@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_16_180534) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_17_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -355,9 +355,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_16_180534) do
     t.string "background_color"
     t.string "brand_tone"
     t.datetime "created_at", null: false
+    t.string "facebook_url"
     t.string "font_body"
     t.string "font_heading"
+    t.string "instagram_url"
     t.string "logo_url"
+    t.text "philosophy"
     t.string "primary_color"
     t.string "raw_extraction"
     t.string "secondary_color"
@@ -365,6 +368,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_16_180534) do
     t.string "tagline"
     t.string "text_color"
     t.datetime "updated_at", null: false
+    t.string "vibe_keywords", default: [], array: true
+    t.string "website_url"
     t.index ["studio_id"], name: "index_studio_brands_on_studio_id"
   end
 
@@ -391,6 +396,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_16_180534) do
     t.string "mindbody_api_key"
     t.string "mindbody_site_id"
     t.string "name"
+    t.integer "onboarding_step", default: 0, null: false
     t.string "slug"
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false

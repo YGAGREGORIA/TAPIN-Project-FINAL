@@ -1,0 +1,164 @@
+<div class="onboarding-card">
+
+  <div class="onboarding-progress">
+    <span class="onboarding-step-badge done">Step 1</span>
+    <span class="onboarding-step-badge done">Step 2</span>
+    <span class="onboarding-step-badge active">Step 3</span>
+  </div>
+
+  <h1 class="onboarding-title">Brand your studio</h1>
+  <p class="onboarding-subtitle">Help us personalise the experience for your members. You can update this anytime.</p>
+
+  <%= form_with model: @studio_brand,
+                url: complete_step3_admin_onboarding_path,
+                method: :patch,
+                multipart: true,
+                class: "onboarding-form" do |f| %>
+
+    <%# ── Validation errors ──────────────────────────────────────────────── %>
+    <% if @studio_brand.errors.any? %>
+      <div class="alert alert-danger">
+        <ul class="mb-0">
+          <% @studio_brand.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <%# ── Section 1: Social & web links ─────────────────────────────────── %>
+    <div class="onboarding-section">
+      <h2 class="onboarding-section-title">
+        <i class="bi bi-link-45deg"></i> Social &amp; web links
+      </h2>
+      <p class="onboarding-section-hint">Optional — adds links to your studio profile page.</p>
+
+      <div class="mb-3">
+        <%= f.label :instagram_url, "Instagram URL", class: "form-label" %>
+        <div class="input-group">
+          <span class="input-group-text"><i class="bi bi-instagram"></i></span>
+          <%= f.url_field :instagram_url,
+                          class: "form-control #{'is-invalid' if @studio_brand.errors[:instagram_url].any?}",
+                          placeholder: "https://instagram.com/yourstudio" %>
+          <% if @studio_brand.errors[:instagram_url].any? %>
+            <div class="invalid-feedback"><%= @studio_brand.errors[:instagram_url].first %></div>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <%= f.label :facebook_url, "Facebook URL", class: "form-label" %>
+        <div class="input-group">
+          <span class="input-group-text"><i class="bi bi-facebook"></i></span>
+          <%= f.url_field :facebook_url,
+                          class: "form-control #{'is-invalid' if @studio_brand.errors[:facebook_url].any?}",
+                          placeholder: "https://facebook.com/yourstudio" %>
+          <% if @studio_brand.errors[:facebook_url].any? %>
+            <div class="invalid-feedback"><%= @studio_brand.errors[:facebook_url].first %></div>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <%= f.label :website_url, "Website URL", class: "form-label" %>
+        <div class="input-group">
+          <span class="input-group-text"><i class="bi bi-globe"></i></span>
+          <%= f.url_field :website_url,
+                          class: "form-control #{'is-invalid' if @studio_brand.errors[:website_url].any?}",
+                          placeholder: "https://yourstudio.com" %>
+          <% if @studio_brand.errors[:website_url].any? %>
+            <div class="invalid-feedback"><%= @studio_brand.errors[:website_url].first %></div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <%# ── Section 2: Logo upload ─────────────────────────────────────────── %>
+    <div class="onboarding-section">
+      <h2 class="onboarding-section-title">
+        <i class="bi bi-image"></i> Studio logo
+      </h2>
+      <p class="onboarding-section-hint">PNG or JPG, recommended 400×400px or larger.</p>
+
+      <div class="logo-upload-area" data-controller="logo-preview">
+        <%# Preview — hidden until a file is chosen or an existing logo exists %>
+        <% if @studio_brand.logo.attached? %>
+          <img data-logo-preview-target="preview"
+               src="<%= url_for(@studio_brand.logo) %>"
+               alt="Studio logo"
+               class="logo-preview-img">
+        <% else %>
+          <img data-logo-preview-target="preview"
+               src=""
+               alt="Studio logo preview"
+               class="logo-preview-img d-none">
+        <% end %>
+
+        <%# Placeholder shown when no logo is set yet %>
+        <div data-logo-preview-target="placeholder"
+             class="logo-upload-placeholder <%= 'hidden' if @studio_brand.logo.attached? %>">
+          <i class="bi bi-cloud-upload"></i>
+          <span>Click to upload logo</span>
+        </div>
+
+        <%= f.file_field :logo,
+                         accept: "image/png,image/jpeg,image/webp",
+                         class: "logo-upload-input",
+                         data: {
+                           logo_preview_target: "input",
+                           action: "change->logo-preview#preview"
+                         } %>
+      </div>
+    </div>
+
+    <%# ── Section 3: Studio philosophy ──────────────────────────────────── %>
+    <div class="onboarding-section">
+      <h2 class="onboarding-section-title">
+        <i class="bi bi-chat-quote"></i> Studio philosophy
+      </h2>
+      <p class="onboarding-section-hint">Describe what your studio stands for. This appears on your member-facing profile.</p>
+
+      <%= f.text_area :philosophy,
+                      rows: 4,
+                      class: "form-control",
+                      placeholder: "e.g. We believe movement should challenge, inspire, and connect. Every class is designed to push your limits in a supportive, high-energy environment." %>
+    </div>
+
+    <%# ── Section 4: Vibe keywords ───────────────────────────────────────── %>
+    <div class="onboarding-section">
+      <h2 class="onboarding-section-title">
+        <i class="bi bi-stars"></i> Vibe keywords
+      </h2>
+      <p class="onboarding-section-hint">Pick the words that best describe your studio's atmosphere. These shape how your member app looks and feels.</p>
+
+      <%# Hidden field ensures an empty array is submitted when nothing is selected %>
+      <%= f.hidden_field :vibe_keywords, value: "", name: "studio_brand[vibe_keywords][]" %>
+
+      <div class="vibe-chips">
+        <% StudioBrand::VIBE_KEYWORDS.each do |keyword| %>
+          <% selected = Array(@studio_brand.vibe_keywords).include?(keyword) %>
+          <label class="vibe-chip <%= 'selected' if selected %>">
+            <%= f.check_box :vibe_keywords,
+                            { multiple: true,
+                              checked: selected,
+                              class: "vibe-chip-input",
+                              onchange: "this.closest('.vibe-chip').classList.toggle('selected', this.checked)" },
+                            keyword, false %>
+            <%= keyword %>
+          </label>
+        <% end %>
+      </div>
+    </div>
+
+    <%# ── Actions ────────────────────────────────────────────────────────── %>
+    <div class="onboarding-actions">
+      <%= f.submit "Save & finish setup", class: "btn-tapin-primary btn-tapin-lg onboarding-submit" %>
+
+      <%= button_to "Skip for now",
+                    skip_step3_admin_onboarding_path,
+                    method: :post,
+                    class: "onboarding-skip" %>
+    </div>
+
+  <% end %>
+</div>

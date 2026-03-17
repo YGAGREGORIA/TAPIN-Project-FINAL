@@ -11,6 +11,12 @@
 
     <%= yield :head %>
 
+    <%# Inject studio vibe theme — overrides CSS custom properties for studio-scoped pages.
+        Only applied when @studio has a brand with vibe keywords set. %>
+    <% if @studio&.studio_brand&.vibe_keywords&.any? %>
+      <style><%= studio_vibe_styles(@studio.studio_brand).html_safe %></style>
+    <% end %>
+
     <%= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
 
     <link rel="icon" href="/icon.png" type="image/png">
