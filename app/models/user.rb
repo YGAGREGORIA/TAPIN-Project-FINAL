@@ -24,9 +24,19 @@ class User < ApplicationRecord
   has_many :rewards, through: :reward_redemptions
 
   before_validation :normalize_email
+  before_validation :generate_placeholder_email, if: :phone_user?
 
-  validates :email, presence: true
+  validates :email, presence: true, unless: :phone_user?
   validate :password_complexity, if: :password_required?
+
+  # Phone-auth users have a phone but no real email
+  def phone_user?
+    phone.present? && !admin?
+  end
+
+  def display_name
+    first_name.presence || "there"
+  end
 
   def self.enabled_omniauth_providers
     OAUTH_PROVIDERS.select { |provider| omniauth_provider_enabled?(provider) }
@@ -83,6 +93,21 @@ class User < ApplicationRecord
 
   def normalize_email
     self.email = email.to_s.strip.downcase.presence
+  end
+
+  def generate_placeholder_email
+    self.email ||= "phone_#{phone.to_s.gsub(/\D/, '')}@tapin.local"
+  end
+
+  # Override Devise's email_required? so phone users can register without email
+  def email_required?
+    !phone_user?
+  end
+
+  # Override Devise's password_required? so phone users skip password validation
+  def password_required?
+    return false if phone_user?
+    super
   end
 
   def password_complexity

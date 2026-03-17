@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_16_180534) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_17_122313) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -414,7 +414,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_16_180534) do
     t.datetime "last_visit_at"
     t.string "linkedin"
     t.datetime "locked_at"
-    t.integer "phone"
+    t.string "phone"
     t.string "referred_by"
     t.datetime "remember_created_at"
     t.datetime "reset_password_sent_at"
@@ -433,7 +433,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_16_180534) do
   end
 
   create_table "visits", force: :cascade do |t|
-    t.bigint "class_config_id", null: false
+    t.bigint "class_config_id"
     t.datetime "created_at", null: false
     t.integer "points_earned"
     t.bigint "studio_id", null: false
