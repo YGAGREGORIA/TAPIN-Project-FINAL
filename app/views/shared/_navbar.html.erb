@@ -5,7 +5,12 @@
 
       <%# Logo — centered %>
       <%= link_to root_path, class: "navbar-brand mx-auto" do %>
-        <span class="tapin-logo">TAPIN<span>.</span></span>
+        <% brand = @studio&.studio_brand %>
+        <% if brand&.logo&.attached? %>
+          <%= image_tag brand.logo, height: 36, alt: @studio.name, style: "object-fit: contain; max-width: 120px;" %>
+        <% else %>
+          <span class="tapin-logo">TAPIN<span>.</span></span>
+        <% end %>
       <% end %>
 
       <%# Hamburger — absolute right, desktop only %>

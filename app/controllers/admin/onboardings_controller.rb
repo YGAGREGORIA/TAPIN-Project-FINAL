@@ -57,26 +57,30 @@ class Admin::OnboardingsController < ApplicationController
       return
     end
 
-    # Use cached proposal if already generated; otherwise call Claude now.
-    @proposal = load_or_generate_proposal(@studio_brand)
+    # Use cached proposals if already generated; otherwise call Claude now.
+    @proposals = load_or_generate_proposal(@studio_brand)
 
-    if @proposal.nil?
+    if @proposals.nil?
       redirect_to step3_admin_onboarding_path,
                   alert: "Couldn't generate a brand proposal right now. Please try again."
     end
   end
 
-  # Applies the AI proposal to studio_brands and marks onboarding complete.
+  # Applies the selected AI proposal to studio_brands and marks onboarding complete.
+  # Expects params[:proposal_index] (0, 1, or 2) indicating which of the 3 was chosen.
   def apply_branding
     @studio_brand = @studio.studio_brand
-    proposal = load_proposal(@studio_brand)
+    proposals = load_proposals(@studio_brand)
 
-    unless proposal
+    unless proposals
       redirect_to preview_branding_admin_onboarding_path, alert: "No proposal found — please regenerate."
       return
     end
 
-    @studio_brand.update!(proposal.merge(raw_extraction: nil))
+    index = params[:proposal_index].to_i.clamp(0, proposals.length - 1)
+    chosen = proposals[index].except(:name)
+
+    @studio_brand.update!(chosen.merge(raw_extraction: nil))
     @studio.update!(onboarding_step: 3)
     redirect_to admin_dashboard_path, notice: "Your brand is live! Welcome to TapIn."
   end
@@ -108,7 +112,7 @@ class Admin::OnboardingsController < ApplicationController
   end
 
   def load_or_generate_proposal(studio_brand)
-    existing = load_proposal(studio_brand)
+    existing = load_proposals(studio_brand)
     return existing if existing
 
     proposal = StudioBrandingProposalService.call(studio_brand)
@@ -119,7 +123,7 @@ class Admin::OnboardingsController < ApplicationController
     proposal
   end
 
-  def load_proposal(studio_brand)
+  def load_proposals(studio_brand)
     return nil if studio_brand&.raw_extraction.blank?
     JSON.parse(studio_brand.raw_extraction, symbolize_names: true)
   rescue JSON::ParserError

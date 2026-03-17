@@ -10,7 +10,7 @@
   </head>
 
   <body class="onboarding-body">
-    <div class="onboarding-wrapper">
+    <div class="onboarding-wrapper <%= 'onboarding-wrapper--wide' if content_for?(:wide_layout) %>">
 
       <header class="onboarding-header">
         <img src="/icon.png" alt="TapIn" height="32">

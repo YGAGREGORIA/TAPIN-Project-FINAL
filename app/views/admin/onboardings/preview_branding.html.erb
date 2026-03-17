@@ -1,18 +1,15 @@
-<%# Inject the proposed brand theme scoped to .brand-preview only — doesn't affect the rest of the onboarding page %>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=<%= @proposal[:font_heading]&.gsub(" ", "+") %>:wght@600;700&family=<%= @proposal[:font_body]&.gsub(" ", "+") %>:wght@400;500&display=swap');
+<% content_for :wide_layout, true %>
+<%# Load all fonts used across the 3 proposals %>
+<% if @proposals&.any? %>
+  <style>
+    <% font_families = @proposals.flat_map { |p| [p[:font_heading], p[:font_body]] }.compact.uniq %>
+    <% font_families.each do |font| %>
+      @import url('https://fonts.googleapis.com/css2?family=<%= font.gsub(" ", "+") %>:ital,wght@0,400;0,600;0,700&display=swap');
+    <% end %>
+  </style>
+<% end %>
 
-  .brand-preview {
-    --preview-primary:    <%= @proposal[:primary_color] %>;
-    --preview-secondary:  <%= @proposal[:secondary_color] %>;
-    --preview-bg:         <%= @proposal[:background_color] %>;
-    --preview-text:       <%= @proposal[:text_color] %>;
-    --preview-font-head:  '<%= @proposal[:font_heading] %>', sans-serif;
-    --preview-font-body:  '<%= @proposal[:font_body] %>', sans-serif;
-  }
-</style>
-
-<div class="onboarding-card">
+<div class="onboarding-card onboarding-card--wide">
 
   <div class="onboarding-progress">
     <span class="onboarding-step-badge done">Step 1</span>
@@ -20,102 +17,112 @@
     <span class="onboarding-step-badge done">Step 3</span>
   </div>
 
-  <h1 class="onboarding-title">Your brand proposal</h1>
+  <h1 class="onboarding-title">Choose your brand</h1>
   <p class="onboarding-subtitle">
-    Claude analysed your studio's identity and created this theme. Review it below — you can apply it or ask for a new one.
+    Claude created 3 distinct proposals based on your studio's identity. Pick the one that feels right — you can regenerate anytime.
   </p>
 
-  <%# ── Proposal summary ──────────────────────────────────────────────────── %>
-  <div class="proposal-meta">
-    <% if @proposal[:tagline].present? %>
-      <p class="proposal-tagline">"<%= @proposal[:tagline] %>"</p>
-    <% end %>
-    <p class="proposal-tone">Brand tone: <strong><%= @proposal[:brand_tone] %></strong></p>
-  </div>
+  <%# ── 3 proposal cards ────────────────────────────────────────────────── %>
+  <div class="proposals-grid">
+    <% @proposals.each_with_index do |proposal, index| %>
+      <div class="proposal-card">
 
-  <%# ── Colour swatches ───────────────────────────────────────────────────── %>
-  <div class="proposal-swatches">
-    <div class="swatch-group">
-      <div class="swatch" style="background: <%= @proposal[:primary_color] %>"></div>
-      <span class="swatch-label">Primary<br><code><%= @proposal[:primary_color] %></code></span>
-    </div>
-    <div class="swatch-group">
-      <div class="swatch" style="background: <%= @proposal[:secondary_color] %>"></div>
-      <span class="swatch-label">Accent<br><code><%= @proposal[:secondary_color] %></code></span>
-    </div>
-    <div class="swatch swatch--bordered" style="background: <%= @proposal[:background_color] %>">
-    </div>
-    <div class="swatch-group">
-      <div class="swatch swatch--bordered" style="background: <%= @proposal[:background_color] %>"></div>
-      <span class="swatch-label">Background<br><code><%= @proposal[:background_color] %></code></span>
-    </div>
-    <div class="swatch-group">
-      <div class="swatch" style="background: <%= @proposal[:text_color] %>"></div>
-      <span class="swatch-label">Text<br><code><%= @proposal[:text_color] %></code></span>
-    </div>
-  </div>
+        <h3 class="proposal-card-name"><%= proposal[:name] %></h3>
 
-  <%# ── Font preview ───────────────────────────────────────────────────────── %>
-  <div class="proposal-fonts">
-    <div class="font-preview-item">
-      <span class="font-label">Heading font</span>
-      <span class="font-sample" style="font-family: '<%= @proposal[:font_heading] %>', sans-serif; font-weight: 700;">
-        <%= @proposal[:font_heading] %>
-      </span>
-    </div>
-    <div class="font-preview-item">
-      <span class="font-label">Body font</span>
-      <span class="font-sample font-sample--body" style="font-family: '<%= @proposal[:font_body] %>', sans-serif;">
-        <%= @proposal[:font_body] %>
-      </span>
-    </div>
-  </div>
-
-  <%# ── Live app mockup ───────────────────────────────────────────────────── %>
-  <div class="brand-preview">
-    <%# Mini navbar %>
-    <div class="preview-navbar">
-      <% if @studio_brand.logo.attached? %>
-        <%= image_tag url_for(@studio_brand.logo), class: "preview-logo", alt: @studio.name %>
-      <% end %>
-      <span class="preview-studio-name"><%= @studio.name %></span>
-    </div>
-
-    <%# Mini hero %>
-    <div class="preview-hero">
-      <p class="preview-greeting">Hi, Alex!</p>
-      <p class="preview-points">240 pts available</p>
-    </div>
-
-    <%# Mini card %>
-    <div class="preview-card">
-      <p class="preview-card-label">Your Progress</p>
-      <div class="preview-stamps">
-        <% 10.times do |i| %>
-          <div class="preview-stamp <%= i < 7 ? 'preview-stamp--done' : '' %>"></div>
+        <% if proposal[:tagline].present? %>
+          <p class="proposal-card-tagline">"<%= proposal[:tagline] %>"</p>
         <% end %>
-      </div>
-      <p class="preview-stamp-text">7 / 10 visits</p>
-    </div>
+        <% if proposal[:brand_tone].present? %>
+          <p class="proposal-card-tone"><%= proposal[:brand_tone] %></p>
+        <% end %>
 
-    <%# Mini CTA button %>
-    <div class="preview-cta-row">
-      <div class="preview-btn">Book a class</div>
-    </div>
+        <%# Colour swatches %>
+        <div class="proposal-swatches proposal-swatches--compact">
+          <div class="swatch-group">
+            <div class="swatch swatch--sm" style="background: <%= proposal[:primary_color] %>"></div>
+            <span class="swatch-label">Primary<br><code><%= proposal[:primary_color] %></code></span>
+          </div>
+          <div class="swatch-group">
+            <div class="swatch swatch--sm" style="background: <%= proposal[:secondary_color] %>"></div>
+            <span class="swatch-label">Accent<br><code><%= proposal[:secondary_color] %></code></span>
+          </div>
+          <div class="swatch-group">
+            <div class="swatch swatch--sm swatch--bordered" style="background: <%= proposal[:background_color] %>"></div>
+            <span class="swatch-label">Background<br><code><%= proposal[:background_color] %></code></span>
+          </div>
+          <div class="swatch-group">
+            <div class="swatch swatch--sm" style="background: <%= proposal[:text_color] %>"></div>
+            <span class="swatch-label">Text<br><code><%= proposal[:text_color] %></code></span>
+          </div>
+        </div>
+
+        <%# Font pair %>
+        <div class="proposal-fonts proposal-fonts--compact">
+          <div class="font-preview-item">
+            <span class="font-label">Heading</span>
+            <span class="font-sample" style="font-family: '<%= proposal[:font_heading] %>', sans-serif; font-weight: 700; font-size: 1rem;">
+              <%= proposal[:font_heading] %>
+            </span>
+          </div>
+          <div class="font-preview-item">
+            <span class="font-label">Body</span>
+            <span class="font-sample font-sample--body" style="font-family: '<%= proposal[:font_body] %>', sans-serif; font-size: 0.875rem;">
+              <%= proposal[:font_body] %>
+            </span>
+          </div>
+        </div>
+
+        <%# Mini app mockup — CSS vars scoped inline so each card is independent %>
+        <div class="brand-preview" style="
+          --preview-primary:   <%= proposal[:primary_color] %>;
+          --preview-secondary: <%= proposal[:secondary_color] %>;
+          --preview-bg:        <%= proposal[:background_color] %>;
+          --preview-text:      <%= proposal[:text_color] %>;
+          --preview-font-head: '<%= proposal[:font_heading] %>', sans-serif;
+          --preview-font-body: '<%= proposal[:font_body] %>', sans-serif;
+        ">
+          <div class="preview-navbar">
+            <% if @studio_brand.logo.attached? %>
+              <%= image_tag url_for(@studio_brand.logo), class: "preview-logo", alt: @studio.name %>
+            <% end %>
+            <span class="preview-studio-name"><%= @studio.name %></span>
+          </div>
+          <div class="preview-hero">
+            <p class="preview-greeting">Hi, Alex!</p>
+            <p class="preview-points">240 pts available</p>
+          </div>
+          <div class="preview-card">
+            <p class="preview-card-label">Your Progress</p>
+            <div class="preview-stamps">
+              <% 10.times do |i| %>
+                <div class="preview-stamp <%= i < 7 ? 'preview-stamp--done' : '' %>"></div>
+              <% end %>
+            </div>
+            <p class="preview-stamp-text">7 / 10 visits</p>
+          </div>
+          <div class="preview-cta-row">
+            <div class="preview-btn">Book a class</div>
+          </div>
+        </div>
+
+        <%# Apply button — posts proposal_index so controller knows which was chosen %>
+        <%= button_to "Apply this theme",
+                      apply_branding_admin_onboarding_path,
+                      method: :post,
+                      params: { proposal_index: index },
+                      class: "btn-tapin-primary btn-tapin-lg proposal-apply-btn" %>
+
+      </div>
+    <% end %>
   </div>
 
-  <%# ── Actions ─────────────────────────────────────────────────────────── %>
-  <div class="onboarding-actions">
-    <%= button_to "Apply this theme",
-                  apply_branding_admin_onboarding_path,
-                  method: :post,
-                  class: "btn-tapin-primary btn-tapin-lg" %>
-
-    <%= button_to "Try again",
+  <%# ── Regenerate ─────────────────────────────────────────────────────── %>
+  <div class="onboarding-actions onboarding-actions--centered">
+    <%= button_to "Generate new proposals",
                   regenerate_branding_admin_onboarding_path,
                   method: :post,
                   class: "onboarding-skip",
-                  data: { confirm: "This will generate a new proposal. Continue?" } %>
+                  data: { confirm: "This will generate 3 new proposals. Continue?" } %>
   </div>
 
 </div>

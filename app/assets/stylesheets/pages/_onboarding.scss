@@ -11,6 +11,10 @@
   max-width: 680px;
   margin: 0 auto;
   padding: 2rem 1rem 4rem;
+
+  &--wide {
+    max-width: 1100px;
+  }
 }
 
 // ── Header ────────────────────────────────────────────────────────────────────
@@ -226,6 +230,73 @@
   &:hover { color: var(--foreground); }
 }
 
+// ── Wider card for the 3-proposal grid ───────────────────────────────────────
+
+.onboarding-card--wide {
+  max-width: 100%;
+}
+
+// ── 3-proposal grid ───────────────────────────────────────────────────────────
+
+.proposals-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.proposal-card {
+  border: 1.5px solid var(--border);
+  border-radius: $border-radius-lg;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  transition: border-color 0.15s;
+
+  &:hover {
+    border-color: var(--primary);
+  }
+}
+
+.proposal-card-name {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--foreground);
+  margin: 0;
+}
+
+.proposal-card-tagline {
+  font-size: 0.8rem;
+  font-style: italic;
+  color: var(--foreground);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.proposal-card-tone {
+  font-size: 0.75rem;
+  color: var(--muted-foreground);
+  margin: 0;
+}
+
+.proposal-apply-btn {
+  width: 100%;
+  text-align: center;
+  margin-top: auto;
+}
+
+.onboarding-actions--centered {
+  justify-content: center;
+  border-top: 1px solid var(--border);
+  padding-top: 1.25rem;
+}
+
 // ── AI branding preview ───────────────────────────────────────────────────────
 
 .proposal-meta {
@@ -251,6 +322,11 @@
   gap: 1rem;
   flex-wrap: wrap;
   margin-bottom: 1.5rem;
+
+  &--compact {
+    gap: 0.5rem;
+    margin-bottom: 0;
+  }
 }
 
 .swatch-group {
@@ -264,6 +340,11 @@
   width: 48px;
   height: 48px;
   border-radius: $border-radius;
+
+  &--sm {
+    width: 36px;
+    height: 36px;
+  }
 
   &--bordered { border: 1px solid var(--border); }
 }
@@ -288,6 +369,11 @@
   gap: 1.5rem;
   margin-bottom: 1.5rem;
   flex-wrap: wrap;
+
+  &--compact {
+    gap: 0.75rem;
+    margin-bottom: 0;
+  }
 }
 
 .font-preview-item {
