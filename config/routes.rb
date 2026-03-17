@@ -18,6 +18,11 @@ Rails.application.routes.draw do
 
     resources :rewards, only: [ :index ] do
       post :redeem, to: "reward_redemptions#create", on: :member
+      post :start_card, to: "stamp_cards#create", on: :member
+    end
+
+    resources :stamp_cards, only: [] do
+      post :redeem, on: :member
     end
 
     resources :reward_redemptions, only: [ :index, :show ]

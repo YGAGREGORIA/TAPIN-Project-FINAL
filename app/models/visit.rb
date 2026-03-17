@@ -10,7 +10,13 @@ class Visit < ApplicationRecord
   validates :visited_at, presence: true
   validate :must_wait_12_hours_between_visits, on: :create
 
+  after_create :increment_stamp_cards
+
   private
+
+  def increment_stamp_cards
+    user.stamp_cards.active.where(studio: studio).find_each(&:add_stamp!)
+  end
 
   def must_wait_12_hours_between_visits
     last_visit = user.visits

@@ -1,6 +1,7 @@
 class Reward < ApplicationRecord
   belongs_to :studio
   has_many :reward_redemptions, dependent: :destroy
+  has_many :stamp_cards, dependent: :destroy
 
   enum :reward_type, { free_class: 0 }
 

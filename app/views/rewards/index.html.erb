@@ -23,34 +23,72 @@
   <%# ── Scrollable content ── %>
   <div class="dashboard-content">
 
-    <%# ── Per-reward progress cards ── %>
-    <% if @rewards.any? %>
+    <%# ── Active Stamp Cards ── %>
+    <% active_cards = @stamp_cards.select(&:active?) %>
+    <% completed_cards = @stamp_cards.select(&:completed?) %>
+
+    <% if active_cards.any? || completed_cards.any? %>
       <section class="dashboard-section animate-fade-up">
-        <p class="section-title">Your Progress</p>
-        <% @rewards.each do |reward| %>
-          <% threshold = reward.visits_required || 10 %>
-          <% progress  = total_visits % threshold %>
-          <% redeemable = reward.redeemable_by?(current_user) %>
+        <p class="section-title">Your Stamp Cards</p>
+
+        <%# Completed cards first — ready to redeem %>
+        <% completed_cards.each do |card| %>
+          <% threshold = card.reward.visits_required || 10 %>
           <div class="studio-progress-card">
             <div class="progress-card-header">
-              <h5 class="studio-name"><%= reward.name %></h5>
-              <% if redeemable %>
-                <span class="reward-ready-badge anim-glow-pulse">Reward ready!</span>
-              <% end %>
+              <h5 class="studio-name"><%= card.reward.name %></h5>
+              <span class="reward-ready-badge anim-glow-pulse">Reward ready!</span>
             </div>
 
-            <% if reward.description.present? %>
+            <% if card.reward.description.present? %>
               <p style="font-size: 0.8125rem; color: var(--muted-foreground); margin: 0 0 1rem;">
-                <%= reward.description %>
+                <%= card.reward.description %>
               </p>
             <% end %>
 
-            <%# Stamp grid: rows of 5 %>
             <div class="stamp-rows">
               <% threshold.times.each_slice(5) do |row| %>
                 <div class="stamp-row">
                   <% row.each do |i| %>
-                    <% done = redeemable || i < progress %>
+                    <div class="stamp-circle stamp-circle--done">
+                      <i class="fa fa-star"></i>
+                    </div>
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
+
+            <p class="stamp-count-text"><%= threshold %> / <%= threshold %> visits</p>
+
+            <div style="text-align: center; margin-top: 0.75rem;">
+              <%= button_to "Redeem Now",
+                    redeem_stamp_card_path(studio_slug: @studio.slug, id: card.id),
+                    method: :post,
+                    class: "btn-redeem" %>
+            </div>
+          </div>
+        <% end %>
+
+        <%# Active cards — in progress %>
+        <% active_cards.each do |card| %>
+          <% threshold = card.reward.visits_required || 10 %>
+          <% stamps = card.stamps_collected %>
+          <div class="studio-progress-card">
+            <div class="progress-card-header">
+              <h5 class="studio-name"><%= card.reward.name %></h5>
+            </div>
+
+            <% if card.reward.description.present? %>
+              <p style="font-size: 0.8125rem; color: var(--muted-foreground); margin: 0 0 1rem;">
+                <%= card.reward.description %>
+              </p>
+            <% end %>
+
+            <div class="stamp-rows">
+              <% threshold.times.each_slice(5) do |row| %>
+                <div class="stamp-row">
+                  <% row.each do |i| %>
+                    <% done = i < stamps %>
                     <div class="stamp-circle <%= done ? 'stamp-circle--done' : '' %>">
                       <i class="fa <%= done ? 'fa-star' : 'fa-star-o' %>"></i>
                     </div>
@@ -59,43 +97,59 @@
               <% end %>
             </div>
 
-            <p class="stamp-count-text">
-              <% if redeemable %>
-                <%= threshold %> / <%= threshold %> visits
-              <% else %>
-                <%= progress %> / <%= threshold %> visits
-              <% end %>
-            </p>
+            <p class="stamp-count-text"><%= stamps %> / <%= threshold %> visits</p>
 
-            <% if redeemable %>
-              <div style="text-align: center; margin-top: 0.75rem;">
-                <%= button_to "Redeem Now",
-                      redeem_reward_path(studio_slug: @studio.slug, id: reward.id),
-                      method: :post,
-                      class: "btn-redeem" %>
-              </div>
-            <% else %>
-              <% remaining = threshold - progress %>
-              <% remaining = threshold if progress.zero? %>
-              <p class="visits-remaining-text">
-                <%= remaining %> more <%= remaining == 1 ? "visit" : "visits" %> to unlock
-              </p>
-            <% end %>
+            <% remaining = threshold - stamps %>
+            <p class="visits-remaining-text">
+              <%= remaining %> more <%= remaining == 1 ? "visit" : "visits" %> to unlock
+            </p>
           </div>
         <% end %>
       </section>
+    <% end %>
 
-    <% else %>
-      <section class="dashboard-section animate-fade-up">
-        <p class="section-title">Available Rewards</p>
+    <%# ── Available Rewards to Start ── %>
+    <section class="dashboard-section animate-fade-up">
+      <p class="section-title">Available Rewards</p>
+      <% startable = @rewards.reject { |r| @active_cards[r.id] || @completed_cards[r.id] } %>
+      <% if startable.any? %>
+        <div class="dashboard-card">
+          <% startable.each_with_index do |reward, i| %>
+            <div class="reward-row <%= i < startable.size - 1 ? 'reward-row--divider' : '' %>">
+              <div class="reward-row-icon">
+                <i class="fa fa-gift"></i>
+              </div>
+              <div class="reward-row-details">
+                <p class="reward-row-name"><%= reward.name %></p>
+                <p class="reward-row-meta">
+                  <%= reward.visits_required || 10 %> visits to unlock
+                  <% if reward.description.present? %>
+                    &middot; <%= truncate(reward.description, length: 40) %>
+                  <% end %>
+                </p>
+              </div>
+              <%= button_to "Start",
+                    start_card_reward_path(studio_slug: @studio.slug, id: reward.id),
+                    method: :post,
+                    class: "btn-redeem" %>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
         <div class="dashboard-card">
           <div class="empty-state">
             <i class="fa fa-gift"></i>
-            <p>No rewards available yet.</p>
+            <p>
+              <% if active_cards.any? || completed_cards.any? %>
+                You've started all available rewards!
+              <% else %>
+                No rewards available yet.
+              <% end %>
+            </p>
           </div>
         </div>
-      </section>
-    <% end %>
+      <% end %>
+    </section>
 
     <%# ── History link ── %>
     <section class="dashboard-section dashboard-section--last animate-fade-up">
