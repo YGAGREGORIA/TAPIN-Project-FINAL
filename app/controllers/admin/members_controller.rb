@@ -56,8 +56,7 @@ class Admin::MembersController < Admin::BaseController
     scope.where(
       "LOWER(COALESCE(first_name, '') || ' ' || COALESCE(last_name, '')) LIKE :query
        OR LOWER(COALESCE(email, '')) LIKE :query
-       OR CAST(COALESCE(phone, 0) AS TEXT) LIKE :digits
-       OR COALESCE(phone_number, '') LIKE :digits",
+       OR COALESCE(phone, '') LIKE :digits",
       query: like_query,
       digits: "%#{@query}%"
     )

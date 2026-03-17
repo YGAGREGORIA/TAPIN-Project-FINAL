@@ -1,11 +1,15 @@
-<% content_for :title, "Log in" %>
+<% content_for :title, "Studio Admin Login" %>
 
 <div class="container py-5">
   <div class="row justify-content-center">
     <div class="col-12 col-md-8 col-lg-5">
       <div class="card shadow-sm border-0">
         <div class="card-body p-4 p-lg-5">
-          <h2 class="h3 text-center mb-4">Welcome back</h2>
+          <h2 class="h3 text-center mb-4">Studio Admin Login</h2>
+          <p class="text-center text-muted small mb-4">
+            This login is for studio owners and managers.<br>
+            Members check in via the QR code at your studio.
+          </p>
 
           <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
             <%= render "devise/shared/error_messages", resource: resource %>

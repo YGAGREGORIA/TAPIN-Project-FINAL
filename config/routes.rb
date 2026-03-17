@@ -9,6 +9,13 @@ Rails.application.routes.draw do
     get "/", to: "studios#show", as: :studio_landing
     post "checkin", to: "studios#checkin", as: :studio_checkin
 
+    # Phone-based member auth
+    get "login", to: "phone_sessions#new", as: :studio_phone_login
+    post "login", to: "phone_sessions#create"
+    get "verify", to: "phone_sessions#verify", as: :studio_phone_verify
+    post "verify", to: "phone_sessions#confirm"
+    delete "logout", to: "phone_sessions#destroy", as: :studio_phone_logout
+
     resources :rewards, only: [ :index ] do
       post :redeem, to: "reward_redemptions#create", on: :member
     end

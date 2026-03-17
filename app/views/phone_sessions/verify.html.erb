@@ -1,0 +1,30 @@
+<% content_for(:title) { "Verify — #{@studio.name}" } %>
+
+<div class="phone-auth">
+  <div class="phone-auth__card">
+    <div class="phone-auth__header">
+      <h1 class="phone-auth__title">Enter verification code</h1>
+      <p class="phone-auth__subtitle">
+        We sent a code to <strong>+49 <%= @phone&.gsub(/(\d{3})(\d+)/, '\1 \2') %></strong>
+      </p>
+    </div>
+
+    <% if alert.present? %>
+      <div class="phone-auth__alert"><%= alert %></div>
+    <% end %>
+
+    <%= form_with url: studio_phone_verify_path(studio_slug: @studio.slug), method: :post, class: "phone-auth__form" do |f| %>
+      <%= f.text_field :code, class: "phone-auth__input phone-auth__input--code", placeholder: "1234", maxlength: 6, autofocus: true, inputmode: "numeric", autocomplete: "one-time-code", style: "text-align: center; letter-spacing: 0.5em; font-size: 1.5rem;" %>
+      <%= f.submit "Verify & Check In", class: "phone-auth__btn" %>
+    <% end %>
+
+    <p class="phone-auth__hint">
+      Didn't receive a code?
+      <%= link_to "Resend", studio_phone_login_path(studio_slug: @studio.slug), class: "phone-auth__link" %>
+      or
+      <%= link_to "change number", studio_phone_login_path(studio_slug: @studio.slug), class: "phone-auth__link" %>
+    </p>
+  </div>
+</div>
+
+<%= render "phone_sessions/styles" %>

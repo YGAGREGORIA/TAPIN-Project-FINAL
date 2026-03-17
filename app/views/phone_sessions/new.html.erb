@@ -1,0 +1,51 @@
+<% content_for(:title) { "Check In — #{@studio.name}" } %>
+
+<div class="phone-auth">
+  <div class="phone-auth__card">
+    <div class="phone-auth__header">
+      <% if @brand&.logo_url.present? %>
+        <img src="<%= @brand.logo_url %>" alt="<%= @studio.name %>" class="phone-auth__logo">
+      <% end %>
+      <h1 class="phone-auth__title"><%= @studio.name %></h1>
+      <p class="phone-auth__subtitle">Enter your phone number to check in</p>
+    </div>
+
+    <% if alert.present? %>
+      <div class="phone-auth__alert"><%= alert %></div>
+    <% end %>
+
+    <%= form_with url: studio_phone_login_path(studio_slug: @studio.slug), method: :post, class: "phone-auth__form" do |f| %>
+      <div class="phone-auth__input-group">
+        <span class="phone-auth__prefix">+49</span>
+        <%= f.telephone_field :phone, class: "phone-auth__input", placeholder: "176 12345678", autofocus: true, inputmode: "tel", autocomplete: "tel" %>
+      </div>
+      <%= f.submit "Continue", class: "phone-auth__btn" %>
+    <% end %>
+
+    <div class="phone-auth__features">
+      <div class="phone-auth__feature">
+        <i class="fa fa-star"></i>
+        <span>Earn points</span>
+      </div>
+      <div class="phone-auth__feature">
+        <i class="fa fa-gift"></i>
+        <span>Get rewards</span>
+      </div>
+      <div class="phone-auth__feature">
+        <i class="fa fa-calendar"></i>
+        <span>Book classes</span>
+      </div>
+      <div class="phone-auth__feature">
+        <i class="fa fa-comments"></i>
+        <span>AI assistant</span>
+      </div>
+    </div>
+
+    <p class="phone-auth__footer">
+      Studio owner?
+      <%= link_to "Admin login", new_user_session_path, class: "phone-auth__link" %>
+    </p>
+  </div>
+</div>
+
+<%= render "phone_sessions/styles" %>

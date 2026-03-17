@@ -27,11 +27,11 @@
     <div class="offcanvas-header tapin-sidebar-header">
       <div class="d-flex align-items-center gap-3">
         <div class="tapin-sidebar-avatar">
-          <%= current_user.email.first.upcase %>
+          <%= current_user.first_name&.first&.upcase || current_user.email.first.upcase %>
         </div>
         <div>
           <div class="tapin-sidebar-name">My Account</div>
-          <div class="tapin-sidebar-email"><%= current_user.email %></div>
+          <div class="tapin-sidebar-email"><%= current_user.phone_user? ? current_user.phone : current_user.email %></div>
         </div>
       </div>
       <button type="button" class="tapin-sidebar-close" data-bs-dismiss="offcanvas" aria-label="Close">

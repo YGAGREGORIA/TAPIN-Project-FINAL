@@ -2,7 +2,7 @@
 
 <% full_name = [@member.first_name, @member.last_name].compact.join(" ").presence || @member.email %>
 <% initials = [@member.first_name, @member.last_name].filter_map { |value| value.to_s.strip.first&.upcase }.join.first(2).presence || @member.email.to_s.first&.upcase || "?" %>
-<% phone = @member.phone_number.presence || @member.phone.presence || "No phone" %>
+<% phone = @member.phone.presence || "No phone" %>
 
 <div class="admin-card mb-4">
   <div class="p-4">

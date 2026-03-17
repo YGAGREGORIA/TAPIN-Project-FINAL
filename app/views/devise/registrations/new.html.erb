@@ -1,11 +1,15 @@
-<% content_for :title, "Sign up" %>
+<% content_for :title, "Register Your Studio" %>
 
 <div class="container py-5">
   <div class="row justify-content-center">
     <div class="col-12 col-md-8 col-lg-5">
       <div class="card shadow-sm border-0">
         <div class="card-body p-4 p-lg-5">
-          <h2 class="h3 text-center mb-4">Create account</h2>
+          <h2 class="h3 text-center mb-4">Register Your Studio</h2>
+          <p class="text-center text-muted small mb-4">
+            Set up your studio on TapIn to manage loyalty, classes, and more.<br>
+            Members check in via the QR code — no account needed for them.
+          </p>
 
           <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
             <%= render "devise/shared/error_messages", resource: resource %>
