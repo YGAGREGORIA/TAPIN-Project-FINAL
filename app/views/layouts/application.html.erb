@@ -8,6 +8,9 @@
     <meta name="mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
+    <% unless user_signed_in? %>
+      <meta name="turbo-cache-control" content="no-cache">
+    <% end %>
 
     <%= yield :head %>
 
@@ -20,7 +23,7 @@
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 
-    <% if @studio_brand&.primary_color.present? %>
+    <% if user_signed_in? && @studio_brand&.primary_color.present? %>
       <% fonts = [@studio_brand.font_heading, @studio_brand.font_body].compact.uniq %>
       <% if fonts.any? %>
         <link rel="preconnect" href="https://fonts.googleapis.com">
