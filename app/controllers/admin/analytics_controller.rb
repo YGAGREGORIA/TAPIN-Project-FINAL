@@ -5,8 +5,10 @@ class Admin::AnalyticsController < Admin::BaseController
 
   # GET /admin/analytics — Member growth & engagement
   def show
-    @total_members = User.where(role: CUSTOMER_ROLE).count
-    @new_members_this_week = User.where(role: CUSTOMER_ROLE)
+    customer_scope = User.where(role: CUSTOMER_ROLE)
+
+    @total_members = customer_scope.count
+    @new_members_this_week = customer_scope
                                   .where(created_at: @start_date..@end_date)
                                   .count
     @total_check_ins = studio_visits.count
@@ -14,9 +16,31 @@ class Admin::AnalyticsController < Admin::BaseController
     @active_members = studio_visits.where(visited_at: @start_date..@end_date)
                                     .distinct.count(:user_id)
     @avg_visits_per_member = @active_members > 0 ? (@check_ins_in_range.to_f / @active_members).round(1) : 0
+    range_days = [(@end_date.to_date - @start_date.to_date).to_i + 1, 1].max
+    @checkins_per_day = (@check_ins_in_range.to_f / range_days).round(1)
+    @in_circulation = customer_scope.sum(:available_points).to_i
+
+    @recent_new_members = customer_scope
+                          .where(created_at: @start_date..@end_date)
+                          .order(created_at: :desc)
+                          .limit(5)
+
+    @total_awarded = studio_visits.where(visited_at: @start_date..@end_date).sum(:points_earned).to_i
+    @total_redeemed = studio_redemptions.where(redeemed_at: @start_date..@end_date).sum(:point_spent).to_i
+    @net_points = @total_awarded - @total_redeemed
+    @top_earners = customer_scope
+                   .where("available_points > 0")
+                   .order(available_points: :desc)
+                   .limit(5)
+    @points_by_class = studio_visits.where(visited_at: @start_date..@end_date)
+                                    .joins(:class_config)
+                                    .group("class_configs.class_name")
+                                    .sum(:points_earned)
+                                    .sort_by { |_, points| -points }
+                                    .first(6)
 
     # Weekly breakdown for the date range
-    @weekly_signups = User.where(role: CUSTOMER_ROLE)
+    @weekly_signups = customer_scope
                           .where(created_at: @start_date..@end_date)
                           .group("DATE_TRUNC('week', created_at)")
                           .count
