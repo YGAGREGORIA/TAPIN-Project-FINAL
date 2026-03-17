@@ -11,34 +11,15 @@
   </head>
 
   <body class="admin-layout">
-
-    <%# ── Admin top navbar ────────────────────────────────────────────── %>
-    <nav class="navbar navbar-admin-top">
-      <div class="container-fluid px-3">
-
-        <%# Logo — left %>
-        <%= link_to admin_dashboard_path, class: "navbar-brand navbar-admin-brand d-flex align-items-center gap-2" do %>
-          <img src="/icon.png" alt="TapIn" height="28">
-          <span>TapIn <span class="admin-badge">Admin</span></span>
-        <% end %>
-
-        <%# Right side — Dashboard + Logout %>
-        <div class="d-flex align-items-center gap-2">
-          <%= link_to "Dashboard", admin_dashboard_path, class: "btn btn-sm btn-admin-outline" %>
-          <%= button_to "Log Out", destroy_user_session_path,
-                        method: :delete,
-                        class: "btn btn-sm btn-admin-logout border-0" %>
-        </div>
-
-      </div>
-    </nav>
-
     <%# ── Body: sidebar + main ───────────────────────────────────────── %>
     <div class="d-flex admin-body">
 
       <%# Sidebar %>
       <nav class="admin-sidebar">
-        <p class="admin-sidebar-section">Navigation</p>
+        <%= link_to admin_dashboard_path, class: "navbar-brand navbar-admin-brand d-flex align-items-center gap-2 mb-3 px-2" do %>
+          <span>TapIn <span class="admin-badge">Admin</span></span>
+        <% end %>
+
         <ul class="nav flex-column">
           <li class="nav-item">
             <%= link_to "Dashboard",         admin_dashboard_path,              class: "nav-link admin-nav-link #{active_link_class(admin_dashboard_path)}" %>
@@ -53,31 +34,64 @@
             <%= link_to "Mindbody",          admin_mindbody_matches_path,       class: "nav-link admin-nav-link #{active_link_class(admin_mindbody_matches_path)}" %>
           </li>
           <li class="nav-item">
-            <%= link_to "Notifications",     admin_notification_templates_path, class: "nav-link admin-nav-link #{active_link_class(admin_notification_templates_path)}" %>
+            <%= link_to "Analytics",         admin_analytics_path,              class: "nav-link admin-nav-link #{active_link_class(admin_analytics_path)}" %>
           </li>
           <li class="nav-item">
             <%= link_to "Broadcasts",        admin_broadcasts_path,             class: "nav-link admin-nav-link #{active_link_class(admin_broadcasts_path)}" %>
           </li>
           <li class="nav-item">
-            <%= link_to "Check-in Settings", admin_checkin_settings_path,       class: "nav-link admin-nav-link #{active_link_class(admin_checkin_settings_path)}" %>
-          </li>
-          <li class="nav-item">
-            <%= link_to "Analytics",         admin_analytics_path,              class: "nav-link admin-nav-link #{active_link_class(admin_analytics_path)}" %>
-          </li>
-          <li class="nav-item">
-            <%= link_to "AI Assistant",      admin_assistant_path,              class: "nav-link admin-nav-link #{active_link_class(admin_assistant_path)}" %>
-          </li>
-          <li class="nav-item">
-            <%= link_to "Onboarding",        admin_onboarding_path,             class: "nav-link admin-nav-link #{active_link_class(admin_onboarding_path)}" %>
+            <%= link_to "Notifications",     admin_notification_templates_path, class: "nav-link admin-nav-link #{active_link_class(admin_notification_templates_path)}" %>
           </li>
         </ul>
 
-        <% if current_studio.present? %>
-          <div class="admin-sidebar-studio">
-            <i class="fa fa-building me-1"></i>
-            <%= current_studio.name %>
+        <div class="mt-auto pt-3">
+          <div class="mx-2 mb-3 border-top"></div>
+
+          <div class="nav flex-column gap-1">
+            <%= link_to admin_checkin_settings_path, class: "nav-link admin-nav-link" do %>
+              <span>Check-in Setup</span>
+            <% end %>
+
+            <%= link_to admin_assistant_path, class: "nav-link admin-nav-link" do %>
+              <span>Studio Assistant</span>
+            <% end %>
           </div>
-        <% end %>
+
+          <% if current_user.present? %>
+            <% admin_display_name = [current_user.first_name, current_user.last_name].compact.join(" ").presence || "My Account" %>
+            <% admin_contact = current_user.phone_user? ? current_user.phone : current_user.email %>
+
+            <div class="position-relative mt-3" data-admin-account>
+              <div class="d-none position-absolute end-0 bottom-100 mb-2 border rounded-3 shadow-sm overflow-hidden"
+                   data-admin-account-menu
+                   style="min-width: 190px; background: #FDFDF8;">
+                <%= button_to destroy_user_session_path,
+                              method: :delete,
+                              class: "dropdown-item px-3 py-2" do %>
+                  <i class="fa fa-sign-out me-2"></i>Logout
+                <% end %>
+              </div>
+
+              <div class="d-flex align-items-center justify-content-between gap-2 px-2 py-2">
+                <div class="d-flex align-items-center min-w-0 flex-grow-1">
+                  <div class="min-w-0">
+                    <div class="fw-semibold text-truncate"><%= admin_display_name %></div>
+                    <div class="text-muted small text-truncate"><%= admin_contact %></div>
+                  </div>
+                </div>
+
+                <button class="btn btn-sm border-0 px-1 text-muted bg-transparent shadow-none"
+                        type="button"
+                        data-admin-account-toggle
+                        aria-expanded="false"
+                        aria-label="Toggle account menu">
+                  <i class="fa fa-chevron-down" data-chevron-closed></i>
+                  <i class="fa fa-chevron-up d-none" data-chevron-open></i>
+                </button>
+              </div>
+            </div>
+          <% end %>
+        </div>
       </nav>
 
       <%# Main content %>
@@ -99,5 +113,70 @@
       </main>
 
     </div>
+
+    <script>
+      function initAdminAccountMenus() {
+        document.querySelectorAll("[data-admin-account]").forEach(function (account) {
+          if (account.dataset.bound === "true") return;
+          account.dataset.bound = "true";
+
+          var toggle = account.querySelector("[data-admin-account-toggle]");
+          var menu = account.querySelector("[data-admin-account-menu]");
+          if (!toggle || !menu) return;
+          var closedIcon = toggle.querySelector("[data-chevron-closed]");
+          var openIcon = toggle.querySelector("[data-chevron-open]");
+
+          function syncChevron() {
+            var expanded = toggle.getAttribute("aria-expanded") === "true";
+            if (closedIcon) closedIcon.classList.toggle("d-none", expanded);
+            if (openIcon) openIcon.classList.toggle("d-none", !expanded);
+          }
+
+          function closeMenu() {
+            toggle.setAttribute("aria-expanded", "false");
+            menu.classList.add("d-none");
+            syncChevron();
+          }
+
+          function openMenu() {
+            toggle.setAttribute("aria-expanded", "true");
+            menu.classList.remove("d-none");
+            syncChevron();
+          }
+
+          toggle.addEventListener("click", function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            if (toggle.getAttribute("aria-expanded") === "true") {
+              closeMenu();
+            } else {
+              document.querySelectorAll("[data-admin-account-menu]").forEach(function (otherMenu) {
+                otherMenu.classList.add("d-none");
+              });
+              document.querySelectorAll("[data-admin-account-toggle]").forEach(function (otherToggle) {
+                otherToggle.setAttribute("aria-expanded", "false");
+                var otherClosed = otherToggle.querySelector("[data-chevron-closed]");
+                var otherOpen = otherToggle.querySelector("[data-chevron-open]");
+                if (otherClosed) otherClosed.classList.remove("d-none");
+                if (otherOpen) otherOpen.classList.add("d-none");
+              });
+              openMenu();
+            }
+          });
+
+          document.addEventListener("click", function (event) {
+            if (!account.contains(event.target)) {
+              closeMenu();
+            }
+          });
+
+          syncChevron();
+        });
+      }
+
+      document.addEventListener("DOMContentLoaded", initAdminAccountMenus);
+      document.addEventListener("turbo:load", initAdminAccountMenus);
+    </script>
   </body>
 </html>
