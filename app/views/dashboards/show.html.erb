@@ -10,7 +10,8 @@
           Hi, <%= current_user.first_name.presence || "there" %>!
         </h3>
         <p class="hero-points">
-          <span class="hero-points-value"><%= current_user.visits.count %> visits</span>
+          <% _visit_count = current_user.visits.count %>
+          <span class="hero-points-value"><%= _visit_count %> <%= _visit_count == 1 ? "visit" : "visits" %></span>
           total
         </p>
       </div>
@@ -196,9 +197,7 @@
                 <p class="activity-title"><%= visit.class_config&.class_name.presence || "Class visit" %></p>
                 <p class="activity-subtitle"><%= visit.studio.name %> · <%= visit.visited_at.strftime("%b %-d, %Y") %></p>
               </div>
-              <% if visit.points_earned.present? && visit.points_earned > 0 %>
-                <p class="activity-points">+<%= visit.points_earned %> pts</p>
-              <% end %>
+              <p class="activity-points">✓ Visit counted</p>
             </div>
           <% end %>
         <% else %>
