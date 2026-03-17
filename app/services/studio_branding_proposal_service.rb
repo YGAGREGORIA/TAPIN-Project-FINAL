@@ -15,14 +15,22 @@ class StudioBrandingProposalService
   # Curated Google Font pairs mapped to brand personalities.
   # Claude picks from this list — no risk of invalid or obscure font names.
   FONT_PAIRS = [
-    { heading: "Playfair Display", body: "Lato",               personality: "Premium, luxury, high-end" },
-    { heading: "Oswald",           body: "Open Sans",           personality: "Energetic, bold, intense, athletic" },
-    { heading: "Space Grotesk",    body: "Inter",               personality: "Minimalist, modern, clean, tech" },
-    { heading: "Poppins",          body: "Nunito",              personality: "Welcoming, friendly, playful, community-focused" },
-    { heading: "Bebas Neue",       body: "Barlow",              personality: "Intense, strong, elite, performance" },
-    { heading: "DM Sans",          body: "DM Sans",             personality: "Sleek, contemporary, neutral, versatile" },
+    { heading: "Playfair Display",   body: "Lato",              personality: "Premium, luxury, high-end" },
+    { heading: "Oswald",             body: "Open Sans",         personality: "Energetic, bold, intense, athletic" },
+    { heading: "Space Grotesk",      body: "Inter",             personality: "Minimalist, modern, clean, tech" },
+    { heading: "Poppins",            body: "Nunito",            personality: "Welcoming, friendly, playful, community-focused" },
+    { heading: "Bebas Neue",         body: "Barlow",            personality: "Intense, strong, elite, performance" },
+    { heading: "DM Sans",            body: "DM Sans",           personality: "Sleek, contemporary, neutral, versatile" },
     { heading: "Cormorant Garamond", body: "Raleway",           personality: "Elegant, refined, boutique, sophisticated" },
-    { heading: "Montserrat",       body: "Source Sans Pro",     personality: "Professional, trustworthy, established" },
+    { heading: "Montserrat",         body: "Source Sans Pro",   personality: "Professional, trustworthy, established" },
+    { heading: "Anton",              body: "Roboto",            personality: "High-impact, gym, CrossFit, powerlifting" },
+    { heading: "Raleway",            body: "Mulish",            personality: "Boutique, yoga, pilates, wellness" },
+    { heading: "Nunito",             body: "Nunito",            personality: "Soft, inclusive, community-driven, accessible" },
+    { heading: "Barlow Condensed",   body: "Barlow",            personality: "Performance, cycling, HIIT, functional fitness" },
+    { heading: "Josefin Sans",       body: "Josefin Sans",      personality: "Geometric, minimal, Nordic, design-forward" },
+    { heading: "Cinzel",             body: "EB Garamond",       personality: "Ultra-premium, spa, retreat, exclusive" },
+    { heading: "Exo 2",              body: "Exo 2",             personality: "Futuristic, tech-driven, esports fitness, innovation" },
+    { heading: "Libre Baskerville",  body: "Libre Franklin",    personality: "Classic, established, trusted, traditional" },
   ].freeze
 
   def self.call(studio_brand)
