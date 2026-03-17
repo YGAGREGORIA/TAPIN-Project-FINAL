@@ -85,12 +85,13 @@ class StudioBrandingProposalService
       sections << "## Studio philosophy [SUPPORTING CONTEXT]\n#{@brand.philosophy}"
     end
 
-    # ── Priority 4: Vibe keywords (last resort) ──────────────────────────────
-    if @brand.vibe_keywords.present?
+    # ── Priority 4: Vibe keywords (only when no URL is provided) ────────────
+    # If a website or social URL exists, skip keywords entirely — they cause
+    # Claude to steer away from the real brand palette toward generic vibes.
+    no_url = @brand.website_url.blank? && @brand.instagram_url.blank? && @brand.facebook_url.blank?
+    if no_url && @brand.vibe_keywords.present?
       keywords = Array(@brand.vibe_keywords).reject(&:empty?)
-      if keywords.any?
-        sections << "## Vibe keywords [LAST RESORT — only use if no URL content is available]\n#{keywords.join(', ')}"
-      end
+      sections << "## Vibe keywords\n#{keywords.join(', ')}" if keywords.any?
     end
 
     sections.join("\n\n---\n\n")
