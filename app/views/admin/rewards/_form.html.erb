@@ -7,6 +7,12 @@
   </div>
 
   <div class="mb-3">
+    <%= f.label :visits_required, "Visits Required", class: "form-label" %>
+    <%= f.number_field :visits_required, class: "form-control", min: 1, placeholder: "10", value: @reward.visits_required || 10 %>
+    <div class="form-text">How many visits before a member unlocks this reward?</div>
+  </div>
+
+  <div class="mb-3">
     <%= f.label :description, class: "form-label" %>
     <%= f.text_area :description, class: "form-control", rows: 3, placeholder: "Describe this reward..." %>
   </div>
