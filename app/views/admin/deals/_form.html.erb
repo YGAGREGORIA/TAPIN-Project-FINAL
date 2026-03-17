@@ -1,0 +1,58 @@
+<%= form_with model: [:admin, deal], class: "admin-card" do |f| %>
+  <div class="admin-card-header">
+    <span><%= deal.persisted? ? "Edit Deal" : "New Deal" %></span>
+    <%= link_to "Back", admin_rewards_path(tab: "deals"), class: "admin-card-link" %>
+  </div>
+
+  <div class="p-3">
+    <% if deal.errors.any? %>
+      <div class="alert alert-danger">
+        <%= deal.errors.full_messages.to_sentence %>
+      </div>
+    <% end %>
+
+    <div class="row g-3">
+      <div class="col-md-6">
+        <%= f.label :name, "Title", class: "form-label" %>
+        <%= f.text_field :name, class: "form-control", placeholder: "Refer a Friend" %>
+      </div>
+
+      <div class="col-md-6">
+        <%= f.label :deal_type, "Type", class: "form-label" %>
+        <%= f.select :deal_type, Deal.deal_types.keys.map { |key| [key.humanize, key] }, {}, class: "form-select" %>
+      </div>
+
+      <div class="col-md-6">
+        <%= f.label :trigger_condition, "Trigger", class: "form-label" %>
+        <%= f.select :trigger_condition, Deal.trigger_conditions.keys.map { |key| [key.humanize, key] }, {}, class: "form-select" %>
+      </div>
+
+      <div class="col-md-6">
+        <%= f.label :discount_percent, "Discount Percent", class: "form-label" %>
+        <%= f.number_field :discount_percent, class: "form-control", min: 0, max: 100, placeholder: "10" %>
+      </div>
+
+      <div class="col-md-6">
+        <%= f.label :usage_limit, "Usage Limit", class: "form-label" %>
+        <%= f.number_field :usage_limit, class: "form-control", min: 1, placeholder: "1" %>
+      </div>
+
+      <div class="col-md-6">
+        <%= f.label :expiry_days, "Valid For (Days)", class: "form-label" %>
+        <%= f.number_field :expiry_days, class: "form-control", min: 1, placeholder: "30" %>
+      </div>
+
+      <div class="col-12">
+        <div class="form-check mt-2">
+          <%= f.check_box :active, class: "form-check-input" %>
+          <%= f.label :active, "Active", class: "form-check-label" %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="p-3 border-top d-flex gap-2 justify-content-end">
+    <%= link_to "Cancel", admin_rewards_path(tab: "deals"), class: "btn btn-outline-secondary" %>
+    <%= f.submit deal.persisted? ? "Save Changes" : "Create Deal", class: "btn btn-dark" %>
+  </div>
+<% end %>
