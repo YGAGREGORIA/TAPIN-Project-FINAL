@@ -1,0 +1,40 @@
+<h1 class="onboarding-title">Import studio information</h1>
+<p class="onboarding-desc">
+  Automatically import your studio data from Mindbody.
+</p>
+
+<div class="onboarding-card onboarding-card--studio mb-4">
+  <div class="onboarding-studio-header">
+    <h2><%= @studio_info[:name] %></h2>
+  </div>
+
+  <div class="onboarding-studio-body">
+    <div class="onboarding-studio-grid">
+      <div>
+        <p class="onboarding-label">Address</p>
+        <p class="onboarding-value"><%= @studio_info[:address] %></p>
+        <p class="onboarding-value"><%= @studio_info[:postal_city] %></p>
+      </div>
+      <div>
+        <p class="onboarding-label">Phone</p>
+        <p class="onboarding-value"><%= @studio_info[:phone] %></p>
+      </div>
+      <div>
+        <p class="onboarding-label">Email</p>
+        <p class="onboarding-value"><%= @studio_info[:email] %></p>
+      </div>
+    </div>
+
+    <div class="onboarding-studio-desc">
+      <p class="onboarding-label">Description</p>
+      <p class="onboarding-value--light"><%= @studio_info[:description] %></p>
+    </div>
+  </div>
+</div>
+
+<div class="onboarding-actions">
+  <%= button_to "Import studio information", advance_admin_onboarding_path,
+        method: :post,
+        class: "btn onboarding-btn-primary",
+        data: { onboarding_target: "submitBtn", action: "onboarding#submit" } %>
+</div>

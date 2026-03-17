@@ -1,0 +1,33 @@
+<h1 class="onboarding-title">Connect your Mindbody account</h1>
+<p class="onboarding-desc">
+  Connect your Mindbody account to automatically sync your studio data.
+</p>
+
+<div class="onboarding-card mb-4">
+  <h3 class="onboarding-card-heading">The following data will be automatically imported:</h3>
+  <div class="onboarding-import-grid">
+    <div class="onboarding-import-item">
+      <span class="onboarding-bullet"></span>
+      <span>Studio Information</span>
+    </div>
+    <div class="onboarding-import-item">
+      <span class="onboarding-bullet"></span>
+      <span>Teachers</span>
+    </div>
+    <div class="onboarding-import-item">
+      <span class="onboarding-bullet"></span>
+      <span>Classes</span>
+    </div>
+    <div class="onboarding-import-item">
+      <span class="onboarding-bullet"></span>
+      <span>Members</span>
+    </div>
+  </div>
+</div>
+
+<div class="onboarding-actions">
+  <%= button_to "Connect with Mindbody", advance_admin_onboarding_path,
+        method: :post,
+        class: "btn onboarding-btn-primary",
+        data: { onboarding_target: "submitBtn", action: "onboarding#submit" } %>
+</div>

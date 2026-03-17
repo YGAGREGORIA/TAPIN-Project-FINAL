@@ -67,6 +67,9 @@
           <li class="nav-item">
             <%= link_to "AI Assistant",      admin_assistant_path,              class: "nav-link admin-nav-link #{active_link_class(admin_assistant_path)}" %>
           </li>
+          <li class="nav-item">
+            <%= link_to "Onboarding",        admin_onboarding_path,             class: "nav-link admin-nav-link #{active_link_class(admin_onboarding_path)}" %>
+          </li>
         </ul>
 
         <% if current_studio.present? %>

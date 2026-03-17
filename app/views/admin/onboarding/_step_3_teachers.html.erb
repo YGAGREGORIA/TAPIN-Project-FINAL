@@ -1,0 +1,33 @@
+<h1 class="onboarding-title">Import your teachers</h1>
+<p class="onboarding-desc">
+  We will automatically import all teachers from your Mindbody account.
+</p>
+<p class="onboarding-count"><%= @teachers.count %> teachers found</p>
+
+<div class="onboarding-card onboarding-card--flush mb-4">
+  <table class="onboarding-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Specialty</th>
+        <th>Classes Taught</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @teachers.each do |teacher| %>
+        <tr>
+          <td class="fw-bold"><%= teacher.first_name %> <%= teacher.last_name %></td>
+          <td><%= teacher.bio.presence || "—" %></td>
+          <td class="fw-bold"><%= teacher.klasses.count %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<div class="onboarding-actions">
+  <%= button_to "Import #{@teachers.count} teachers", advance_admin_onboarding_path,
+        method: :post,
+        class: "btn onboarding-btn-primary",
+        data: { onboarding_target: "submitBtn", action: "onboarding#submit" } %>
+</div>

@@ -1,0 +1,37 @@
+<div class="onboarding-complete">
+  <div class="onboarding-complete-icon">
+    <i class="fa fa-check"></i>
+  </div>
+  <h1 class="onboarding-title text-center">You're ready to go!</h1>
+  <p class="onboarding-desc text-center">
+    Your studio is now fully set up.
+  </p>
+</div>
+
+<div class="onboarding-card mb-4">
+  <p class="onboarding-value--light mb-3">
+    You can adjust additional settings at any time via the left navigation in the dashboard.
+  </p>
+
+  <h3 class="onboarding-card-heading mb-3">For example:</h3>
+  <div class="onboarding-example-list">
+    <div class="onboarding-import-item">
+      <span class="onboarding-bullet"></span>
+      <span>Customize your branding page</span>
+    </div>
+    <div class="onboarding-import-item">
+      <span class="onboarding-bullet"></span>
+      <span>Create loyalty rewards</span>
+    </div>
+    <div class="onboarding-import-item">
+      <span class="onboarding-bullet"></span>
+      <span>Add promotional deals</span>
+    </div>
+  </div>
+</div>
+
+<div class="onboarding-actions">
+  <%= link_to admin_dashboard_path, class: "btn onboarding-btn-primary" do %>
+    Go to dashboard <i class="fa fa-chevron-right ms-1"></i>
+  <% end %>
+</div>
