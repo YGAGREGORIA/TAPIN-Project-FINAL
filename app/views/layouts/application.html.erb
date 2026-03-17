@@ -11,10 +11,41 @@
 
     <%= yield :head %>
 
-    <%# Inject studio vibe theme — overrides CSS custom properties for studio-scoped pages.
-        Only applied when @studio has a brand with vibe keywords set. %>
-    <% if @studio&.studio_brand&.vibe_keywords&.any? %>
-      <style><%= studio_vibe_styles(@studio.studio_brand).html_safe %></style>
+    <%# Inject approved studio brand theme — overrides CSS custom properties and fonts.
+        Applied whenever @studio has an AI-approved brand (primary_color present).
+        Falls back to vibe keywords if brand colours haven't been approved yet. %>
+    <% brand = @studio&.studio_brand %>
+    <% if brand&.primary_color.present? %>
+      <%# Load studio's custom fonts from Google Fonts %>
+      <% if brand.font_heading.present? || brand.font_body.present? %>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=<%= brand.font_heading&.gsub(' ', '+') %>:wght@600;700&family=<%= brand.font_body&.gsub(' ', '+') %>:wght@400;500&display=swap" rel="stylesheet">
+      <% end %>
+      <style>
+        :root {
+          --primary:            <%= brand.primary_color %>;
+          --primary-foreground: #ffffff;
+          --accent:             <%= brand.secondary_color || brand.primary_color %>;
+          --accent-foreground:  #ffffff;
+          --background:         <%= brand.background_color || '#FDFDF8' %>;
+          --foreground:         <%= brand.text_color || '#1A1A1A' %>;
+          <% if brand.font_heading.present? %>
+          --font-heading: '<%= brand.font_heading %>', sans-serif;
+          <% end %>
+          <% if brand.font_body.present? %>
+          --font-body: '<%= brand.font_body %>', sans-serif;
+          <% end %>
+        }
+        <% if brand.font_heading.present? %>
+        h1, h2, h3, h4, h5, h6, .dashboard-hero, .landing-headline { font-family: '<%= brand.font_heading %>', sans-serif; }
+        <% end %>
+        <% if brand.font_body.present? %>
+        body { font-family: '<%= brand.font_body %>', sans-serif; }
+        <% end %>
+      </style>
+    <% elsif brand&.vibe_keywords&.any? %>
+      <style><%= studio_vibe_styles(brand).html_safe %></style>
     <% end %>
 
     <%= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>

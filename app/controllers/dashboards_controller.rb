@@ -5,7 +5,13 @@ class DashboardsController < ApplicationController
     @studios_visited = Studio.joins(:visits)
                              .where(visits: { user: current_user })
                              .distinct
-                             .includes(:rewards, :deals)
+                             .includes(:rewards, :deals, :studio_brand)
+
+    # Used by the layout to inject the vibe theme — most recently visited studio wins.
+    @studio = @studios_visited
+                .joins(:visits)
+                .order("visits.visited_at DESC")
+                .first
 
     @upcoming_bookings = current_user.bookings
                                      .where("class_time > ?", Time.current)

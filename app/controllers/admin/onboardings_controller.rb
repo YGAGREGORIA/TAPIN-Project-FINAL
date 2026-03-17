@@ -26,16 +26,17 @@ class Admin::OnboardingsController < ApplicationController
     redirect_to step3_admin_onboarding_path
   end
 
-  # ── Step 3 — Studio branding ──────────────────────────────────────────────
+  # ── Step 3 — Studio branding data collection ──────────────────────────────
   def step3
     @studio_brand = @studio.studio_brand || @studio.build_studio_brand
   end
 
+  # Saves the form data, then sends admin to the AI preview before going live.
+  # Does NOT mark onboarding complete yet — that happens in apply_branding.
   def complete_step3
     @studio_brand = @studio.studio_brand || @studio.build_studio_brand
-    if @studio_brand.update(brand_params)
-      @studio.update!(onboarding_step: 3)
-      redirect_to admin_dashboard_path, notice: "Your studio is all set. Welcome to TapIn!"
+    if @studio_brand.update(brand_params.merge(raw_extraction: nil))
+      redirect_to preview_branding_admin_onboarding_path
     else
       render :step3, status: :unprocessable_entity
     end
@@ -44,6 +45,47 @@ class Admin::OnboardingsController < ApplicationController
   def skip_step3
     @studio.update!(onboarding_step: 3)
     redirect_to admin_dashboard_path, notice: "Branding skipped — you can complete it anytime from Settings."
+  end
+
+  # ── AI branding preview ───────────────────────────────────────────────────
+
+  # Generates (or loads cached) the AI brand proposal and renders the preview.
+  def preview_branding
+    @studio_brand = @studio.studio_brand
+    unless @studio_brand
+      redirect_to step3_admin_onboarding_path, alert: "Please complete step 3 first."
+      return
+    end
+
+    # Use cached proposal if already generated; otherwise call Claude now.
+    @proposal = load_or_generate_proposal(@studio_brand)
+
+    if @proposal.nil?
+      redirect_to step3_admin_onboarding_path,
+                  alert: "Couldn't generate a brand proposal right now. Please try again."
+    end
+  end
+
+  # Applies the AI proposal to studio_brands and marks onboarding complete.
+  def apply_branding
+    @studio_brand = @studio.studio_brand
+    proposal = load_proposal(@studio_brand)
+
+    unless proposal
+      redirect_to preview_branding_admin_onboarding_path, alert: "No proposal found — please regenerate."
+      return
+    end
+
+    @studio_brand.update!(proposal.merge(raw_extraction: nil))
+    @studio.update!(onboarding_step: 3)
+    redirect_to admin_dashboard_path, notice: "Your brand is live! Welcome to TapIn."
+  end
+
+  # Clears the cached proposal and re-runs the AI.
+  def regenerate_branding
+    @studio_brand = @studio.studio_brand
+    @studio_brand&.update!(raw_extraction: nil)
+    redirect_to preview_branding_admin_onboarding_path
   end
 
   private
@@ -63,5 +105,24 @@ class Admin::OnboardingsController < ApplicationController
       :logo, :philosophy,
       vibe_keywords: []
     )
+  end
+
+  def load_or_generate_proposal(studio_brand)
+    existing = load_proposal(studio_brand)
+    return existing if existing
+
+    proposal = StudioBrandingProposalService.call(studio_brand)
+    return nil unless proposal
+
+    # Cache the proposal in raw_extraction as JSON so the apply step can read it.
+    studio_brand.update!(raw_extraction: proposal.to_json)
+    proposal
+  end
+
+  def load_proposal(studio_brand)
+    return nil if studio_brand&.raw_extraction.blank?
+    JSON.parse(studio_brand.raw_extraction, symbolize_names: true)
+  rescue JSON::ParserError
+    nil
   end
 end

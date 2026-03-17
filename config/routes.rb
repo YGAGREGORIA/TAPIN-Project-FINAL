@@ -42,7 +42,10 @@ Rails.application.routes.draw do
       post :complete_step1
       post :complete_step2
       patch :complete_step3
-      post :skip_step3
+      post  :skip_step3
+      get  :preview_branding
+      post :apply_branding
+      post :regenerate_branding
     end
 
     namespace :loyalty do

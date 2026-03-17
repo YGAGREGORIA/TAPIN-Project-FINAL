@@ -225,3 +225,207 @@
 
   &:hover { color: var(--foreground); }
 }
+
+// ── AI branding preview ───────────────────────────────────────────────────────
+
+.proposal-meta {
+  margin-bottom: 1.5rem;
+}
+
+.proposal-tagline {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.1rem;
+  font-style: italic;
+  color: var(--foreground);
+  margin-bottom: 0.25rem;
+}
+
+.proposal-tone {
+  font-size: 0.875rem;
+  color: var(--muted-foreground);
+}
+
+// Colour swatches
+.proposal-swatches {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+
+.swatch-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.swatch {
+  width: 48px;
+  height: 48px;
+  border-radius: $border-radius;
+
+  &--bordered { border: 1px solid var(--border); }
+}
+
+.swatch-label {
+  font-size: 0.7rem;
+  color: var(--muted-foreground);
+  text-align: center;
+  line-height: 1.3;
+
+  code {
+    font-size: 0.65rem;
+    background: var(--muted);
+    padding: 0 0.2rem;
+    border-radius: 3px;
+  }
+}
+
+// Font preview
+.proposal-fonts {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.font-preview-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.font-label {
+  font-size: 0.75rem;
+  color: var(--muted-foreground);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.font-sample {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--foreground);
+
+  &--body {
+    font-weight: 400;
+    font-size: 1rem;
+  }
+}
+
+// Live mockup — all styles scoped to .brand-preview to stay isolated
+.brand-preview {
+  border: 1px solid var(--border);
+  border-radius: $border-radius-lg;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+  font-family: var(--preview-font-body);
+  background: var(--preview-bg);
+  color: var(--preview-text);
+
+  // Mini navbar
+  .preview-navbar {
+    background: var(--preview-primary);
+    padding: 0.75rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .preview-logo {
+    height: 24px;
+    width: 24px;
+    object-fit: contain;
+    border-radius: 4px;
+  }
+
+  .preview-studio-name {
+    font-family: var(--preview-font-head);
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #ffffff;
+  }
+
+  // Mini hero
+  .preview-hero {
+    background: var(--preview-primary);
+    padding: 1rem 1rem 1.5rem;
+    border-bottom: 3px solid var(--preview-secondary);
+  }
+
+  .preview-greeting {
+    font-family: var(--preview-font-head);
+    font-size: 1rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.85);
+    margin: 0 0 0.2rem;
+  }
+
+  .preview-points {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0;
+  }
+
+  // Mini card
+  .preview-card {
+    background: #ffffff;
+    margin: 0.75rem;
+    border-radius: $border-radius;
+    padding: 0.75rem;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+  }
+
+  .preview-card-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0 0 0.5rem;
+  }
+
+  .preview-stamps {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 0.35rem;
+  }
+
+  .preview-stamp {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--muted);
+    border: 1.5px solid var(--border);
+
+    &--done {
+      background: var(--preview-primary);
+      border-color: var(--preview-primary);
+    }
+  }
+
+  .preview-stamp-text {
+    font-size: 0.75rem;
+    color: #888;
+    margin: 0;
+  }
+
+  // Mini CTA
+  .preview-cta-row {
+    padding: 0.75rem;
+  }
+
+  .preview-btn {
+    display: inline-block;
+    background: var(--preview-secondary);
+    color: #ffffff;
+    font-family: var(--preview-font-head);
+    font-weight: 600;
+    font-size: 0.875rem;
+    padding: 0.5rem 1.25rem;
+    border-radius: $border-radius;
+    cursor: default;
+  }
+}
