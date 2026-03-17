@@ -50,6 +50,7 @@ Rails.application.routes.draw do
     resource :dashboard, only: [ :show ]
     resource :onboarding, only: [ :show ], controller: "onboarding" do
       post :advance
+      post :goto
     end
     resources :rewards
     resources :class_configs, only: [ :index, :update ]

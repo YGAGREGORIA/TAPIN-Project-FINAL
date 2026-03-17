@@ -1,19 +1,38 @@
 <div class="onboarding-complete">
-  <div class="onboarding-complete-icon">
+  <div class="onboarding-complete-icon onboarding-complete-icon--celebrate">
     <i class="fa fa-check"></i>
   </div>
   <h1 class="onboarding-title text-center">You're ready to go!</h1>
   <p class="onboarding-desc text-center">
-    Your studio is now fully set up.
+    Your studio has been fully set up and is ready to use.
   </p>
 </div>
 
-<div class="onboarding-card mb-4">
-  <p class="onboarding-value--light mb-3">
-    You can adjust additional settings at any time via the left navigation in the dashboard.
-  </p>
+<div class="onboarding-summary-grid mb-4">
+  <div class="onboarding-summary-card">
+    <div class="onboarding-summary-icon"><i class="fa fa-building"></i></div>
+    <div class="onboarding-summary-value">1</div>
+    <div class="onboarding-summary-label">Studio</div>
+  </div>
+  <div class="onboarding-summary-card">
+    <div class="onboarding-summary-icon"><i class="fa fa-chalkboard-teacher"></i></div>
+    <div class="onboarding-summary-value"><%= @teacher_count %></div>
+    <div class="onboarding-summary-label">Teachers</div>
+  </div>
+  <div class="onboarding-summary-card">
+    <div class="onboarding-summary-icon"><i class="fa fa-calendar-alt"></i></div>
+    <div class="onboarding-summary-value"><%= @class_count %></div>
+    <div class="onboarding-summary-label">Classes</div>
+  </div>
+  <div class="onboarding-summary-card">
+    <div class="onboarding-summary-icon"><i class="fa fa-users"></i></div>
+    <div class="onboarding-summary-value"><%= @member_count %></div>
+    <div class="onboarding-summary-label">Members</div>
+  </div>
+</div>
 
-  <h3 class="onboarding-card-heading mb-3">For example:</h3>
+<div class="onboarding-card mb-4">
+  <h3 class="onboarding-card-heading mb-3">What's next?</h3>
   <div class="onboarding-example-list">
     <div class="onboarding-import-item">
       <span class="onboarding-bullet"></span>
@@ -21,16 +40,21 @@
     </div>
     <div class="onboarding-import-item">
       <span class="onboarding-bullet"></span>
-      <span>Create loyalty rewards</span>
+      <span>Create loyalty rewards to keep members engaged</span>
     </div>
     <div class="onboarding-import-item">
       <span class="onboarding-bullet"></span>
-      <span>Add promotional deals</span>
+      <span>Add promotional deals to attract new customers</span>
+    </div>
+    <div class="onboarding-import-item">
+      <span class="onboarding-bullet"></span>
+      <span>Set up push notifications for your studio</span>
     </div>
   </div>
 </div>
 
 <div class="onboarding-actions">
+  <%= render "admin/onboarding/back_button" %>
   <%= link_to admin_dashboard_path, class: "btn onboarding-btn-primary" do %>
     Go to dashboard <i class="fa fa-chevron-right ms-1"></i>
   <% end %>

@@ -446,12 +446,34 @@
   }
 }
 
+.onboarding-qr-image {
+  border-radius: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
 .onboarding-qr-label {
   font-size: 0.85rem;
   font-weight: 700;
   color: #1a1a2e;
   margin-top: 1rem;
+  margin-bottom: 0.25rem;
+}
+
+.onboarding-qr-url {
+  font-size: 0.75rem;
+  color: rgba(0, 0, 0, 0.4);
   margin-bottom: 0;
+  word-break: break-all;
+}
+
+.onboarding-next-link {
+  color: $sage-green;
+  font-weight: 600;
+  text-decoration: none;
+  &:hover {
+    text-decoration: underline;
+    color: darken($sage-green, 10%);
+  }
 }
 
 // ── Complete step ──────────────────────────────────────────────────────────
@@ -476,10 +498,82 @@
   }
 }
 
+.onboarding-complete-icon--celebrate {
+  animation: onboarding-celebrate 0.6s ease-out;
+  box-shadow: 0 4px 16px rgba($sage-green, 0.4);
+}
+
+@keyframes onboarding-celebrate {
+  0% { transform: scale(0); opacity: 0; }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.onboarding-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+
+.onboarding-summary-card {
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  padding: 1.25rem;
+  text-align: center;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+}
+
+.onboarding-summary-icon {
+  width: 40px;
+  height: 40px;
+  background: rgba($sage-green, 0.1);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 0.75rem;
+  i {
+    color: $sage-green;
+    font-size: 1rem;
+  }
+}
+
+.onboarding-summary-value {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 1.75rem;
+  color: #1a1a2e;
+  line-height: 1;
+  margin-bottom: 0.25rem;
+}
+
+.onboarding-summary-label {
+  font-size: 0.8rem;
+  color: rgba(0, 0, 0, 0.5);
+  font-weight: 600;
+}
+
 .onboarding-example-list {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+}
+
+// ── Clickable sidebar steps ────────────────────────────────────────────────
+
+.onboarding-step-link {
+  background: none;
+  border: none;
+  padding: 0.5rem 0;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  position: relative;
+
+  &:hover .onboarding-step-label {
+    color: $sage-green;
+  }
 }
 
 // ── Primary button ─────────────────────────────────────────────────────────
@@ -487,7 +581,30 @@
 .onboarding-actions {
   display: flex;
   justify-content: flex-end;
+  align-items: center;
+  gap: 1rem;
   margin-top: 1.5rem;
+}
+
+.onboarding-btn-back {
+  background: none;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  padding: 0.7rem 1.5rem;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: rgba(0, 0, 0, 0.6);
+  cursor: pointer;
+  transition: all 0.15s;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  margin-right: auto;
+
+  &:hover {
+    border-color: rgba(0, 0, 0, 0.3);
+    color: #1a1a2e;
+  }
 }
 
 .onboarding-btn-primary {

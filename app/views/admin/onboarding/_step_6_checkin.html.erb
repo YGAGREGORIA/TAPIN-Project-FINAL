@@ -3,6 +3,9 @@
   Create a QR code that customers can scan at the studio to automatically check in and earn points.
 </p>
 
+<% checkin_url = @studio ? "#{request.base_url}/s/#{@studio.slug}" : "#" %>
+<% qr_api_url = "https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=#{CGI.escape(checkin_url)}" %>
+
 <div class="onboarding-checkin-grid mb-4">
   <%# Left column — how it works %>
   <div>
@@ -25,34 +28,40 @@
     <div class="onboarding-next-steps">
       <h4 class="onboarding-card-heading mb-3">Next steps:</h4>
       <div class="onboarding-next-step">
-        <i class="fa fa-arrow-right"></i>
-        <span>Download the QR Code</span>
+        <i class="fa fa-download"></i>
+        <%= link_to "Download the QR Code", qr_api_url, download: "studio-checkin-qr.png", class: "onboarding-next-link" %>
       </div>
       <div class="onboarding-next-step">
-        <i class="fa fa-arrow-right"></i>
+        <i class="fa fa-print"></i>
         <span>Print it</span>
       </div>
       <div class="onboarding-next-step">
-        <i class="fa fa-arrow-right"></i>
+        <i class="fa fa-door-open"></i>
         <span>Place it at your studio entrance</span>
       </div>
     </div>
   </div>
 
-  <%# Right column — QR code placeholder %>
+  <%# Right column — dynamic QR code %>
   <div class="onboarding-qr-container">
     <div class="onboarding-qr-card">
-      <div class="onboarding-qr-placeholder">
-        <i class="fa fa-qrcode"></i>
-      </div>
-      <p class="onboarding-qr-label">Studio Check-in QR Code</p>
+      <% if @studio %>
+        <img src="<%= qr_api_url %>" alt="Studio Check-in QR Code" width="220" height="220" class="onboarding-qr-image" />
+      <% else %>
+        <div class="onboarding-qr-placeholder">
+          <i class="fa fa-qrcode"></i>
+        </div>
+      <% end %>
+      <p class="onboarding-qr-label"><%= @studio&.name || "Studio" %> Check-in</p>
+      <p class="onboarding-qr-url"><%= checkin_url %></p>
     </div>
   </div>
 </div>
 
 <div class="onboarding-actions">
+  <%= render "admin/onboarding/back_button" %>
   <%= button_to "Continue", advance_admin_onboarding_path,
         method: :post,
         class: "btn onboarding-btn-primary",
-        data: { onboarding_target: "submitBtn", action: "onboarding#submit" } %>
+        data: { turbo: false } %>
 </div>

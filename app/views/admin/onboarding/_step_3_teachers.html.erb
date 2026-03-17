@@ -26,8 +26,9 @@
 </div>
 
 <div class="onboarding-actions">
+  <%= render "admin/onboarding/back_button" %>
   <%= button_to "Import #{@teachers.count} teachers", advance_admin_onboarding_path,
         method: :post,
         class: "btn onboarding-btn-primary",
-        data: { onboarding_target: "submitBtn", action: "onboarding#submit" } %>
+        data: { turbo: false } %>
 </div>
