@@ -13,7 +13,7 @@ require "uri"
 #
 class StudioBrandingProposalService
   MAX_FETCH_CHARS = 5_000
-  MAX_EXTRACTED_COLORS = 20
+  MAX_EXTRACTED_COLORS = 40
 
   FONT_PAIRS = [
     { heading: "Playfair Display",   body: "Lato",              personality: "Premium, luxury, high-end" },
@@ -189,7 +189,7 @@ class StudioBrandingProposalService
     css_hrefs = css_hrefs
       .reject { |href| cdn_domains.any? { |cdn| href.include?(cdn) } }
       .reject { |href| href.start_with?("http") && !href.include?(base_uri.host) }
-      .first(4)
+      .first(8)
 
     Rails.logger.debug("StudioBrandingProposalService: found #{css_hrefs.size} stylesheets to fetch")
 
@@ -220,6 +220,10 @@ class StudioBrandingProposalService
 
       # All hex colors in the CSS as supplement
       colors.concat(extract_hex_colors(css_content))
+
+      # rgb()/rgba() colors — many modern sites define their palette this way
+      css_content.scan(/rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/i)
+                 .each { |r, g, b| colors << rgb_to_hex(r.to_i, g.to_i, b.to_i) }
     end
 
     result = colors.compact.uniq.reject { |c| GENERIC_COLORS.include?(c) }
@@ -278,10 +282,12 @@ class StudioBrandingProposalService
       You will receive brand signals in STRICT PRIORITY ORDER. Weight them accordingly:
 
       1. WEBSITE URL & CONTENT — primary source.
-         - "Hex colours found in page source" were extracted from the raw HTML + linked CSS stylesheets. These ARE the real brand colors — use them directly as your palette base. Do NOT invent new colors if a color list is provided.
-         - CSS custom property colors (extracted from stylesheets) are the most reliable — treat them as the definitive brand palette.
-         - If the color list looks generic (only grays and blacks), fall back to your own knowledge of the brand from the URL.
-         - If a theme-color meta tag is present, use it as the primary_color.
+         - "Hex colours found in page source" contains ALL colors extracted from the real CSS stylesheets and HTML. Study this full list carefully.
+         - Identify the dominant brand colors (those that appear most or feel most intentional) vs utility/neutral colors.
+         - Look for accent colors — oranges, teals, greens, warm tones — even if they appear less frequently. These are often the most distinctive brand colors.
+         - Use the extracted colors directly in your proposals. Pick different subsets for each proposal to create variation.
+         - If the list looks entirely generic (only near-black/near-white), fall back to your own knowledge of the brand from the URL.
+         - If a theme-color meta tag is present, treat it as the primary_color.
          - Always cross-reference the URL with your knowledge of the brand if you recognise it.
          - Use page text content (copy, headings, descriptions) to infer personality and aesthetic.
       2. SOCIAL MEDIA URLs — use handle and URL structure to infer audience and personality.
