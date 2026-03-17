@@ -1,102 +1,239 @@
-<% content_for(:title) { "Analytics — Overview" } %>
+<% content_for(:title) { "Analytics" } %>
 
-<h1>Analytics</h1>
+<div class="d-flex align-items-start justify-content-between gap-3 flex-wrap mb-4">
+  <div>
+    <h1 class="admin-page-title mb-1">Analytics</h1>
+    <p class="text-muted mb-0">A clear overview of member growth, check-ins, and points activity.</p>
+  </div>
 
-<%= render "date_range" %>
+  <div class="d-flex flex-column align-items-md-end">
+    <%= render "date_range" %>
+  </div>
+</div>
 
-<%# ── Summary Cards ── %>
-<div class="row g-3 mb-4">
-  <div class="col-md-3">
-    <div class="card text-center p-3">
-      <h3><%= @total_members %></h3>
-      <p class="text-muted mb-0">Total Members</p>
-    </div>
+<div class="admin-section-title mb-3">
+  <span>Overview</span>
+  <span class="admin-section-subtitle">The key performance metrics for the selected period.</span>
+</div>
+
+<div class="admin-card mb-4">
+  <div class="admin-card-header">
+    <span>Overview Summary</span>
+    <span class="text-muted fw-normal"><%= @range_label %></span>
   </div>
-  <div class="col-md-3">
-    <div class="card text-center p-3">
-      <h3><%= @new_members_this_week %></h3>
-      <p class="text-muted mb-0">New Members</p>
+
+  <div class="row g-3 p-3">
+    <div class="col-6 col-md-4 col-xl">
+      <div class="admin-stat-card">
+        <div class="admin-stat-icon"><i class="fa fa-users"></i></div>
+        <div class="admin-stat-value"><%= @total_members %></div>
+        <div class="admin-stat-label">Total Members</div>
+        <div class="admin-stat-delta">All time</div>
+      </div>
     </div>
-  </div>
-  <div class="col-md-3">
-    <div class="card text-center p-3">
-      <h3><%= @check_ins_in_range %></h3>
-      <p class="text-muted mb-0">Check-ins</p>
+    <div class="col-6 col-md-4 col-xl">
+      <div class="admin-stat-card">
+        <div class="admin-stat-icon"><i class="fa fa-user"></i></div>
+        <div class="admin-stat-value"><%= @active_members %></div>
+        <div class="admin-stat-label">Active Members</div>
+        <div class="admin-stat-delta">Selected period</div>
+      </div>
     </div>
-  </div>
-  <div class="col-md-3">
-    <div class="card text-center p-3">
-      <h3><%= @active_members %></h3>
-      <p class="text-muted mb-0">Active Members</p>
+    <div class="col-6 col-md-4 col-xl">
+      <div class="admin-stat-card">
+        <div class="admin-stat-icon"><i class="fa fa-check-circle"></i></div>
+        <div class="admin-stat-value"><%= @total_check_ins %></div>
+        <div class="admin-stat-label">Total Check-ins</div>
+        <div class="admin-stat-delta">All time</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-6 col-xl">
+      <div class="admin-stat-card">
+        <div class="admin-stat-icon"><i class="fa fa-calendar"></i></div>
+        <div class="admin-stat-value"><%= @check_ins_in_range %></div>
+        <div class="admin-stat-label">Check-ins</div>
+        <div class="admin-stat-delta">Selected period</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-6 col-xl">
+      <div class="admin-stat-card">
+        <div class="admin-stat-icon"><i class="fa fa-star"></i></div>
+        <div class="admin-stat-value"><%= number_with_delimiter(@in_circulation) %></div>
+        <div class="admin-stat-label">Points in Circulation</div>
+        <div class="admin-stat-delta">Current total</div>
+      </div>
     </div>
   </div>
 </div>
 
-<%# ── Engagement Stats ── %>
-<div class="row g-3 mb-4">
-  <div class="col-md-4">
-    <div class="card p-3">
-      <h5>Avg Visits / Member</h5>
-      <h2><%= @avg_visits_per_member %></h2>
-      <p class="text-muted mb-0">in selected period</p>
-    </div>
+<div class="admin-section-title mb-3">
+  <span>Activity</span>
+  <span class="admin-section-subtitle">A concise view of visit frequency and member engagement.</span>
+</div>
+
+<div class="admin-card mb-4">
+  <div class="admin-card-header">
+    <span>Activity Summary</span>
+    <span class="text-muted fw-normal"><%= @range_label %></span>
   </div>
-  <div class="col-md-4">
-    <div class="card p-3">
-      <h5>Total Check-ins (All Time)</h5>
-      <h2><%= @total_check_ins %></h2>
+
+  <div class="row g-3 p-3">
+    <div class="col-md-6">
+      <div class="h-100 border rounded-3 p-3">
+        <div class="d-flex align-items-start justify-content-between gap-3">
+          <div>
+            <div class="fw-semibold mb-1">Check-ins per Day</div>
+            <div class="text-muted small">Average daily check-ins across the selected range.</div>
+          </div>
+          <div class="admin-stat-value"><%= @checkins_per_day %></div>
+        </div>
+      </div>
     </div>
-  </div>
-  <div class="col-md-4">
-    <div class="card p-3">
-      <h5>Check-ins / Day</h5>
-      <% days_in_range = [(@end_date.to_date - @start_date.to_date).to_i, 1].max %>
-      <h2><%= (@check_ins_in_range.to_f / days_in_range).round(1) %></h2>
-      <p class="text-muted mb-0">avg per day</p>
+    <div class="col-md-6">
+      <div class="h-100 border rounded-3 p-3">
+        <div class="d-flex align-items-start justify-content-between gap-3">
+          <div>
+            <div class="fw-semibold mb-1">Avg Visits per Member</div>
+            <div class="text-muted small">Average visits per active member in this period.</div>
+          </div>
+          <div class="admin-stat-value"><%= @avg_visits_per_member %></div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
-<%# ── Weekly Trends ── %>
-<div class="row g-3">
-  <div class="col-md-6">
-    <div class="card p-3">
-      <h5>New Members by Week</h5>
-      <% if @weekly_signups.any? %>
-        <table class="table table-sm">
-          <thead><tr><th>Week of</th><th class="text-end">Signups</th></tr></thead>
-          <tbody>
-            <% @weekly_signups.each do |week, count| %>
-              <tr>
-                <td><%= week %></td>
-                <td class="text-end"><%= count %></td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
-      <% else %>
-        <p class="text-muted">No signups in this period.</p>
-      <% end %>
+<div class="admin-section-title mb-3">
+  <span>Members</span>
+  <span class="admin-section-subtitle">New member signups captured within the selected period.</span>
+</div>
+
+<div class="admin-card mb-4">
+  <div class="admin-card-header">
+    <span>New Members</span>
+    <span class="text-muted fw-normal"><%= @new_members_this_week %> new signups</span>
+  </div>
+
+  <div class="p-3 border-bottom">
+    <div class="text-muted small">Members who joined in the selected period</div>
+  </div>
+
+  <% if @recent_new_members.any? %>
+    <% @recent_new_members.each do |member| %>
+      <div class="admin-activity-row">
+        <div class="admin-activity-avatar">
+          <%= member.first_name.to_s.first&.upcase || member.email.first.upcase %>
+        </div>
+        <div class="admin-activity-details">
+          <div class="admin-activity-name"><%= [member.first_name, member.last_name].compact.join(" ").presence || member.email %></div>
+          <div class="admin-activity-meta">Joined <%= member.created_at.strftime("%d.%m.%Y") %></div>
+        </div>
+        <%= link_to "View", admin_member_path(member), class: "admin-activity-link" %>
+      </div>
+    <% end %>
+  <% else %>
+    <div class="admin-empty-state">No signups in this period.</div>
+  <% end %>
+</div>
+
+<div class="admin-section-title mb-3">
+  <span>Points</span>
+  <span class="admin-section-subtitle">How points were earned, redeemed, and distributed.</span>
+</div>
+
+<div class="admin-card mb-4">
+  <div class="admin-card-header">
+    <span>Points Summary</span>
+    <span class="text-muted fw-normal"><%= @range_label %></span>
+  </div>
+
+  <div class="row g-3 p-3">
+    <div class="col-md-4">
+      <div class="h-100 border rounded-3 p-3">
+        <div class="d-flex align-items-start justify-content-between gap-3">
+          <div>
+            <div class="fw-semibold mb-1">Points Awarded</div>
+            <div class="text-muted small">Points earned from visits in the selected period.</div>
+          </div>
+          <div class="admin-stat-value"><%= number_with_delimiter(@total_awarded) %></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="h-100 border rounded-3 p-3">
+        <div class="d-flex align-items-start justify-content-between gap-3">
+          <div>
+            <div class="fw-semibold mb-1">Points Redeemed</div>
+            <div class="text-muted small">Points spent on rewards during this period.</div>
+          </div>
+          <div class="admin-stat-value"><%= number_with_delimiter(@total_redeemed) %></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="h-100 border rounded-3 p-3">
+        <div class="d-flex align-items-start justify-content-between gap-3">
+          <div>
+            <div class="fw-semibold mb-1">Net Points</div>
+            <div class="text-muted small">Awarded minus redeemed across the selected range.</div>
+          </div>
+          <div class="admin-stat-value"><%= number_with_delimiter(@net_points) %></div>
+        </div>
+      </div>
     </div>
   </div>
-  <div class="col-md-6">
-    <div class="card p-3">
-      <h5>Check-ins by Week</h5>
-      <% if @weekly_checkins.any? %>
-        <table class="table table-sm">
-          <thead><tr><th>Week of</th><th class="text-end">Check-ins</th></tr></thead>
-          <tbody>
-            <% @weekly_checkins.each do |week, count| %>
-              <tr>
-                <td><%= week %></td>
-                <td class="text-end"><%= count %></td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
-      <% else %>
-        <p class="text-muted">No check-ins in this period.</p>
-      <% end %>
+</div>
+
+<div class="admin-card">
+  <div class="admin-card-header">
+    <span>Points Breakdown</span>
+    <span class="text-muted fw-normal">Class performance and top member balances</span>
+  </div>
+
+  <div class="row g-3 p-3">
+    <div class="col-lg-6">
+      <div class="h-100 border rounded-3 p-3">
+        <div class="d-flex align-items-center justify-content-between gap-3 mb-3">
+          <div class="fw-semibold">Points by Class Type</div>
+          <div class="text-muted small">Top classes in this period</div>
+        </div>
+        <% if @points_by_class.any? %>
+          <% @points_by_class.each do |class_name, points| %>
+            <div class="admin-activity-row px-0">
+              <div class="admin-activity-details">
+                <div class="admin-activity-name"><%= class_name %></div>
+              </div>
+              <div class="admin-activity-points"><%= number_with_delimiter(points) %></div>
+            </div>
+          <% end %>
+        <% else %>
+          <div class="admin-empty-state px-0">No points awarded in this period.</div>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="col-lg-6">
+      <div class="h-100 border rounded-3 p-3">
+        <div class="d-flex align-items-center justify-content-between gap-3 mb-3">
+          <div class="fw-semibold">Top Earners</div>
+          <div class="text-muted small">Members with the highest balances</div>
+        </div>
+        <% if @top_earners.any? %>
+          <% @top_earners.each do |user| %>
+            <div class="admin-activity-row px-0">
+              <div class="admin-activity-avatar">
+                <%= user.first_name.to_s.first&.upcase || user.email.first.upcase %>
+              </div>
+              <div class="admin-activity-details">
+                <div class="admin-activity-name"><%= [user.first_name, user.last_name].compact.join(" ").presence || user.email %></div>
+              </div>
+              <div class="admin-activity-points"><%= number_with_delimiter(user.available_points) %></div>
+            </div>
+          <% end %>
+        <% else %>
+          <div class="admin-empty-state px-0">No members with points yet.</div>
+        <% end %>
+      </div>
     </div>
   </div>
 </div>
