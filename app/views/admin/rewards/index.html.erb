@@ -1,29 +1,124 @@
-<h1>Rewards</h1>
+<% content_for :title, "Rewards & Deals" %>
 
-<p><%= link_to "New Reward", new_admin_reward_path, class: "btn btn-primary btn-sm" %></p>
+<% current_items = @active_tab == "deals" ? @deals : @rewards %>
 
-<table class="table">
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Type</th>
-      <th>Points Cost</th>
-      <th>Active</th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @rewards.each do |reward| %>
-      <tr>
-        <td><%= reward.name %></td>
-        <td><%= reward.reward_type %></td>
-        <td><%= reward.points_cost %></td>
-        <td><%= reward.active? ? "Yes" : "No" %></td>
-        <td>
-          <%= link_to "Edit", edit_admin_reward_path(reward) %>
-          <%= button_to "Delete", admin_reward_path(reward), method: :delete, class: "btn btn-link btn-sm text-danger", data: { turbo_confirm: "Are you sure?" } %>
-        </td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+<div class="d-flex align-items-start justify-content-between gap-3 flex-wrap mb-4">
+  <div>
+    <h1 class="admin-page-title mb-1">Rewards & Deals</h1>
+    <p class="text-muted mb-0">Verwalten Sie Belohnungen und spezielle Angebote fuer Ihre Mitglieder.</p>
+  </div>
+
+  <% if @active_tab == "deals" %>
+    <%= link_to '<i class="fa fa-plus"></i><span>New Deal</span>'.html_safe, new_admin_deal_path, class: "btn btn-dark d-inline-flex align-items-center gap-2 px-3 py-2 shadow-sm" %>
+  <% else %>
+    <%= link_to '<i class="fa fa-plus"></i><span>New Reward</span>'.html_safe, new_admin_reward_path, class: "btn btn-dark d-inline-flex align-items-center gap-2 px-3 py-2 shadow-sm" %>
+  <% end %>
+</div>
+
+<div class="admin-card mb-4">
+  <div class="p-3">
+    <ul class="nav nav-pills gap-2">
+      <li class="nav-item">
+        <%= link_to "Deals", admin_rewards_path(tab: "deals"), class: "nav-link #{'active' if @active_tab == 'deals'}" %>
+      </li>
+      <li class="nav-item">
+        <%= link_to "Rewards", admin_rewards_path(tab: "rewards"), class: "nav-link #{'active' if @active_tab == 'rewards'}" %>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="row g-3">
+  <% current_items.each do |item| %>
+    <div class="col-12 col-lg-6">
+      <div class="admin-card h-100">
+        <div class="p-3">
+          <div class="d-flex align-items-start gap-3 mb-3">
+            <div class="admin-feature-icon">
+              <i class="fa <%= @active_tab == 'deals' ? 'fa-tag' : 'fa-gift' %>"></i>
+            </div>
+
+            <div class="flex-grow-1">
+              <div class="fw-semibold mb-1">
+                <% if @active_tab == "deals" %>
+                  <%= item.name.to_s.gsub(/\s*[—-]\s*\d+%\s*off/i, "") %>
+                <% else %>
+                  <%= item.name %>
+                <% end %>
+              </div>
+              <div class="text-muted small">
+                <% if @active_tab == "deals" %>
+                  <%= item.trigger_condition&.humanize || "Custom deal" %>
+                  <% if item.discount_percent.present? %>
+                    <span class="mx-1">&middot;</span>
+                    <%= item.discount_percent %>% off
+                  <% end %>
+                <% else %>
+                  <%= item.description.presence || item.reward_type&.humanize || "Member reward" %>
+                <% end %>
+              </div>
+            </div>
+          </div>
+
+          <div class="admin-stat-card mb-3">
+            <div class="admin-stat-label mb-2">Code</div>
+            <div class="admin-stat-value" style="font-size: 1.35rem;">
+              <% if @active_tab == "deals" %>
+                <%= item.deal_claims.latest_first.first&.code || "AUTO-GENERATED" %>
+              <% else %>
+                <%= item.reward_redemptions.latest_first.first&.code || "AUTO-GENERATED" %>
+              <% end %>
+            </div>
+          </div>
+
+          <div class="row g-3 mb-3">
+            <div class="col-6">
+              <div class="text-muted small mb-1">Used</div>
+              <div class="fw-semibold">
+                <% if @active_tab == "deals" %>
+                  <%= item.deal_claims.size %> times
+                <% else %>
+                  <%= item.reward_redemptions.size %> times
+                <% end %>
+              </div>
+            </div>
+
+            <div class="col-6">
+              <% if @active_tab == "deals" %>
+                <div class="text-muted small mb-1">Valid for</div>
+                <div class="fw-semibold"><%= item.expiry_days.present? ? "#{item.expiry_days} days" : "No expiry" %></div>
+              <% else %>
+                <div class="text-muted small mb-1">Points Cost</div>
+                <div class="fw-semibold"><%= item.points_cost || 0 %> pts</div>
+              <% end %>
+            </div>
+          </div>
+
+          <div class="d-flex align-items-center justify-content-between gap-3 flex-wrap">
+            <span class="badge <%= item.active? ? 'bg-success' : 'bg-secondary' %>">
+              <%= item.active? ? "Active" : "Inactive" %>
+            </span>
+
+            <div class="d-flex align-items-center gap-2 ms-auto">
+              <% if @active_tab == "deals" %>
+                <%= link_to "Edit", edit_admin_deal_path(item), class: "btn btn-sm btn-outline-secondary py-1 px-2" %>
+                <%= link_to "Delete", confirm_delete_admin_deal_path(item), class: "btn btn-sm btn-outline-danger py-1 px-2" %>
+              <% else %>
+                <%= link_to "Edit", edit_admin_reward_path(item), class: "btn btn-sm btn-outline-secondary py-1 px-2" %>
+                <%= link_to "Delete", confirm_delete_admin_reward_path(item), class: "btn btn-sm btn-outline-danger py-1 px-2" %>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<% if current_items.empty? %>
+  <div class="admin-card mt-3">
+    <div class="admin-empty-state">
+      <%= @active_tab == "deals" ? "No deals yet." : "No rewards yet." %>
+    </div>
+  </div>
+<% end %>

@@ -1,7 +1,6 @@
 class Admin::DealsController < Admin::BaseController
   def index
-    @deals = current_studio.deals.order(:name) if current_studio
-    @deals ||= Deal.none
+    redirect_to admin_rewards_path(tab: "deals")
   end
 
   def show
@@ -15,7 +14,7 @@ class Admin::DealsController < Admin::BaseController
   def create
     @deal = current_studio.deals.new(deal_params)
     if @deal.save
-      redirect_to admin_deals_path, notice: "Deal created."
+      redirect_to admin_rewards_path(tab: "deals"), notice: "Deal created."
     else
       render :new, status: :unprocessable_entity
     end
@@ -25,10 +24,14 @@ class Admin::DealsController < Admin::BaseController
     @deal = Deal.find(params[:id])
   end
 
+  def confirm_delete
+    @deal = Deal.find(params[:id])
+  end
+
   def update
     @deal = Deal.find(params[:id])
     if @deal.update(deal_params)
-      redirect_to admin_deals_path, notice: "Deal updated."
+      redirect_to admin_rewards_path(tab: "deals"), notice: "Deal updated."
     else
       render :edit, status: :unprocessable_entity
     end
@@ -37,21 +40,21 @@ class Admin::DealsController < Admin::BaseController
   def destroy
     @deal = Deal.find(params[:id])
     @deal.destroy
-    redirect_to admin_deals_path, notice: "Deal deleted."
+    redirect_to admin_rewards_path(tab: "deals"), notice: "Deal deleted."
   end
 
   def update_referral
     referral_deal = current_studio.deals.find_by(deal_type: "referral")
 
     unless referral_deal
-      redirect_to admin_deals_path, alert: "No referral deal found."
+      redirect_to admin_rewards_path(tab: "deals"), alert: "No referral deal found."
       return
     end
 
     if referral_deal.update(referral_params)
-      redirect_to admin_deals_path, notice: "Referral settings updated."
+      redirect_to admin_rewards_path(tab: "deals"), notice: "Referral settings updated."
     else
-      redirect_to admin_deals_path, alert: "Failed to update referral settings."
+      redirect_to admin_rewards_path(tab: "deals"), alert: "Failed to update referral settings."
     end
   end
 

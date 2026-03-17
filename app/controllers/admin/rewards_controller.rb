@@ -1,6 +1,9 @@
 class Admin::RewardsController < Admin::BaseController
   def index
-    @rewards = current_studio.rewards.order(:name) if current_studio
+    @active_tab = %w[deals rewards].include?(params[:tab]) ? params[:tab] : "deals"
+    @deals = current_studio.deals.includes(:deal_claims).order(:name) if current_studio
+    @rewards = current_studio.rewards.includes(:reward_redemptions).order(:name) if current_studio
+    @deals ||= Deal.none
     @rewards ||= Reward.none
   end
 
@@ -15,7 +18,7 @@ class Admin::RewardsController < Admin::BaseController
   def create
     @reward = current_studio.rewards.new(reward_params)
     if @reward.save
-      redirect_to admin_rewards_path, notice: "Reward created."
+      redirect_to admin_rewards_path(tab: "rewards"), notice: "Reward created."
     else
       render :new, status: :unprocessable_entity
     end
@@ -25,10 +28,14 @@ class Admin::RewardsController < Admin::BaseController
     @reward = Reward.find(params[:id])
   end
 
+  def confirm_delete
+    @reward = Reward.find(params[:id])
+  end
+
   def update
     @reward = Reward.find(params[:id])
     if @reward.update(reward_params)
-      redirect_to admin_rewards_path, notice: "Reward updated."
+      redirect_to admin_rewards_path(tab: "rewards"), notice: "Reward updated."
     else
       render :edit, status: :unprocessable_entity
     end
@@ -37,7 +44,7 @@ class Admin::RewardsController < Admin::BaseController
   def destroy
     @reward = Reward.find(params[:id])
     @reward.destroy
-    redirect_to admin_rewards_path, notice: "Reward deleted."
+    redirect_to admin_rewards_path(tab: "rewards"), notice: "Reward deleted."
   end
 
   private
