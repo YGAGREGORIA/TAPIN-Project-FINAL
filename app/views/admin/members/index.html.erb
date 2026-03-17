@@ -1,28 +1,111 @@
-<h1>Members</h1>
+<% content_for :title, "Members" %>
 
-<p><%= link_to "Export CSV", export_admin_members_path(format: :csv), class: "btn btn-outline-secondary btn-sm" %></p>
+<div class="d-flex align-items-start justify-content-between gap-3 flex-wrap mb-4">
+  <div>
+    <h1 class="admin-page-title mb-1">Members</h1>
+    <p class="text-muted mb-0">Verwalten Sie Ihre Mitglieder und deren Aktivitäten.</p>
+  </div>
 
-<table class="table">
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Email</th>
-      <th>Phone</th>
-      <th>Visits</th>
-      <th>Points</th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @members.each do |member| %>
-      <tr>
-        <td><%= member.first_name %> <%= member.last_name %></td>
-        <td><%= member.email %></td>
-        <td><%= member.phone %></td>
-        <td><%= member.total_visits || 0 %></td>
-        <td><%= member.available_points || 0 %></td>
-        <td><%= link_to "View", admin_member_path(member) %></td>
-      </tr>
+  <%= link_to(export_admin_members_path(format: :csv), class: "btn btn-sm btn-admin-outline d-inline-flex align-items-center gap-2") do %>
+    <i class="fa fa-download"></i>
+    <span>Export CSV</span>
+  <% end %>
+</div>
+
+<div class="admin-card mb-4">
+  <div class="admin-card-header">
+    <span>Filter Members</span>
+    <span class="text-muted fw-normal"><%= @total_members %> Mitglieder</span>
+  </div>
+
+  <div class="p-3">
+    <%= form_with url: admin_members_path, method: :get, local: true do %>
+      <div class="d-flex flex-wrap align-items-end gap-3">
+        <div class="flex-grow-1" style="min-width: 260px;">
+          <%= label_tag :q, "Suche", class: "form-label" %>
+          <%= text_field_tag :q, @query, class: "form-control", placeholder: "Suche nach Name oder E-Mail..." %>
+        </div>
+
+        <div style="min-width: 220px;">
+          <%= label_tag :sort, "Sortieren", class: "form-label" %>
+          <%= select_tag :sort, options_for_select([
+            ["Neueste zuerst", "date-newest"],
+            ["Älteste zuerst", "date-oldest"],
+            ["Punkte absteigend", "points-high"],
+            ["Punkte aufsteigend", "points-low"],
+            ["Besuche absteigend", "visits-high"],
+            ["Besuche aufsteigend", "visits-low"]
+          ], @sort), class: "form-select" %>
+        </div>
+
+        <div class="d-flex gap-2 flex-wrap">
+          <%= submit_tag "Anwenden", class: "btn btn-dark" %>
+        </div>
+      </div>
     <% end %>
-  </tbody>
-</table>
+  </div>
+</div>
+
+<div class="admin-card">
+  <div class="admin-card-header">
+    <span>Mitgliederliste</span>
+    <span class="text-muted fw-normal">Seite <%= @current_page %> von <%= @total_pages %></span>
+  </div>
+
+  <% if @members.any? %>
+    <% @members.each do |member| %>
+      <% full_name = [member.first_name, member.last_name].compact.join(" ").presence || member.email %>
+      <% initials = [member.first_name, member.last_name].filter_map { |value| value.to_s.strip.first&.upcase }.join.first(2).presence || member.email.to_s.first&.upcase || "?" %>
+
+      <div class="admin-activity-row justify-content-between flex-wrap flex-md-nowrap">
+        <div class="admin-activity-avatar"><%= initials %></div>
+
+        <div class="admin-activity-details">
+          <div class="admin-activity-name"><%= full_name %></div>
+          <div class="admin-activity-meta">
+            <span><%= member.email %></span>
+            <span class="mx-1">&middot;</span>
+            <span>Joined <%= member.created_at.strftime("%b %-d, %Y") %></span>
+          </div>
+        </div>
+
+        <div class="d-flex align-items-center gap-2 ms-md-auto mt-2 mt-md-0">
+          <div class="badge bg-light text-dark d-inline-flex align-items-center justify-content-center gap-2 px-3 py-2" style="min-width: 92px;">
+            <i class="fa fa-check-circle"></i>
+            <span><%= member.total_visits || 0 %></span>
+            <span>visits</span>
+          </div>
+          <div class="badge bg-warning text-dark d-inline-flex align-items-center justify-content-center gap-2 px-3 py-2" style="min-width: 84px;">
+            <i class="fa fa-star"></i>
+            <span><%= member.available_points || 0 %></span>
+            <span>pts</span>
+          </div>
+        </div>
+
+        <%= link_to "View", admin_member_path(member), class: "admin-activity-link ms-md-3 mt-2 mt-md-0" %>
+      </div>
+    <% end %>
+
+    <div class="p-3 border-top d-flex align-items-center justify-content-between gap-3 flex-wrap">
+      <span class="text-muted small">Seite <%= @current_page %> von <%= @total_pages %></span>
+
+      <div class="d-flex gap-2">
+        <% if @current_page > 1 %>
+          <%= link_to "Zurück", admin_members_path(request.query_parameters.merge(page: @current_page - 1)), class: "btn btn-sm btn-outline-secondary" %>
+        <% else %>
+          <span class="btn btn-sm btn-outline-secondary disabled">Zurück</span>
+        <% end %>
+
+        <% if @current_page < @total_pages %>
+          <%= link_to "Weiter", admin_members_path(request.query_parameters.merge(page: @current_page + 1)), class: "btn btn-sm btn-outline-secondary" %>
+        <% else %>
+          <span class="btn btn-sm btn-outline-secondary disabled">Weiter</span>
+        <% end %>
+      </div>
+    </div>
+  <% else %>
+    <div class="admin-empty-state">
+      Keine Mitglieder gefunden. Sobald sich Mitglieder registrieren, erscheinen sie hier.
+    </div>
+  <% end %>
+</div>
