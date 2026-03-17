@@ -67,6 +67,10 @@ Rails.application.routes.draw do
       post :save_branding
       post :apply_branding
       post :regenerate_branding
+      # Safety redirects — Turbo Drive can cache POST URLs and hit them with GET
+      get :save_branding,       to: redirect("/admin/onboarding")
+      get :apply_branding,      to: redirect("/admin/onboarding")
+      get :regenerate_branding, to: redirect("/admin/onboarding")
     end
     resources :rewards
     resources :class_configs, only: [ :index, :update ]
