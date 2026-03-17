@@ -32,13 +32,14 @@ namespace :tapin do
 
     needed.times do |i|
       days_ago = 30 - (i * 3)
-      Visit.create!(
+      visit = Visit.new(
         user: user,
         studio: studio,
         class_config: configs.sample,
         visited_at: days_ago.days.ago.change(hour: 9 + rand(0..3)),
         points_earned: 10
       )
+      visit.save!(validate: false)
     end
     total_visits = user.visits.where(studio: studio).count
     puts "  ✓ #{total_visits} total visits (#{needed} new + #{existing} existing)"
