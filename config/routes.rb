@@ -64,6 +64,9 @@ Rails.application.routes.draw do
     resource :onboarding, only: [ :show ], controller: "onboarding" do
       post :advance
       post :goto
+      post :save_branding
+      post :apply_branding
+      post :regenerate_branding
     end
     resources :rewards
     resources :class_configs, only: [ :index, :update ]

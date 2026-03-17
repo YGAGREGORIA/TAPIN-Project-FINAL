@@ -1,0 +1,194 @@
+<% if @proposals %>
+  <%# ── PREVIEW STATE: show 3 AI proposals ── %>
+  <h1 class="onboarding-title">Choose your brand</h1>
+  <p class="onboarding-desc">
+    Claude created 3 distinct proposals based on your studio's identity. Pick the one that feels right — you can regenerate anytime.
+  </p>
+
+  <div class="row g-4 mb-4">
+    <% @proposals.each_with_index do |proposal, i| %>
+      <div class="col-12 col-lg-4">
+        <div class="onboarding-card h-100 d-flex flex-column">
+          <h3 class="onboarding-card-heading mb-1" style="color: <%= proposal[:primary_color] %>">
+            <%= proposal[:name] %>
+          </h3>
+          <p class="text-muted small fst-italic mb-3">"<%= proposal[:tagline] %>"</p>
+          <p class="small mb-3"><%= proposal[:brand_tone] %></p>
+
+          <%# Colour swatches %>
+          <div class="d-flex gap-2 align-items-center mb-3">
+            <% [
+              [:primary_color, "Primary"],
+              [:secondary_color, "Accent"],
+              [:background_color, "Background"],
+              [:text_color, "Text"]
+            ].each do |key, label| %>
+              <div class="text-center">
+                <div style="width:40px;height:40px;border-radius:8px;background:<%= proposal[key] %>;border:1px solid #dee2e6;"></div>
+                <div class="text-muted" style="font-size:10px;margin-top:3px;"><%= label %></div>
+                <div style="font-size:9px;font-family:monospace;"><%= proposal[key] %></div>
+              </div>
+            <% end %>
+          </div>
+
+          <%# Font preview %>
+          <div class="d-flex gap-3 mb-3 align-items-baseline">
+            <div>
+              <div class="text-muted" style="font-size:10px;">HEADING</div>
+              <div style="font-family:'<%= proposal[:font_heading] %>',sans-serif;font-weight:700;font-size:14px;"><%= proposal[:font_heading] %></div>
+            </div>
+            <div>
+              <div class="text-muted" style="font-size:10px;">BODY</div>
+              <div style="font-family:'<%= proposal[:font_body] %>',sans-serif;font-size:13px;"><%= proposal[:font_body] %></div>
+            </div>
+          </div>
+
+          <%# Mini app mockup %>
+          <div class="mt-auto">
+            <div style="border-radius:12px;overflow:hidden;background:<%= proposal[:primary_color] %>;padding:12px 14px;margin-bottom:2px;">
+              <div style="font-family:'<%= proposal[:font_heading] %>',sans-serif;font-weight:700;font-size:11px;color:#fff;letter-spacing:.5px;margin-bottom:6px;">
+                <%= @studio&.name&.upcase || "YOUR STUDIO" %>
+              </div>
+              <div style="font-family:'<%= proposal[:font_heading] %>',sans-serif;font-weight:700;font-size:13px;color:#fff;">Hi, Alex!</div>
+              <div style="font-family:'<%= proposal[:font_heading] %>',sans-serif;font-weight:700;font-size:16px;color:#fff;margin-bottom:8px;">240 pts available</div>
+              <div style="background:rgba(255,255,255,0.15);border-radius:6px;padding:8px;">
+                <div style="font-family:'<%= proposal[:font_body] %>',sans-serif;font-size:10px;color:rgba(255,255,255,0.8);margin-bottom:4px;">YOUR PROGRESS</div>
+                <div class="d-flex gap-1">
+                  <% 7.times do %>
+                    <div style="width:14px;height:14px;border-radius:50%;background:<%= proposal[:secondary_color] %>;"></div>
+                  <% end %>
+                  <% 3.times do %>
+                    <div style="width:14px;height:14px;border-radius:50%;background:rgba(255,255,255,0.3);"></div>
+                  <% end %>
+                </div>
+                <div style="font-family:'<%= proposal[:font_body] %>',sans-serif;font-size:10px;color:rgba(255,255,255,0.7);margin-top:3px;">7 / 10 visits</div>
+              </div>
+            </div>
+            <div style="background:<%= proposal[:background_color] %>;padding:8px 14px;border-radius:0 0 12px 12px;border:1px solid #dee2e6;border-top:none;">
+              <div style="background:<%= proposal[:primary_color] %>;color:#fff;border-radius:6px;padding:6px;text-align:center;font-family:'<%= proposal[:font_body] %>',sans-serif;font-size:11px;font-weight:600;">
+                Book a class
+              </div>
+            </div>
+          </div>
+
+          <%# Apply button %>
+          <%= button_to apply_branding_admin_onboarding_path,
+                method: :post,
+                params: { proposal_index: i },
+                class: "btn onboarding-btn-primary w-100 mt-3",
+                data: { turbo: false } do %>
+            Apply this brand
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="onboarding-actions justify-content-between">
+    <%= button_to "← Edit details", regenerate_branding_admin_onboarding_path,
+          method: :post,
+          class: "btn btn-outline-secondary",
+          data: { turbo: false } %>
+    <%= button_to "Regenerate proposals", regenerate_branding_admin_onboarding_path,
+          method: :post,
+          class: "btn btn-outline-primary",
+          data: { turbo: false } %>
+  </div>
+
+<% else %>
+  <%# ── FORM STATE: collect branding info ── %>
+  <h1 class="onboarding-title">Set up your studio branding</h1>
+  <p class="onboarding-desc">
+    Share your studio's online presence and personality. Claude will analyse your content and create a custom brand for your app — colours, fonts, and tone.
+  </p>
+
+  <%= form_with url: save_branding_admin_onboarding_path, method: :post, multipart: true, data: { turbo: false } do |f| %>
+
+    <%# URLs %>
+    <div class="onboarding-card mb-4">
+      <h3 class="onboarding-card-heading mb-3">Your online presence</h3>
+      <p class="text-muted small mb-3">Add at least one URL — Claude will fetch your content to build an accurate brand proposal.</p>
+
+      <div class="mb-3">
+        <label class="form-label small fw-semibold">Website URL</label>
+        <%= f.text_field :website_url,
+              name: "studio_brand[website_url]",
+              value: @studio_brand&.website_url,
+              class: "form-control",
+              placeholder: "https://www.yourstudio.com" %>
+      </div>
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label small fw-semibold">Instagram URL</label>
+          <%= f.text_field :instagram_url,
+                name: "studio_brand[instagram_url]",
+                value: @studio_brand&.instagram_url,
+                class: "form-control",
+                placeholder: "https://instagram.com/yourstudio" %>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label small fw-semibold">Facebook URL</label>
+          <%= f.text_field :facebook_url,
+                name: "studio_brand[facebook_url]",
+                value: @studio_brand&.facebook_url,
+                class: "form-control",
+                placeholder: "https://facebook.com/yourstudio" %>
+        </div>
+      </div>
+    </div>
+
+    <%# Logo %>
+    <div class="onboarding-card mb-4">
+      <h3 class="onboarding-card-heading mb-3">Studio logo</h3>
+      <% if @studio_brand&.logo&.attached? %>
+        <div class="mb-3">
+          <%= image_tag url_for(@studio_brand.logo), class: "img-thumbnail", style: "max-height:80px;" %>
+          <p class="text-muted small mt-1">Logo already uploaded — upload a new one to replace it.</p>
+        </div>
+      <% end %>
+      <%= f.file_field :logo, name: "studio_brand[logo]", class: "form-control", accept: "image/*" %>
+    </div>
+
+    <%# Philosophy %>
+    <div class="onboarding-card mb-4">
+      <h3 class="onboarding-card-heading mb-3">Studio philosophy <span class="text-muted fw-normal">(optional)</span></h3>
+      <%= f.text_area :philosophy,
+            name: "studio_brand[philosophy]",
+            value: @studio_brand&.philosophy,
+            class: "form-control",
+            rows: 3,
+            placeholder: "e.g. We believe movement should be accessible, joyful, and transformative for everyone..." %>
+    </div>
+
+    <%# Vibe keywords %>
+    <div class="onboarding-card mb-4">
+      <h3 class="onboarding-card-heading mb-3">Studio vibe <span class="text-muted fw-normal">(optional)</span></h3>
+      <p class="text-muted small mb-3">Select keywords that describe your studio's energy. Used as a fallback when no URL is provided.</p>
+      <div class="d-flex flex-wrap gap-2">
+        <% StudioBrand::VIBE_KEYWORDS.each do |keyword| %>
+          <% selected = @studio_brand&.vibe_keywords&.include?(keyword) %>
+          <label class="d-flex align-items-center gap-1 px-3 py-2 rounded-pill border <%= selected ? 'border-primary bg-primary text-white' : 'border-secondary text-secondary' %>" style="cursor:pointer;font-size:13px;">
+            <%= check_box_tag "studio_brand[vibe_keywords][]", keyword, selected, class: "d-none" %>
+            <%= keyword %>
+          </label>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="onboarding-actions">
+      <%= render "admin/onboarding/back_button" %>
+      <button type="submit" class="btn onboarding-btn-primary">
+        Generate brand proposals <i class="fa fa-wand-magic-sparkles ms-1"></i>
+      </button>
+    </div>
+
+  <% end %>
+
+  <div class="text-center mt-3">
+    <%= button_to "Skip branding for now", advance_admin_onboarding_path,
+          method: :post,
+          class: "btn btn-link text-muted small",
+          data: { turbo: false } %>
+  </div>
+
+<% end %>
