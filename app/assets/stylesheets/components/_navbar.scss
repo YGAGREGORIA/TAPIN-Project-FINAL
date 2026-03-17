@@ -377,9 +377,10 @@ $nav-height: 60px;
 // ═══════════════════════════════════════════════════════════════════════════
 
 .navbar-admin-top {
-  background-color: $espresso-brown;
+  background-color: #ffffff;
   min-height: 52px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+  border-bottom: 1px solid rgba(135, 168, 120, 0.12);
   position: sticky;
   top: 0;
   z-index: 1030;
@@ -388,15 +389,11 @@ $nav-height: 60px;
     font-family: 'Space Grotesk', sans-serif;
     font-weight: 700;
     font-size: 1.1rem;
-    color: $accent-gold;
+    color: $sage-green;
     letter-spacing: -0.01em;
 
-    img {
-      border-radius: 5px;
-    }
-
     &:hover {
-      color: lighten($accent-gold, 10%);
+      color: darken($sage-green, 6%);
     }
   }
 
@@ -406,9 +403,9 @@ $nav-height: 60px;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    background: rgba($accent-gold, 0.2);
-    color: $accent-gold;
-    border: 1px solid rgba($accent-gold, 0.35);
+    background: rgba($sage-green, 0.12);
+    color: $sage-green;
+    border: 1px solid rgba($sage-green, 0.2);
     border-radius: 4px;
     padding: 1px 5px;
     vertical-align: middle;
@@ -455,41 +452,50 @@ $nav-height: 60px;
 }
 
 .admin-body {
-  min-height: calc(100vh - 52px);
+  min-height: 100vh;
 }
 
 .admin-sidebar {
-  width: 220px;
+  width: 244px;
+  min-width: 244px;
+  max-width: 244px;
   flex-shrink: 0;
-  background-color: $espresso-brown;
+  background-color: #ffffff;
   padding: 1.25rem 0.75rem;
+  border-right: 1px solid rgba(135, 168, 120, 0.12);
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 
   .admin-sidebar-section {
     font-size: 0.65rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    color: rgba(255, 255, 255, 0.35);
+    color: rgba(135, 168, 120, 0.45);
     margin: 0 0.5rem 0.5rem;
   }
 
   .admin-nav-link {
-    color: rgba(255, 255, 255, 0.65);
+    color: rgba(135, 168, 120, 0.8);
     font-weight: 500;
-    font-size: 0.875rem;
+    font-size: 0.95rem;
     border-radius: 0.5rem;
-    padding: 0.45rem 0.75rem;
+    padding: 0.5rem 0.85rem;
     margin-bottom: 2px;
     transition: color 0.12s, background 0.12s;
 
     &:hover {
-      color: #fff;
-      background: rgba(255, 255, 255, 0.08);
+      color: $sage-green;
+      background: rgba(135, 168, 120, 0.08);
     }
 
     &.active {
       color: $accent-gold;
-      background: rgba($accent-gold, 0.12);
+      background: rgba($accent-gold, 0.1);
     }
   }
 
@@ -497,8 +503,8 @@ $nav-height: 60px;
     margin-top: auto;
     padding: 0.75rem;
     font-size: 0.75rem;
-    color: rgba(255, 255, 255, 0.35);
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    color: rgba(135, 168, 120, 0.5);
+    border-top: 1px solid rgba(135, 168, 120, 0.12);
     margin-top: 1rem;
   }
 }
