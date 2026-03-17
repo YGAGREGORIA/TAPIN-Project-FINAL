@@ -1,18 +1,25 @@
 // =============================================================================
+// Breakpoints (shared across page stylesheets)
+// =============================================================================
+$bp-tablet:  768px;
+$bp-desktop: 992px;
+$bp-wide:    1200px;
+
+// =============================================================================
 // Bootstrap Color Map Overrides
 // =============================================================================
-$primary:   $espresso-brown;
-$secondary: $accent-gold;
-$danger:    $clay-red;
-$light:     $oat;
-$dark:      $espresso-brown;
+$primary:   $sage-green;
+$secondary: $sandy-orange;
+$danger:    $terracotta;
+$light:     $light-muted;
+$dark:      $sage-green;
 $warning:   $mustard-gold;
 
 // =============================================================================
 // Body
 // =============================================================================
-$body-bg:    $oat;
-$body-color: $espresso-brown;
+$body-bg:    $off-white;
+$body-color: $sage-green;
 
 // =============================================================================
 // Typography
@@ -50,17 +57,17 @@ $border-radius-pill: 50rem;
 // =============================================================================
 // Borders & Inputs
 // =============================================================================
-$border-color:             rgba(43, 33, 24, 0.1);
+$border-color:             rgba(135, 168, 120, 0.15);
 $input-bg:                 #ffffff;
-$input-border-color:       rgba(43, 33, 24, 0.1);
-$input-focus-border-color: $accent-gold;
-$input-focus-box-shadow:   0 0 0 0.25rem rgba(225, 184, 74, 0.25);
+$input-border-color:       rgba(135, 168, 120, 0.15);
+$input-focus-border-color: $terracotta;
+$input-focus-box-shadow:   0 0 0 0.25rem rgba(224, 122, 95, 0.25);
 
 // =============================================================================
 // Cards
 // =============================================================================
 $card-bg:            #ffffff;
-$card-border-color:  rgba(43, 33, 24, 0.1);
+$card-border-color:  rgba(135, 168, 120, 0.15);
 $card-border-radius: $border-radius;
 
 // =============================================================================
@@ -74,58 +81,102 @@ $btn-font-weight:      500;
 // =============================================================================
 // Links
 // =============================================================================
-$link-color:       $espresso-brown;
-$link-hover-color: $accent-gold;
+$link-color:       $sage-green;
+$link-hover-color: $sandy-orange;
 
 // =============================================================================
 // Focus Ring
 // =============================================================================
-$focus-ring-color: rgba(225, 184, 74, 0.5);
+$focus-ring-color: rgba(224, 122, 95, 0.5);
 
 // =============================================================================
 // CSS Custom Properties — Design Tokens (Light Mode)
 // =============================================================================
 :root {
-  --espresso-brown: #2B2118;
-  --accent-gold:    #E1B84A;
-  --clay-red:       #B4533C;
-  --oat:            #F6F1EB;
-  --mustard-gold:   #D4A574;
+  --sage-green:    #87A878;
+  --terracotta:    #E07A5F;
+  --sandy-orange:  #F4A261;
+  --off-white:     #FDFDF8;
+  --light-muted:   #F2F2ED;
 
-  --background:       #F6F1EB;
-  --foreground:       #2B2118;
-  --card:             #ffffff;
-  --card-foreground:  #2B2118;
-  --muted:            #F6F1EB;
-  --muted-foreground: #6B6560;
-  --border:           rgba(43, 33, 24, 0.1);
-  --input-background: #ffffff;
-  --ring:             #E1B84A;
-  --radius:           0.75rem;
+  // Keep legacy names pointing at new values
+  --espresso-brown: #87A878;
+  --accent-gold:    #E07A5F;
+  --clay-red:       #E07A5F;
+  --oat:            #F6F1EB;
+  --mustard-gold:   #F4A261;
+
+  --background:             #FDFDF8;
+  --foreground:             #87A878;
+  --card:                   #ffffff;
+  --card-foreground:        #87A878;
+  --popover:                #ffffff;
+  --popover-foreground:     #87A878;
+  --primary:                #87A878;
+  --primary-foreground:     #FFFFFF;
+  --secondary:              #F4A261;
+  --secondary-foreground:   #1A1A1A;
+  --muted:                  #F2F2ED;
+  --muted-foreground:       #6B6560;
+  --accent:                 #E07A5F;
+  --accent-foreground:      #FFFFFF;
+  --destructive:            #E07A5F;
+  --destructive-foreground: #FFFFFF;
+  --border:                 rgba(135, 168, 120, 0.15);
+  --input:                  transparent;
+  --input-background:       #ffffff;
+  --switch-background:      #F4A261;
+  --font-weight-medium:     500;
+  --font-weight-normal:     400;
+  --ring:                   #E07A5F;
+  --radius:                 0.75rem;
+  --chart-1:                #87A878;
+  --chart-2:                #E07A5F;
+  --chart-3:                #F4A261;
+  --chart-4:                #F2F2ED;
+  --chart-5:                #FDFDF8;
 
   --sidebar:                    #ffffff;
-  --sidebar-foreground:         #2B2118;
-  --sidebar-primary:            #2B2118;
-  --sidebar-primary-foreground: #F6F1EB;
-  --sidebar-accent:             #F6F1EB;
-  --sidebar-accent-foreground:  #2B2118;
-  --sidebar-border:             rgba(43, 33, 24, 0.1);
-  --sidebar-ring:               #E1B84A;
+  --sidebar-foreground:         #87A878;
+  --sidebar-primary:            #87A878;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent:             #F2F2ED;
+  --sidebar-accent-foreground:  #87A878;
+  --sidebar-border:             rgba(135, 168, 120, 0.15);
+  --sidebar-ring:               #E07A5F;
 }
 
 // =============================================================================
 // CSS Custom Properties — Dark Mode
 // =============================================================================
 .dark {
-  --background:       #2B2118;
-  --foreground:       #F6F1EB;
-  --card:             #3A3028;
-  --card-foreground:  #F6F1EB;
-  --muted:            #3A3028;
-  --muted-foreground: #B8B3AE;
-  --border:           rgba(246, 241, 235, 0.1);
-  --input-background: #3A3028;
-  --ring:             #E1B84A;
+  --background:             #2B2118;
+  --foreground:             #F6F1EB;
+  --card:                   #3A3028;
+  --card-foreground:        #F6F1EB;
+  --popover:                #3A3028;
+  --popover-foreground:     #F6F1EB;
+  --primary:                #F6F1EB;
+  --primary-foreground:     #2B2118;
+  --secondary:              #E1B84A;
+  --secondary-foreground:   #2B2118;
+  --muted:                  #3A3028;
+  --muted-foreground:       #B8B3AE;
+  --accent:                 #E1B84A;
+  --accent-foreground:      #2B2118;
+  --destructive:            #B4533C;
+  --destructive-foreground: #F6F1EB;
+  --border:                 rgba(246, 241, 235, 0.1);
+  --input:                  #3A3028;
+  --input-background:       #3A3028;
+  --font-weight-medium:     500;
+  --font-weight-normal:     400;
+  --ring:                   #E1B84A;
+  --chart-1:                #E1B84A;
+  --chart-2:                #B4533C;
+  --chart-3:                #F6F1EB;
+  --chart-4:                #D4A574;
+  --chart-5:                #2B2118;
 
   --sidebar:                    #3A3028;
   --sidebar-foreground:         #F6F1EB;

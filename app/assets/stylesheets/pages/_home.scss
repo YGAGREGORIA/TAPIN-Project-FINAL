@@ -1,14 +1,14 @@
 // ── Landing page ─────────────────────────────────────────────────
 
 .landing-page {
-  background: $oat;
+  background: var(--background); // off-white #FDFDF8
   font-family: 'Inter', sans-serif;
 }
 
 // ── Hero ──────────────────────────────────────────────────────────
 .landing-hero {
-  background: $espresso-brown;
-  color: $oat;
+  background: var(--primary); // sage green
+  color: var(--primary-foreground);
   padding: 4rem 1.5rem 3.5rem;
   text-align: center;
 
@@ -24,7 +24,7 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: $accent-gold;
+  color: $terracotta; // terracotta accent on hero
   margin-bottom: 1rem;
 }
 
@@ -33,14 +33,14 @@
   font-size: clamp(1.75rem, 6vw, 2.5rem);
   font-weight: 700;
   line-height: 1.2;
-  color: $oat;
+  color: var(--primary-foreground);
   margin-bottom: 1.25rem;
 }
 
 .landing-sub {
   font-size: 1rem;
   line-height: 1.65;
-  color: rgba($oat, 0.75);
+  color: rgba(255, 255, 255, 0.75); // white-alpha on colored hero
   margin-bottom: 2rem;
 }
 
@@ -53,29 +53,30 @@
   padding: 0.75rem 1.75rem;
   border-radius: 2rem;
   text-decoration: none;
-  transition: background 0.18s ease, color 0.18s ease, transform 0.15s ease;
+  transition: background 0.18s ease, color 0.18s ease, opacity 0.18s ease, transform 0.15s ease;
   margin: 0.375rem;
 
   &:active { transform: scale(0.96); }
 
   &--primary {
-    background: $accent-gold;
-    color: $espresso-brown;
+    background: var(--accent); // terracotta CTA button
+    color: var(--accent-foreground);
 
     &:hover {
-      background: darken($accent-gold, 6%);
-      color: $espresso-brown;
+      background: darken($terracotta, 7%);
+      color: var(--accent-foreground);
+      opacity: 1;
     }
   }
 
   &--ghost {
     background: transparent;
-    color: $oat;
-    border: 1.5px solid rgba($oat, 0.4);
+    color: var(--primary-foreground);
+    border: 1.5px solid rgba(255, 255, 255, 0.45);
 
     &:hover {
-      border-color: $oat;
-      color: $oat;
+      border-color: rgba(255, 255, 255, 0.9);
+      color: var(--primary-foreground);
     }
   }
 }
@@ -86,7 +87,7 @@
   text-align: center;
 
   &--dark {
-    background: $espresso-brown;
+    background: var(--primary); // sage green dark section
   }
 
   &__label {
@@ -95,11 +96,11 @@
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    color: rgba($espresso-brown, 0.45);
+    color: var(--muted-foreground); // muted grey #6B6560
     margin-bottom: 0.5rem;
 
     &--light {
-      color: rgba($oat, 0.5);
+      color: rgba(255, 255, 255, 0.55);
     }
   }
 
@@ -107,12 +108,12 @@
     font-family: 'Space Grotesk', sans-serif;
     font-size: clamp(1.375rem, 4vw, 1.875rem);
     font-weight: 700;
-    color: $espresso-brown;
+    color: var(--foreground);
     max-width: 480px;
     margin: 0 auto 2.5rem;
 
     &--light {
-      color: $oat;
+      color: var(--primary-foreground);
     }
   }
 }
@@ -132,18 +133,19 @@
 }
 
 .landing-step {
-  background: white;
+  background: var(--card); // white card
+  border: 1px solid var(--border);
   border-radius: 0.875rem;
   padding: 1.5rem 1.25rem;
-  box-shadow: 0 1px 4px rgba($espresso-brown, 0.07);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
   flex: 1;
 
   &__icon {
     width: 2.75rem;
     height: 2.75rem;
     border-radius: 50%;
-    background: rgba($accent-gold, 0.15);
-    color: darken($accent-gold, 10%);
+    background: rgba($terracotta, 0.12); // terracotta tint
+    color: $terracotta;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -155,13 +157,13 @@
     font-family: 'Space Grotesk', sans-serif;
     font-size: 1rem;
     font-weight: 700;
-    color: $espresso-brown;
+    color: var(--foreground);
     margin-bottom: 0.5rem;
   }
 
   &__body {
     font-size: 0.875rem;
-    color: rgba($espresso-brown, 0.65);
+    color: var(--muted-foreground); // muted grey #6B6560
     line-height: 1.6;
     margin: 0;
   }
@@ -181,14 +183,15 @@
 }
 
 .landing-feature {
-  background: rgba($oat, 0.07);
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 0.875rem;
   padding: 1.375rem 1.25rem;
   text-align: left;
 
   &__icon {
     font-size: 1.25rem;
-    color: $accent-gold;
+    color: $terracotta; // terracotta icons on dark section
     margin-bottom: 0.75rem;
     display: block;
   }
@@ -197,13 +200,13 @@
     font-family: 'Space Grotesk', sans-serif;
     font-size: 0.9375rem;
     font-weight: 700;
-    color: $oat;
+    color: var(--primary-foreground);
     margin-bottom: 0.375rem;
   }
 
   &__body {
     font-size: 0.8125rem;
-    color: rgba($oat, 0.65);
+    color: rgba(255, 255, 255, 0.65);
     line-height: 1.6;
     margin: 0;
   }
@@ -211,7 +214,7 @@
 
 // ── CTA ───────────────────────────────────────────────────────────
 .landing-cta {
-  background: $accent-gold;
+  background: $sandy-orange; // sandy orange CTA band
   padding: 3.5rem 1.5rem;
   text-align: center;
 
@@ -224,14 +227,26 @@
     font-family: 'Space Grotesk', sans-serif;
     font-size: clamp(1.375rem, 4vw, 1.875rem);
     font-weight: 700;
-    color: $espresso-brown;
+    color: #1A1A1A;
     margin-bottom: 0.875rem;
   }
 
   &__sub {
     font-size: 0.9375rem;
-    color: rgba($espresso-brown, 0.75);
+    color: rgba(0, 0, 0, 0.6);
     line-height: 1.6;
     margin-bottom: 2rem;
+  }
+
+  // Override primary button on sandy-orange bg → use sage green
+  .landing-btn--primary {
+    background: var(--primary);
+    color: var(--primary-foreground);
+
+    &:hover {
+      background: darken($sage-green, 6%);
+      color: var(--primary-foreground);
+      opacity: 1;
+    }
   }
 }

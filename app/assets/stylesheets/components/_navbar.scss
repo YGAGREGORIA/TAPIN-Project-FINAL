@@ -10,11 +10,11 @@ $nav-height: 60px;
   font-weight: 700;
   font-size: 24px;
   letter-spacing: -1px;
-  color: #F6F1EB;
+  color: var(--primary); // sage green
   text-decoration: none;
 
   span {
-    color: #D4A017;
+    color: var(--accent); // terracotta dot
   }
 }
 
@@ -23,23 +23,23 @@ $nav-height: 60px;
 // ═══════════════════════════════════════════════════════════════════════════
 
 .navbar-tapin {
-  background-color: $espresso-brown;
+  background-color: var(--background); // off-white #FDFDF8
   min-height: $nav-height;
   padding: 14px 28px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid var(--border);
 
   // Brand / logo
   .navbar-brand {
     text-decoration: none;
 
     &:hover .tapin-logo {
-      color: #fff;
+      color: darken($sage-green, 8%);
     }
   }
 
   // Standard nav links
   .navbar-tapin-link {
-    color: #E9E1D8;
+    color: var(--muted-foreground);
     font-weight: 500;
     margin-right: 22px;
     padding: 0.4rem 0.75rem;
@@ -47,12 +47,12 @@ $nav-height: 60px;
     transition: all 0.2s ease;
 
     &:hover {
-      color: $accent-gold;
+      color: var(--accent);
       background: transparent;
     }
 
     &.active {
-      color: $accent-gold;
+      color: var(--accent);
       font-weight: 600;
     }
   }
@@ -221,13 +221,13 @@ $nav-height: 60px;
     display: block;
     width: 22px;
     height: 2px;
-    background: #F6F1EB;
+    background: var(--primary); // sage green on bright navbar
     border-radius: 2px;
     transition: all 0.2s ease;
   }
 
   &:hover span {
-    background: $accent-gold;
+    background: var(--accent); // terracotta on hover
   }
 }
 
@@ -344,7 +344,7 @@ $nav-height: 60px;
     transition: background 0.15s ease;
 
     &:hover {
-      background: #d2a63c;
+      background: darken($accent-gold, 6%);
     }
   }
 }
@@ -361,7 +361,7 @@ $nav-height: 60px;
   transition: background 0.15s, transform 0.1s;
 
   &:hover {
-    background-color: #d2a63c;
+    background-color: darken($accent-gold, 6%);
     color: $espresso-brown;
     transform: translateY(-1px);
   }

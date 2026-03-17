@@ -2,70 +2,77 @@
 
 <div class="booking-confirm-page">
 
-  <%# ── Confirmation hero ── %>
+  <%# ── Success hero ── %>
   <div class="confirm-hero">
     <div class="confirm-check-icon">
-      <i class="fa fa-check"></i>
+      <i class="fa fa-check-circle"></i>
     </div>
     <h1 class="confirm-title">You're booked!</h1>
     <p class="confirm-subtitle"><%= @studio.name %></p>
   </div>
 
-  <%# ── Class details card ── %>
+  <%# ── Body ── %>
   <div class="confirm-body">
+
+    <%# Details card %>
     <div class="confirm-card">
-      <div class="confirm-class-name"><%= @booking.class_name %></div>
+      <h3 class="confirm-class-name"><%= @booking.class_name %></h3>
 
-      <div class="confirm-detail-row">
-        <i class="fa fa-calendar"></i>
-        <span><%= @booking.class_time.strftime("%A, %B %-d, %Y") %></span>
-      </div>
-
-      <div class="confirm-detail-row">
-        <i class="fa fa-clock-o"></i>
-        <span><%= @booking.class_time.strftime("%-I:%M %p") %></span>
-      </div>
-
-      <% if @booking.studio_class&.teacher_name.present? %>
+      <div class="confirm-details">
         <div class="confirm-detail-row">
-          <i class="fa fa-user"></i>
-          <span><%= @booking.studio_class.teacher_name %></span>
+          <i class="fa fa-calendar text-muted"></i>
+          <div>
+            <p class="confirm-detail-primary"><%= @booking.class_time.strftime("%A, %B %-d, %Y") %></p>
+            <p class="confirm-detail-secondary"><%= @booking.class_time.strftime("%-I:%M %p") %></p>
+          </div>
         </div>
-      <% end %>
 
-      <% if @booking.studio_class&.duration_minutes.present? %>
-        <div class="confirm-detail-row">
-          <i class="fa fa-hourglass-half"></i>
-          <span><%= @booking.studio_class.duration_minutes %> minutes</span>
-        </div>
-      <% end %>
+        <% if @booking.studio_class&.teacher_name.present? %>
+          <div class="confirm-detail-row">
+            <i class="fa fa-user text-muted"></i>
+            <p class="confirm-detail-primary"><%= @booking.studio_class.teacher_name %></p>
+          </div>
+        <% end %>
+
+        <% if @booking.studio_class&.duration_minutes.present? %>
+          <div class="confirm-detail-row">
+            <i class="fa fa-clock-o text-muted"></i>
+            <p class="confirm-detail-primary"><%= @booking.studio_class.duration_minutes %> minutes</p>
+          </div>
+        <% end %>
+      </div>
 
       <div class="confirm-divider"></div>
 
-      <div class="confirm-booking-id">
+      <p class="confirm-booking-id">
         Booking ref: <span>#<%= @booking.id %></span>
-      </div>
+      </p>
     </div>
 
-    <%# ── Actions ── %>
+    <%# Action buttons %>
     <div class="confirm-actions">
       <%= link_to "View All Bookings",
             bookings_path(studio_slug: @studio.slug),
             class: "btn-book" %>
       <%= link_to "Back to Schedule",
             classes_path(studio_slug: @studio.slug),
-            class: "btn-secondary-action" %>
+            class: "btn-book btn-book--secondary" %>
     </div>
 
-    <%# ── Cancel notice ── %>
+    <%# Cancel link %>
     <div class="confirm-cancel-note">
-      Need to cancel?
-      <%= button_to "Cancel this booking",
+      <p>Need to cancel? <%= button_to "Cancel this booking",
             booking_path(studio_slug: @studio.slug, id: @booking.id),
             method: :delete,
             class: "btn-cancel-link",
-            data: { turbo_confirm: "Cancel your booking for #{@booking.class_name}?" } %>
+            data: { turbo_confirm: "Cancel your booking for #{@booking.class_name}?" } %></p>
     </div>
+
+    <%# Pro tip %>
+    <div class="confirm-tip">
+      <p><span class="confirm-tip-label">Pro tip:</span> Arrive 5–10 minutes early to set up and warm up before class begins.</p>
+    </div>
+
   </div>
 
 </div>

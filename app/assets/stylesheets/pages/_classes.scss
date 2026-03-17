@@ -1,368 +1,279 @@
-// ── Breakpoints ───────────────────────────────────────────────────
-$bp-tablet:  768px;
-$bp-desktop: 992px;
-$bp-wide:    1200px;
-
-// ── Responsive container ──────────────────────────────────────────
-.schedule-page,
-.class-detail-page {
-  background-color: $oat;
+// ── Schedule page ─────────────────────────────────────────────────
+.schedule-page {
+  background: var(--background);
   min-height: 100vh;
   font-family: 'Inter', sans-serif;
-  padding-bottom: 3rem;
+  padding-bottom: calc(62px + 1.5rem);
 }
 
-.schedule-inner,
-.detail-inner {
-  width: 100%;
-  margin: 0 auto;
-
-  @media (min-width: $bp-tablet) { max-width: 720px; }
-  @media (min-width: $bp-desktop) { max-width: 960px; }
-  @media (min-width: $bp-wide)   { max-width: 1100px; }
+// ── Hero ──────────────────────────────────────────────────────────
+.schedule-hero {
+  background: var(--primary);
+  color: var(--primary-foreground);
+  padding: 2rem 1.5rem 1.75rem;
 }
 
-// ── Header ───────────────────────────────────────────────────────
-.schedule-header,
-.bookings-header {
-  background: $espresso-brown;
-  color: $oat;
-  padding: 2rem 1.25rem 1.5rem;
-  text-align: center;
-
-  @media (min-width: $bp-tablet) {
-    padding: 2.5rem 2rem 2rem;
-  }
-
-  @media (min-width: $bp-desktop) {
-    padding: 3rem 2rem 2.5rem;
-  }
+.schedule-hero-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
-.schedule-studio-name {
-  font-size: 0.75rem;
+.schedule-studio-label {
+  font-size: 0.6875rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: rgba($oat, 0.5);
-  margin-bottom: 0.25rem;
-
-  @media (min-width: $bp-tablet) { font-size: 0.8125rem; }
+  color: rgba(255, 255, 255, 0.6);
+  margin: 0 0 0.375rem;
 }
 
 .schedule-title {
   font-family: 'Space Grotesk', sans-serif;
   font-size: 1.5rem;
-  font-weight: 700;
-  color: $oat;
+  font-weight: 600;
+  color: var(--primary-foreground);
   margin: 0;
-
-  @media (min-width: $bp-tablet) { font-size: 1.875rem; }
-  @media (min-width: $bp-desktop) { font-size: 2.25rem; }
 }
 
-// ── Filters ──────────────────────────────────────────────────────
-.schedule-filters {
-  background: $espresso-brown;
-  padding: 0 0 1rem;
-  position: sticky;
-  top: 0;
-  z-index: 10;
+.schedule-filter-btn {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  border: none;
+  color: var(--primary-foreground);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.2s;
+
+  &:hover { background: rgba(255, 255, 255, 0.25); }
 }
 
-// Day filter row — always horizontal scroll, never wraps
-.filter-days {
+// ── Filter panel ──────────────────────────────────────────────────
+.schedule-filter-panel {
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.filter-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.filter-section-label {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted-foreground);
+  margin: 0;
+}
+
+.filter-scroll {
   display: flex;
   gap: 0.5rem;
   overflow-x: auto;
-  padding: 0.75rem 1.25rem 0;
   scrollbar-width: none;
-
   &::-webkit-scrollbar { display: none; }
-
-  @media (min-width: $bp-tablet) {
-    padding: 0.875rem 2rem 0;
-  }
-
-  @media (min-width: $bp-desktop) {
-    padding-top: 0.875rem;
-    padding-left: calc((100% - 960px) / 2 + 1.25rem);
-    padding-right: 1.25rem;
-  }
-
-  @media (min-width: $bp-wide) {
-    padding-left: calc((100% - 1100px) / 2 + 1.25rem);
-  }
 }
 
-// Type filter row — wraps naturally
-.filter-types {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
-  padding: 0.5rem 1.25rem 0;
-
-  @media (min-width: $bp-tablet) {
-    padding: 0.5rem 2rem 0;
-  }
-
-  @media (min-width: $bp-desktop) {
-    padding-top: 0.5rem;
-    padding-left: calc((100% - 960px) / 2 + 1.25rem);
-    padding-right: 1.25rem;
-  }
-
-  @media (min-width: $bp-wide) {
-    padding-left: calc((100% - 1100px) / 2 + 1.25rem);
-  }
-}
-
-.filter-chip {
-  display: inline-flex;
-  align-items: center;
-  white-space: nowrap;
-  padding: 0.375rem 0.875rem;
-  border-radius: 2rem;
-  font-size: 0.8125rem;
+// Day buttons — rectangular with day name + date sublabel
+.filter-day-btn {
+  flex-shrink: 0;
+  padding: 0.5rem 0.875rem;
+  border-radius: 0.5rem;
+  border: 1.5px solid var(--border);
+  background: var(--background);
+  color: var(--foreground);
+  text-decoration: none;
+  text-align: center;
+  font-size: 0.875rem;
   font-weight: 500;
-  color: rgba($oat, 0.65);
-  border: 1.5px solid rgba($oat, 0.2);
-  text-decoration: none;
-  transition: all 0.18s ease;
-  flex-shrink: 0;
+  transition: border-color 0.15s;
 
-  &--sm {
-    padding: 0.25rem 0.625rem;
-    font-size: 0.75rem;
+  &:hover:not(&--active) {
+    border-color: var(--primary);
+    color: var(--foreground);
   }
 
   &--active {
-    background: $accent-gold;
-    border-color: $accent-gold;
-    color: $espresso-brown;
-    font-weight: 600;
-  }
-
-  &:hover:not(&--active) {
-    border-color: rgba($oat, 0.5);
-    color: $oat;
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--accent-foreground);
   }
 }
 
-// Day chip — stacked layout (abbrev day + number)
-.filter-day-chip {
-  display: inline-flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+.filter-day-name {
+  display: block;
+  font-weight: 500;
+}
+
+.filter-day-sub {
+  display: block;
+  font-size: 0.75rem;
+  opacity: 0.7;
+  margin-top: 0.125rem;
+}
+
+// Type buttons — pill style
+.filter-type-btn {
   flex-shrink: 0;
-  min-width: 2.75rem;
-  padding: 0.375rem 0.5rem;
-  border-radius: 0.625rem;
-  border: 1.5px solid rgba($oat, 0.2);
+  padding: 0.4rem 1rem;
+  border-radius: 2rem;
+  border: 1.5px solid var(--border);
+  background: var(--background);
+  color: var(--foreground);
   text-decoration: none;
-  transition: all 0.18s ease;
-  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: border-color 0.15s;
 
-  .day-abbr {
-    font-size: 0.625rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: rgba($oat, 0.5);
-    line-height: 1.2;
-  }
-
-  .day-num {
-    font-family: 'Space Grotesk', sans-serif;
-    font-weight: 700;
-    font-size: 1rem;
-    color: rgba($oat, 0.8);
-    line-height: 1.2;
-  }
-
-  &--today {
-    .day-abbr { color: rgba($oat, 0.65); }
+  &:hover:not(&--active) {
+    border-color: var(--primary);
+    color: var(--foreground);
   }
 
   &--active {
-    background: $accent-gold;
-    border-color: $accent-gold;
-
-    .day-abbr { color: rgba($espresso-brown, 0.65); }
-    .day-num  { color: $espresso-brown; }
-  }
-
-  &:hover:not(&--active) {
-    border-color: rgba($oat, 0.5);
-    .day-num  { color: $oat; }
-    .day-abbr { color: rgba($oat, 0.7); }
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--accent-foreground);
   }
 }
 
 // ── Schedule list ─────────────────────────────────────────────────
 .schedule-list {
-  padding: 1.25rem 1.25rem 0;
-
-  @media (min-width: $bp-tablet) {
-    padding: 1.75rem 2rem 0;
-    max-width: 720px;
-    margin: 0 auto;
-  }
-
-  @media (min-width: $bp-desktop) {
-    max-width: 960px;
-    padding: 2rem calc((100% - 960px) / 2 + 1.25rem) 0;
-  }
-
-  @media (min-width: $bp-wide) {
-    max-width: 1100px;
-    padding: 2rem calc((100% - 1100px) / 2 + 1.25rem) 0;
-  }
+  padding: 1.5rem 1rem;
+  max-width: 640px;
+  margin: 0 auto;
 }
 
 .schedule-day-label {
-  font-family: 'Space Grotesk', sans-serif;
   font-size: 0.75rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.07em;
-  color: rgba($espresso-brown, 0.45);
-  margin-bottom: 0.625rem;
-  margin-top: 1.25rem;
+  color: var(--muted-foreground);
+  margin-bottom: 0.875rem;
+  margin-top: 1.5rem;
 
   &:first-child { margin-top: 0; }
-
-  @media (min-width: $bp-tablet) {
-    font-size: 0.8125rem;
-    margin-top: 1.75rem;
-  }
 }
 
-// ── Class cards grid ──────────────────────────────────────────────
-.class-cards-grid {
-  @media (min-width: $bp-tablet) {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.75rem;
-  }
-
-  @media (min-width: $bp-desktop) {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
-
-// ── Class card ────────────────────────────────────────────────────
-.class-card {
-  background: white;
-  border-radius: 0.875rem;
-  padding: 1rem 1.125rem;
-  box-shadow: 0 1px 4px rgba($espresso-brown, 0.07);
-  margin-bottom: 0.625rem;
+// ── Schedule cards ────────────────────────────────────────────────
+.class-card-list {
   display: flex;
-  align-items: center;
-  gap: 0.875rem;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  text-decoration: none;
-  color: inherit;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.sched-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 0.875rem;
+  padding: 1.25rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 
   &--full { opacity: 0.6; }
-
-  @media (min-width: $bp-tablet) {
-    padding: 1.125rem 1.25rem;
-    margin-bottom: 0;
-    border-radius: 1rem;
-  }
-
-  @media (hover: hover) {
-    &:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(darken($espresso-brown, 5%), 0.22);
-      color: inherit;
-    }
-  }
 }
 
-.class-card-time {
-  text-align: center;
-  width: 2.75rem;
-  flex-shrink: 0;
-
-  .class-time-hour {
-    font-family: 'Space Grotesk', sans-serif;
-    font-weight: 700;
-    font-size: 1.0625rem;
-    color: $espresso-brown;
-    line-height: 1.1;
-  }
-
-  .class-time-period {
-    font-size: 0.625rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: rgba($espresso-brown, 0.4);
-  }
-
-  @media (min-width: $bp-desktop) {
-    width: 3.25rem;
-
-    .class-time-hour { font-size: 1.1875rem; }
-    .class-time-period { font-size: 0.6875rem; }
-  }
+.sched-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
 }
 
-.class-card-body {
+.sched-card-info {
   flex: 1;
   min-width: 0;
+}
 
-  .class-card-name {
-    font-family: 'Space Grotesk', sans-serif;
-    font-weight: 600;
-    font-size: 0.9375rem;
-    color: $espresso-brown;
-    margin-bottom: 0.25rem;
+.sched-card-title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.375rem;
+}
 
-    @media (min-width: $bp-desktop) { font-size: 1rem; }
-  }
+.sched-card-name {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--foreground);
+  margin: 0;
+}
 
-  .class-card-meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    font-size: 0.75rem;
-    color: rgba($espresso-brown, 0.5);
+.sched-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.8125rem;
+  color: var(--muted-foreground);
+  flex-wrap: wrap;
 
-    i {
-      margin-right: 0.2rem;
-      font-size: 0.6875rem;
-    }
-
-    @media (min-width: $bp-desktop) { font-size: 0.8125rem; }
-  }
-
-  .class-spots-remaining {
-    margin-top: 0.3rem;
-    font-size: 0.75rem;
-    font-weight: 500;
+  span + span::before {
+    content: '·';
+    margin-right: 0.75rem;
   }
 }
 
+.sched-card-spots {
+  text-align: right;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  flex-shrink: 0;
+}
+
+.btn-book-card {
+  display: block;
+  width: 100%;
+  background: var(--primary);
+  color: var(--primary-foreground);
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-size: 0.9375rem;
+  padding: 0.625rem 1rem;
+  border-radius: 0.625rem;
+  border: none;
+  text-align: center;
+  text-decoration: none;
+  transition: opacity 0.18s ease;
+
+  &:hover {
+    opacity: 0.9;
+    color: var(--primary-foreground);
+  }
+
+  &--disabled {
+    background: var(--muted);
+    color: var(--muted-foreground);
+    pointer-events: none;
+  }
+}
 
 .premium-badge {
   background: rgba($accent-gold, 0.2);
   color: darken($accent-gold, 15%);
   font-size: 0.625rem;
   font-weight: 700;
-  padding: 0.125rem 0.4rem;
-  border-radius: 2rem;
+  padding: 0.125rem 0.5rem;
+  border-radius: 0.25rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
-
-// ── Spot indicators ───────────────────────────────────────────────
-.spots-ok   { color: rgba($espresso-brown, 0.45); }
-.spots-low  { color: $clay-red; font-weight: 600; }
-.spots-full { color: rgba($espresso-brown, 0.35); font-style: italic; }
 
 // ── Empty state ───────────────────────────────────────────────────
 .schedule-empty {
@@ -392,224 +303,200 @@ $bp-wide:    1200px;
   &:hover { text-decoration: underline; }
 }
 
-// ── Class detail page ─────────────────────────────────────────────
-.detail-nav {
-  background: $espresso-brown;
-  padding: 1rem 1.25rem 0;
+// ── Spot indicators ───────────────────────────────────────────────
+.spots-ok   { color: var(--muted-foreground); }
+.spots-low  { color: var(--destructive); font-weight: 600; }
+.spots-full { color: var(--muted-foreground); font-style: italic; }
 
-  @media (min-width: $bp-tablet)  { padding: 1.25rem 2rem 0; }
-  @media (min-width: $bp-desktop) { padding: 1.25rem calc((100% - 960px) / 2 + 1.25rem) 0; }
-  @media (min-width: $bp-wide)    { padding: 1.25rem calc((100% - 1100px) / 2 + 1.25rem) 0; }
+// ── Class detail page ─────────────────────────────────────────────
+.class-detail-page {
+  background: var(--background);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: calc(62px + 5rem); // bottom-nav + CTA bar
+}
+
+.detail-hero {
+  background: var(--primary);
+  color: var(--primary-foreground);
+  padding: 1.25rem 1.5rem 2rem;
+  text-align: center;
+  flex-shrink: 0;
 }
 
 .detail-back-link {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  color: rgba($oat, 0.65);
+  gap: 0.375rem;
+  color: rgba(255, 255, 255, 0.7);
   font-size: 0.875rem;
   font-weight: 500;
   text-decoration: none;
-  transition: color 0.18s ease;
+  transition: color 0.15s;
+  margin-bottom: 1.25rem;
 
-  &:hover { color: $oat; }
+  &:hover { color: var(--primary-foreground); }
 }
 
-.detail-hero {
-  background: $espresso-brown;
-  color: $oat;
-  padding: 1.25rem 1.25rem 2rem;
-  text-align: center;
-
-  @media (min-width: $bp-tablet)  { padding: 1.75rem 2rem 2.5rem; }
-  @media (min-width: $bp-desktop) { padding: 2rem 2rem 3rem; }
+.detail-hero-badge-wrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 0.875rem;
 }
 
 .class-type-badge {
   display: inline-block;
-  background: rgba($oat, 0.12);
-  color: rgba($oat, 0.75);
-  font-size: 0.6875rem;
+  background: rgba(255, 255, 255, 0.2);
+  color: var(--primary-foreground);
+  font-size: 0.75rem;
   font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  padding: 0.25rem 0.75rem;
+  letter-spacing: 0.08em;
+  padding: 0.375rem 1rem;
   border-radius: 2rem;
-  margin-bottom: 0.75rem;
 }
 
 .detail-class-name {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: $oat;
+  font-size: 1.625rem;
+  font-weight: 600;
+  color: var(--primary-foreground);
   margin-bottom: 0.25rem;
   line-height: 1.2;
-
-  @media (min-width: $bp-tablet)  { font-size: 2.25rem; }
-  @media (min-width: $bp-desktop) { font-size: 2.75rem; }
 }
 
 .detail-studio-name {
-  font-size: 0.8125rem;
-  color: rgba($oat, 0.5);
-
-  @media (min-width: $bp-tablet) { font-size: 0.9375rem; }
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.65);
+  margin: 0;
 }
 
-// ── Detail body layout ────────────────────────────────────────────
+// ── Detail body ───────────────────────────────────────────────────
 .detail-body {
-  padding: 1.25rem;
-
-  @media (min-width: $bp-tablet) {
-    padding: 1.75rem 2rem;
-    max-width: 720px;
-    margin: 0 auto;
-  }
-
-  @media (min-width: $bp-desktop) {
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 2rem 2rem;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: auto auto 1fr;
-    column-gap: 1.5rem;
-    align-items: start;
-  }
-
-  @media (min-width: $bp-wide) {
-    padding: 2rem 3rem;
-  }
-}
-
-.detail-info-card {
-  background: white;
-  border-radius: 0.875rem;
-  padding: 0.5rem 1.25rem;
-  box-shadow: 0 1px 4px rgba($espresso-brown, 0.07);
-  margin-bottom: 1rem;
-
-  @media (min-width: $bp-desktop) {
-    grid-column: 1 / 4;
-    grid-row: 1;
-    margin-bottom: 1rem;
-  }
-}
-
-.detail-description {
-  background: white;
-  border-radius: 0.875rem;
-  padding: 1.125rem 1.25rem;
-  box-shadow: 0 1px 4px rgba($espresso-brown, 0.07);
-  margin-bottom: 1.25rem;
-
-  .detail-desc-title {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: rgba($espresso-brown, 0.4);
-    margin-bottom: 0.5rem;
-  }
-
-  .detail-desc-body {
-    font-size: 0.9375rem;
-    line-height: 1.6;
-    color: rgba($espresso-brown, 0.8);
-    margin: 0;
-  }
-
-  @media (min-width: $bp-desktop) {
-    grid-column: 1 / 4;
-    grid-row: 2;
-  }
+  padding: 1.5rem 1.5rem 0;
+  max-width: 640px;
+  margin: 0 auto;
+  width: 100%;
 }
 
 .detail-info-row {
   display: flex;
   align-items: flex-start;
-  gap: 0.875rem;
-  padding: 0.875rem 0;
-  border-bottom: 1px solid rgba($espresso-brown, 0.06);
+  gap: 1rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--border);
 
-  &:last-child {
+  &:last-of-type {
     border-bottom: none;
-    padding-bottom: 0.5rem;
-  }
-
-  .detail-info-icon {
-    width: 2rem;
-    height: 2rem;
-    border-radius: 50%;
-    background: rgba($espresso-brown, 0.06);
-    color: rgba($espresso-brown, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.8125rem;
-    flex-shrink: 0;
-    margin-top: 0.125rem;
-  }
-
-  .detail-info-content {
-    flex: 1;
-
-    .detail-info-label {
-      font-size: 0.6875rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.07em;
-      color: rgba($espresso-brown, 0.4);
-      margin-bottom: 0.2rem;
-    }
-
-    .detail-info-value {
-      font-size: 0.9375rem;
-      font-weight: 500;
-      color: $espresso-brown;
-    }
   }
 }
 
+.detail-info-icon {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  background: var(--muted);
+  color: var(--muted-foreground);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.detail-info-content {
+  flex: 1;
+  padding-top: 0.25rem;
+
+  &--full { width: 100%; }
+}
+
+.detail-info-label {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted-foreground);
+  margin: 0 0 0.25rem;
+}
+
+.detail-info-value {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--foreground);
+  margin: 0;
+}
+
 .spots-bar {
-  height: 5px;
-  background: rgba($espresso-brown, 0.1);
+  height: 6px;
+  background: var(--muted);
   border-radius: 3px;
-  margin-top: 0.5rem;
+  margin-top: 0.625rem;
   overflow: hidden;
 
   .spots-bar-fill {
     height: 100%;
-    background: $clay-red;
+    background: var(--destructive);
     border-radius: 3px;
     transition: width 0.4s ease;
   }
 }
 
-.detail-cta {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  gap: 0.75rem;
+.detail-description {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 0.875rem;
+  padding: 1.25rem;
+  margin-top: 1.5rem;
 
-  @media (min-width: $bp-desktop) {
-    grid-column: 4;
-    grid-row: 1 / 3;
-    position: sticky;
-    top: 1.5rem;
+  .detail-desc-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--foreground);
+    margin-bottom: 0.625rem;
+  }
+
+  .detail-desc-body {
+    font-size: 0.9375rem;
+    line-height: 1.65;
+    color: var(--muted-foreground);
+    margin: 0;
   }
 }
 
-// ── Shared booking buttons ────────────────────────────────────────
+// ── Fixed CTA bar ─────────────────────────────────────────────────
+.detail-cta-bar {
+  position: fixed;
+  bottom: 62px; // sits above the bottom nav
+  left: 0;
+  right: 0;
+  background: var(--card);
+  border-top: 1px solid var(--border);
+  padding: 0.875rem 1.25rem;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+
+  @include media-breakpoint-up(lg) {
+    position: static;
+    background: transparent;
+    border-top: none;
+    padding: 1.5rem 0 0;
+    max-width: 640px;
+    margin: 0 auto;
+  }
+}
+
+// ── Booking buttons ───────────────────────────────────────────────
 .btn-book {
   display: block;
   width: 100%;
-  background: $espresso-brown;
-  color: $oat;
+  background: var(--primary);
+  color: var(--primary-foreground);
   font-family: 'Space Grotesk', sans-serif;
-  font-weight: 700;
+  font-weight: 600;
   font-size: 1rem;
   padding: 0.875rem 1.5rem;
   border-radius: 0.75rem;
@@ -617,47 +504,34 @@ $bp-wide:    1200px;
   cursor: pointer;
   text-align: center;
   text-decoration: none;
-  transition: background 0.18s ease, transform 0.15s ease;
+  transition: opacity 0.18s ease, transform 0.15s ease;
+  box-shadow: 0 4px 12px rgba($sage-green, 0.3);
 
   &:hover {
-    background: lighten($espresso-brown, 8%);
-    color: $oat;
+    opacity: 0.92;
+    color: var(--primary-foreground);
   }
 
   &:active { transform: scale(0.98); }
 
   &--disabled {
-    background: rgba($espresso-brown, 0.25);
-    color: rgba($espresso-brown, 0.45);
+    background: var(--muted);
+    color: var(--muted-foreground);
+    box-shadow: none;
     cursor: not-allowed;
     pointer-events: none;
   }
 
-  @media (min-width: $bp-tablet) {
-    font-size: 1.0625rem;
-    padding: 1rem 1.5rem;
-  }
-}
+  &--secondary {
+    background: transparent;
+    color: var(--primary);
+    border: 1.5px solid var(--border);
+    box-shadow: none;
 
-.btn-secondary-action {
-  display: block;
-  width: 100%;
-  background: transparent;
-  color: $espresso-brown;
-  font-family: 'Space Grotesk', sans-serif;
-  font-weight: 600;
-  font-size: 0.9375rem;
-  padding: 0.75rem 1.5rem;
-  border-radius: 0.75rem;
-  border: 1.5px solid rgba($espresso-brown, 0.2);
-  text-align: center;
-  text-decoration: none;
-  transition: border-color 0.18s ease, background 0.18s ease;
-
-  &:hover {
-    border-color: $espresso-brown;
-    background: rgba($espresso-brown, 0.04);
-    color: $espresso-brown;
+    &:hover {
+      background: var(--muted);
+      color: var(--primary);
+    }
   }
 }
 
@@ -665,10 +539,15 @@ $bp-wide:    1200px;
   background: rgba($accent-gold, 0.15);
   color: darken($accent-gold, 18%);
   border-radius: 0.75rem;
-  padding: 0.875rem 1.25rem;
+  padding: 0.75rem 1rem;
   font-weight: 600;
-  font-size: 0.9375rem;
+  font-size: 0.875rem;
   text-align: center;
 
   i { margin-right: 0.375rem; }
 }
+
+// ── Spot indicators ───────────────────────────────────────────────
+.spots-ok   { color: var(--muted-foreground); }
+.spots-low  { color: var(--destructive); font-weight: 600; }
+.spots-full { color: var(--muted-foreground); font-style: italic; }

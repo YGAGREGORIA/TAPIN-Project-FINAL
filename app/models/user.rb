@@ -7,6 +7,8 @@ class User < ApplicationRecord
          :lockable, :timeoutable, :omniauthable,
          omniauth_providers: OAUTH_PROVIDERS
 
+  has_one_attached :avatar
+
   has_many :studios, dependent: :destroy
   has_many :chats, dependent: :destroy
   has_many :messages, through: :chats
