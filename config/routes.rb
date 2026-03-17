@@ -6,6 +6,9 @@ Rails.application.routes.draw do
   root to: "pages#home"
 
   scope "/s/:studio_slug" do
+    get "/", to: "studios#show", as: :studio_landing
+    post "checkin", to: "studios#checkin", as: :studio_checkin
+
     resources :rewards, only: [ :index ] do
       post :redeem, to: "reward_redemptions#create", on: :member
     end
