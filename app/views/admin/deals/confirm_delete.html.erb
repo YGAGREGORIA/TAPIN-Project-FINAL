@@ -1,0 +1,18 @@
+<% content_for :title, "Delete Deal" %>
+
+<div class="admin-card">
+  <div class="admin-card-header">
+    <span>Delete Deal</span>
+    <%= link_to "Back", admin_rewards_path(tab: "deals"), class: "admin-card-link" %>
+  </div>
+
+  <div class="p-4">
+    <h1 class="admin-page-title mb-2"><%= @deal.name %></h1>
+    <p class="text-muted mb-4">This will permanently remove the deal and its related claims. This action cannot be undone.</p>
+
+    <div class="d-flex gap-2 justify-content-end flex-wrap">
+      <%= link_to "Cancel", admin_rewards_path(tab: "deals"), class: "btn btn-outline-secondary" %>
+      <%= button_to "Delete Deal", admin_deal_path(@deal), method: :delete, class: "btn btn-outline-danger" %>
+    </div>
+  </div>
+</div>
