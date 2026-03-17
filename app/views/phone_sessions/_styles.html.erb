@@ -1,0 +1,185 @@
+<style>
+  .phone-auth {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #FDFDF8;
+    padding: 1.5rem;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+
+  .phone-auth__card {
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 1.5rem;
+    padding: 2.5rem 2rem;
+    width: 100%;
+    max-width: 420px;
+    color: #1a1a2e;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+  }
+
+  .phone-auth__header {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .phone-auth__logo {
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+    margin-bottom: 1rem;
+    object-fit: cover;
+  }
+
+  .phone-auth__title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: #1a1a2e;
+  }
+
+  .phone-auth__subtitle {
+    color: rgba(0, 0, 0, 0.5);
+    font-size: 0.9rem;
+    margin: 0;
+  }
+
+  .phone-auth__alert {
+    background: rgba(224, 122, 95, 0.1);
+    border: 1px solid rgba(224, 122, 95, 0.25);
+    color: #c0523a;
+    padding: 0.75rem 1rem;
+    border-radius: 0.75rem;
+    font-size: 0.85rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+
+  .phone-auth__form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .phone-auth__input-group {
+    display: flex;
+    align-items: center;
+    background: #F2F2ED;
+    border: 1.5px solid rgba(0, 0, 0, 0.1);
+    border-radius: 0.75rem;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+
+  .phone-auth__input-group:focus-within {
+    border-color: rgba(135, 168, 120, 0.6);
+    box-shadow: 0 0 0 3px rgba(135, 168, 120, 0.15);
+  }
+
+  .phone-auth__prefix {
+    padding: 0.85rem 0.75rem 0.85rem 1rem;
+    color: rgba(0, 0, 0, 0.45);
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 1rem;
+    white-space: nowrap;
+  }
+
+  .phone-auth__input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: #1a1a2e;
+    font-size: 1rem;
+    padding: 0.85rem 1rem 0.85rem 0;
+    outline: none;
+    font-family: 'Space Grotesk', sans-serif;
+  }
+
+  .phone-auth__input--code {
+    background: #F2F2ED;
+    border: 1.5px solid rgba(0, 0, 0, 0.1);
+    border-radius: 0.75rem;
+    color: #1a1a2e;
+    padding: 1rem;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .phone-auth__input--code:focus {
+    border-color: rgba(135, 168, 120, 0.6);
+    box-shadow: 0 0 0 3px rgba(135, 168, 120, 0.15);
+  }
+
+  .phone-auth__input::placeholder {
+    color: rgba(0, 0, 0, 0.3);
+  }
+
+  .phone-auth__btn {
+    background: linear-gradient(135deg, #87A878, #739466);
+    color: #fff;
+    border: none;
+    padding: 0.85rem;
+    border-radius: 0.75rem;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: opacity 0.15s, transform 0.1s;
+    font-family: 'Space Grotesk', sans-serif;
+  }
+
+  .phone-auth__btn:hover {
+    opacity: 0.92;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(135, 168, 120, 0.35);
+  }
+
+  .phone-auth__features {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+  }
+
+  .phone-auth__feature {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: rgba(0, 0, 0, 0.5);
+    font-size: 0.8rem;
+  }
+
+  .phone-auth__feature i {
+    color: #E07A5F;
+    font-size: 0.9rem;
+    width: 20px;
+    text-align: center;
+  }
+
+  .phone-auth__footer,
+  .phone-auth__hint {
+    text-align: center;
+    margin-top: 1.5rem;
+    margin-bottom: 0;
+    color: rgba(0, 0, 0, 0.4);
+    font-size: 0.8rem;
+  }
+
+  .phone-auth__link {
+    color: #E07A5F;
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  .phone-auth__link:hover {
+    text-decoration: underline;
+    color: #c0523a;
+  }
+</style>

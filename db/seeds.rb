@@ -219,12 +219,14 @@ Reward.find_or_create_by!(studio: studio, name: "Guest Pass") do |r|
   r.active = true
 end
 
-Reward.find_or_create_by!(studio: studio, name: "Merchandise Discount") do |r|
-  r.reward_type = :free_class
-  r.points_cost = 0
-  r.image_url = "https://example.com/merch.png"
-  r.description = "20% off any item in our studio shop."
-  r.active = true
+Reward.where(studio: studio, name: "Merchandise Discount").destroy_all
+
+Deal.find_or_create_by!(studio: studio, name: "Merchandise Discount") do |d|
+  d.deal_type = "discount"
+  d.discount_percent = 20
+  d.usage_limit = 1
+  d.expiry_days = 30
+  d.active = true
 end
 
 puts "Seeding visits..."

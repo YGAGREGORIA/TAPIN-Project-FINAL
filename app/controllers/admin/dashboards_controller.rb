@@ -20,5 +20,13 @@ class Admin::DashboardsController < Admin::BaseController
     @recent_members = User.where(admin: false)
                           .order(created_at: :desc)
                           .limit(5)
+
+    @featured_deals = @studio ? Deal.where(studio: @studio, active: true)
+                                   .order(updated_at: :desc)
+                                   .limit(4) : Deal.none
+
+    @featured_rewards = @studio ? Reward.where(studio: @studio, active: true)
+                                       .order(updated_at: :desc)
+                                       .limit(4) : Reward.none
   end
 end
