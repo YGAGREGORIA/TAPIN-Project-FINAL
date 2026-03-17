@@ -1,0 +1,39 @@
+<h1 class="onboarding-title">Import your members</h1>
+<p class="onboarding-desc">
+  All existing members from your Mindbody account will be imported.
+</p>
+<p class="onboarding-count"><%= @members.count %> members found</p>
+
+<div class="onboarding-card onboarding-card--flush mb-4">
+  <table class="onboarding-table">
+    <thead>
+      <tr>
+        <th>Member</th>
+        <th>Email</th>
+        <th>Total Visits</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @members.each do |member| %>
+        <tr>
+          <td class="fw-bold"><%= member.first_name %> <%= member.last_name %></td>
+          <td><%= member.email %></td>
+          <td class="fw-bold"><%= member.client_visits.count %></td>
+          <td>
+            <span class="onboarding-badge onboarding-badge--<%= member.status&.downcase %>">
+              <%= member.status %>
+            </span>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<div class="onboarding-actions">
+  <%= button_to "Import #{@members.count} members", advance_admin_onboarding_path,
+        method: :post,
+        class: "btn onboarding-btn-primary",
+        data: { onboarding_target: "submitBtn", action: "onboarding#submit" } %>
+</div>

@@ -1,0 +1,38 @@
+<h1 class="onboarding-title">Import your classes</h1>
+<p class="onboarding-desc">
+  Sync all existing classes from your Mindbody system.
+</p>
+<p class="onboarding-count"><%= @class_descriptions.count %> classes found</p>
+
+<div class="onboarding-card onboarding-card--flush mb-4">
+  <table class="onboarding-table">
+    <thead>
+      <tr>
+        <th>Class Name</th>
+        <th>Teacher</th>
+        <th>Duration</th>
+        <th>Capacity</th>
+        <th>Sessions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @class_descriptions.each do |desc| %>
+        <% sample_klass = desc.klasses.first %>
+        <tr>
+          <td class="fw-bold"><%= desc.name %></td>
+          <td><%= sample_klass&.staff ? "#{sample_klass.staff.first_name} #{sample_klass.staff.last_name}" : "—" %></td>
+          <td><%= desc.duration_minutes ? "#{desc.duration_minutes} min" : "—" %></td>
+          <td><%= sample_klass&.max_capacity || "—" %></td>
+          <td class="fw-bold"><%= desc.klasses.count %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<div class="onboarding-actions">
+  <%= button_to "Import #{@class_descriptions.count} classes", advance_admin_onboarding_path,
+        method: :post,
+        class: "btn onboarding-btn-primary",
+        data: { onboarding_target: "submitBtn", action: "onboarding#submit" } %>
+</div>

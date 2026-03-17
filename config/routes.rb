@@ -45,6 +45,9 @@ Rails.application.routes.draw do
     end
 
     resource :dashboard, only: [ :show ]
+    resource :onboarding, only: [ :show ], controller: "onboarding" do
+      post :advance
+    end
     resources :rewards
     resources :class_configs, only: [ :index, :update ]
     resources :deals do

@@ -1,0 +1,44 @@
+<div class="onboarding-shell" data-controller="onboarding">
+
+  <%# ── Left sidebar: step progress ── %>
+  <aside class="onboarding-sidebar">
+    <div class="onboarding-logo">
+      <div class="onboarding-logo-icon">
+        <i class="fa fa-building"></i>
+      </div>
+      <h2 class="onboarding-logo-title">Studio Setup</h2>
+      <p class="onboarding-logo-subtitle">Create your studio setup in a few steps</p>
+    </div>
+
+    <nav class="onboarding-steps">
+      <div class="onboarding-steps-line"></div>
+
+      <% Admin::OnboardingHelper::STEPS.each do |step| %>
+        <div class="onboarding-step-item <%= step_css_class(step[:number], @current_step) %>">
+          <div class="onboarding-step-indicator">
+            <% if step[:number] < @current_step %>
+              <i class="fa fa-check"></i>
+            <% else %>
+              <span><%= step[:number] %></span>
+            <% end %>
+          </div>
+          <div class="onboarding-step-label"><%= step[:title] %></div>
+        </div>
+      <% end %>
+    </nav>
+
+    <div class="onboarding-sidebar-footer">
+      <%= link_to admin_dashboard_path, class: "onboarding-exit-link" do %>
+        <i class="fa fa-arrow-left me-1"></i> Exit Setup
+      <% end %>
+    </div>
+  </aside>
+
+  <%# ── Right content area ── %>
+  <main class="onboarding-content">
+    <div class="onboarding-content-inner">
+      <%= render partial: "admin/onboarding/step_#{@current_step}_#{step_partial_name(@current_step)}" %>
+    </div>
+  </main>
+
+</div>

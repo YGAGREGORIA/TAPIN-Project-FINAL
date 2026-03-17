@@ -1,0 +1,58 @@
+<h1 class="onboarding-title">Studio Check-in setup</h1>
+<p class="onboarding-desc">
+  Create a QR code that customers can scan at the studio to automatically check in and earn points.
+</p>
+
+<div class="onboarding-checkin-grid mb-4">
+  <%# Left column — how it works %>
+  <div>
+    <h3 class="onboarding-card-heading mb-3">How it works:</h3>
+    <div class="onboarding-how-steps">
+      <div class="onboarding-how-step">
+        <div class="onboarding-how-badge">1</div>
+        <span>Customers scan the QR code when entering the studio</span>
+      </div>
+      <div class="onboarding-how-step">
+        <div class="onboarding-how-badge">2</div>
+        <span>The visit is automatically recorded</span>
+      </div>
+      <div class="onboarding-how-step">
+        <div class="onboarding-how-badge">3</div>
+        <span>Rewards and loyalty points are updated</span>
+      </div>
+    </div>
+
+    <div class="onboarding-next-steps">
+      <h4 class="onboarding-card-heading mb-3">Next steps:</h4>
+      <div class="onboarding-next-step">
+        <i class="fa fa-arrow-right"></i>
+        <span>Download the QR Code</span>
+      </div>
+      <div class="onboarding-next-step">
+        <i class="fa fa-arrow-right"></i>
+        <span>Print it</span>
+      </div>
+      <div class="onboarding-next-step">
+        <i class="fa fa-arrow-right"></i>
+        <span>Place it at your studio entrance</span>
+      </div>
+    </div>
+  </div>
+
+  <%# Right column — QR code placeholder %>
+  <div class="onboarding-qr-container">
+    <div class="onboarding-qr-card">
+      <div class="onboarding-qr-placeholder">
+        <i class="fa fa-qrcode"></i>
+      </div>
+      <p class="onboarding-qr-label">Studio Check-in QR Code</p>
+    </div>
+  </div>
+</div>
+
+<div class="onboarding-actions">
+  <%= button_to "Continue", advance_admin_onboarding_path,
+        method: :post,
+        class: "btn onboarding-btn-primary",
+        data: { onboarding_target: "submitBtn", action: "onboarding#submit" } %>
+</div>
