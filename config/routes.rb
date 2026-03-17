@@ -50,7 +50,7 @@ Rails.application.routes.draw do
     resources :deals do
       patch :update_referral, on: :collection
     end
-    resources :members, only: [ :index, :show ] do
+    resources :members, only: [:index, :show] do
       post :points, to: "member_points#create", on: :member
       post :rewards, to: "member_rewards#create", on: :member
       get :export, on: :collection
