@@ -7,13 +7,11 @@
     <div class="hero-inner">
       <div>
         <h3 class="hero-greeting">
-          Hi, <%= current_user.first_name.presence || current_user.email.split("@").first %>!
+          Hi, <%= current_user.first_name.presence || "there" %>!
         </h3>
         <p class="hero-points">
-          <span class="hero-points-value"
-                data-dashboard-target="pointsValue"
-                data-points="<%= current_user.available_points || 0 %>"><%= current_user.available_points || 0 %> pts</span>
-          available
+          <span class="hero-points-value"><%= current_user.visits.count %> visits</span>
+          total
         </p>
       </div>
       <%= link_to edit_user_registration_path, class: "hero-avatar-btn" do %>

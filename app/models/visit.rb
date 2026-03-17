@@ -5,7 +5,7 @@ class Visit < ApplicationRecord
 
   belongs_to :user
   belongs_to :studio
-  belongs_to :class_config
+  belongs_to :class_config, optional: true
 
   validates :visited_at, presence: true
   validate :must_wait_12_hours_between_visits, on: :create
