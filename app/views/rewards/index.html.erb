@@ -1,97 +1,121 @@
 <% content_for :title, "Rewards — #{@studio.name}" %>
 
 <% total_visits = current_user.visits_count_for(@studio) %>
-<% nearest_threshold = @rewards.any? ? @rewards.map { |r| r.visits_required || 10 }.min : 10 %>
 
-<div class="schedule-page">
+<div class="dashboard">
 
-  <%# ── Header ── %>
-  <div class="schedule-header">
-    <p class="schedule-studio-name"><%= @studio.name %></p>
-    <h1 class="schedule-title">Rewards</h1>
-    <p class="schedule-subtitle">
-      <%= total_visits %> <%= total_visits == 1 ? "visit" : "visits" %> so far
-    </p>
-  </div>
-
-  <%# ── Available Rewards ── %>
-  <section class="dashboard-section">
-    <p class="section-title">Available Rewards</p>
-    <% if @rewards.any? %>
-      <% @rewards.each do |reward| %>
-        <% threshold = reward.visits_required || 10 %>
-        <% progress = total_visits % threshold %>
-        <% remaining = threshold - progress %>
-        <% remaining = threshold if progress.zero? && !reward.redeemable_by?(current_user) %>
-        <div class="reward-card">
-          <div class="reward-name"><%= reward.name %></div>
-          <% if reward.description.present? %>
-            <p class="reward-description"><%= reward.description %></p>
-          <% end %>
-
-          <% if reward.redeemable_by?(current_user) %>
-            <div class="stamp-card" style="margin: 12px 0 8px;">
-              <div class="stamp-grid">
-                <% threshold.times do |i| %>
-                  <div class="stamp stamp--done">
-                    <i class="fa fa-check"></i>
-                  </div>
-                <% end %>
-              </div>
-              <div class="stamp-card-footer">
-                <div class="progress dashboard-progress">
-                  <div class="progress-bar" style="width: 100%"></div>
-                </div>
-                <span class="stamp-count"><%= threshold %> / <%= threshold %></span>
-              </div>
-            </div>
-            <span class="reward-ready-badge">Reward ready!</span>
-            <%= button_to "Redeem Now",
-                  redeem_reward_path(studio_slug: @studio.slug, id: reward.id),
-                  method: :post,
-                  class: "btn-redeem" %>
-          <% else %>
-            <div class="stamp-card" style="margin: 12px 0 8px;">
-              <div class="stamp-grid">
-                <% threshold.times do |i| %>
-                  <div class="stamp <%= i < progress ? 'stamp--done' : '' %>">
-                    <% if i < progress %>
-                      <i class="fa fa-check"></i>
-                    <% end %>
-                  </div>
-                <% end %>
-              </div>
-              <div class="stamp-card-footer">
-                <div class="progress dashboard-progress">
-                  <div class="progress-bar" style="width: <%= (progress.to_f / threshold * 100).round %>%"></div>
-                </div>
-                <span class="stamp-count"><%= progress %> / <%= threshold %></span>
-              </div>
-            </div>
-            <div class="visits-remaining-text">
-              Unlocks after <%= threshold %> <%= threshold == 1 ? "visit" : "visits" %> &middot;
-              <%= remaining %> remaining
-            </div>
-          <% end %>
-        </div>
-      <% end %>
-    <% else %>
-      <div class="dashboard-card">
-        <div class="empty-state">
-          <i class="fa fa-gift"></i>
-          <p>No rewards available yet.</p>
-        </div>
+  <%# ── Hero ── %>
+  <div class="dashboard-hero">
+    <div class="hero-inner">
+      <div>
+        <h3 class="hero-greeting">Rewards</h3>
+        <p class="hero-points">
+          <span class="hero-points-value"><%= total_visits %> <%= total_visits == 1 ? "visit" : "visits" %></span>
+          at <%= @studio.name %>
+        </p>
       </div>
-    <% end %>
-  </section>
-
-  <%# ── History link ── %>
-  <section class="dashboard-section pb-5">
-    <div class="dashboard-card" style="text-align: center;">
-      <%= link_to reward_redemptions_path(studio_slug: @studio.slug), class: "btn-secondary-action" do %>
-        <i class="fa fa-history"></i> View Reward History
+      <%= link_to edit_user_registration_path, class: "hero-avatar-btn" do %>
+        <i class="fa fa-user"></i>
       <% end %>
     </div>
-  </section>
+  </div>
+
+  <%# ── Scrollable content ── %>
+  <div class="dashboard-content">
+
+    <%# ── Per-reward progress cards ── %>
+    <% if @rewards.any? %>
+      <section class="dashboard-section animate-fade-up">
+        <p class="section-title">Your Progress</p>
+        <% @rewards.each do |reward| %>
+          <% threshold = reward.visits_required || 10 %>
+          <% progress  = total_visits % threshold %>
+          <% redeemable = reward.redeemable_by?(current_user) %>
+          <div class="studio-progress-card">
+            <div class="progress-card-header">
+              <h5 class="studio-name"><%= reward.name %></h5>
+              <% if redeemable %>
+                <span class="reward-ready-badge anim-glow-pulse">Reward ready!</span>
+              <% end %>
+            </div>
+
+            <% if reward.description.present? %>
+              <p style="font-size: 0.8125rem; color: var(--muted-foreground); margin: 0 0 1rem;">
+                <%= reward.description %>
+              </p>
+            <% end %>
+
+            <%# Stamp grid: rows of 5 %>
+            <div class="stamp-rows">
+              <% threshold.times.each_slice(5) do |row| %>
+                <div class="stamp-row">
+                  <% row.each do |i| %>
+                    <% done = redeemable || i < progress %>
+                    <div class="stamp-circle <%= done ? 'stamp-circle--done' : '' %>">
+                      <i class="fa <%= done ? 'fa-star' : 'fa-star-o' %>"></i>
+                    </div>
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
+
+            <p class="stamp-count-text">
+              <% if redeemable %>
+                <%= threshold %> / <%= threshold %> visits
+              <% else %>
+                <%= progress %> / <%= threshold %> visits
+              <% end %>
+            </p>
+
+            <% if redeemable %>
+              <div style="text-align: center; margin-top: 0.75rem;">
+                <%= button_to "Redeem Now",
+                      redeem_reward_path(studio_slug: @studio.slug, id: reward.id),
+                      method: :post,
+                      class: "btn-redeem" %>
+              </div>
+            <% else %>
+              <% remaining = threshold - progress %>
+              <% remaining = threshold if progress.zero? %>
+              <p class="visits-remaining-text">
+                <%= remaining %> more <%= remaining == 1 ? "visit" : "visits" %> to unlock
+              </p>
+            <% end %>
+          </div>
+        <% end %>
+      </section>
+
+    <% else %>
+      <section class="dashboard-section animate-fade-up">
+        <p class="section-title">Available Rewards</p>
+        <div class="dashboard-card">
+          <div class="empty-state">
+            <i class="fa fa-gift"></i>
+            <p>No rewards available yet.</p>
+          </div>
+        </div>
+      </section>
+    <% end %>
+
+    <%# ── History link ── %>
+    <section class="dashboard-section dashboard-section--last animate-fade-up">
+      <p class="section-title">Reward History</p>
+      <div class="dashboard-card">
+        <div class="reward-row">
+          <div class="reward-row-icon">
+            <i class="fa fa-history"></i>
+          </div>
+          <div class="reward-row-details">
+            <p class="reward-row-name">View Past Redemptions</p>
+            <p class="reward-row-meta">See codes and expiry dates</p>
+          </div>
+          <%= link_to reward_redemptions_path(studio_slug: @studio.slug), class: "btn-redeem" do %>
+            View <i class="fa fa-chevron-right" style="font-size: 0.75rem; margin-left: 0.25rem;"></i>
+          <% end %>
+        </div>
+      </div>
+    </section>
+
+  </div><%# end .dashboard-content %>
 
 </div>

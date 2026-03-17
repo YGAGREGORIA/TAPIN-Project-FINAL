@@ -29,41 +29,44 @@
       <section class="dashboard-section animate-fade-up">
         <p class="section-title">Your Progress</p>
         <% @studios_visited.each do |studio| %>
-          <% progress = current_user.current_visit_progress_for(studio) %>
+          <% nearest_reward = studio.rewards.active.order(:visits_required).first %>
+          <% threshold = nearest_reward&.visits_required || 10 %>
+          <% total = current_user.visits_count_for(studio) %>
+          <% progress = total % threshold %>
+          <% any_redeemable = nearest_reward&.redeemable_by?(current_user) %>
           <div class="studio-progress-card">
             <div class="progress-card-header">
               <h5 class="studio-name"><%= studio.name %></h5>
-              <% if current_user.free_class_reward_available_for?(studio) %>
+              <% if any_redeemable %>
                 <span class="reward-ready-badge">Reward ready!</span>
               <% end %>
             </div>
 
-            <%# Stamp grid: 2 rows of 5 %>
+            <%# Stamp grid: rows of 5 %>
             <div class="stamp-rows">
-              <div class="stamp-row">
-                <% 5.times do |i| %>
-                  <div class="stamp-circle <%= i < progress ? 'stamp-circle--done' : '' %>">
-                    <i class="fa <%= i < progress ? 'fa-star' : 'fa-star-o' %>"></i>
-                  </div>
-                <% end %>
-              </div>
-              <div class="stamp-row">
-                <% 5.times do |i| %>
-                  <% idx = i + 5 %>
-                  <div class="stamp-circle <%= idx < progress ? 'stamp-circle--done' : '' %>">
-                    <i class="fa <%= idx < progress ? 'fa-star' : 'fa-star-o' %>"></i>
-                  </div>
-                <% end %>
-              </div>
+              <% threshold.times.each_slice(5) do |row| %>
+                <div class="stamp-row">
+                  <% row.each do |i| %>
+                    <% done = any_redeemable || i < progress %>
+                    <div class="stamp-circle <%= done ? 'stamp-circle--done' : '' %>">
+                      <i class="fa <%= done ? 'fa-star' : 'fa-star-o' %>"></i>
+                    </div>
+                  <% end %>
+                </div>
+              <% end %>
             </div>
 
-            <p class="stamp-count-text"><%= progress %> / 10 visits</p>
+            <p class="stamp-count-text">
+              <%= any_redeemable ? threshold : progress %> / <%= threshold %> visits
+            </p>
 
-            <% unless current_user.free_class_reward_available_for?(studio) %>
+            <% unless any_redeemable %>
+              <% remaining = threshold - progress %>
+              <% remaining = threshold if progress.zero? %>
               <p class="visits-remaining-text">
-                <%= current_user.visits_remaining_for_next_reward(studio) %>
-                more <%= current_user.visits_remaining_for_next_reward(studio) == 1 ? "visit" : "visits" %>
-                to your next free class
+                <%= remaining %>
+                more <%= remaining == 1 ? "visit" : "visits" %>
+                to your next reward
               </p>
             <% end %>
           </div>
