@@ -45,9 +45,12 @@ Rails.application.routes.draw do
     end
 
     resource :dashboard, only: [ :show ]
-    resources :rewards
+    resources :rewards do
+      get :confirm_delete, on: :member
+    end
     resources :class_configs, only: [ :index, :update ]
     resources :deals do
+      get :confirm_delete, on: :member
       patch :update_referral, on: :collection
     end
     resources :members, only: [:index, :show] do
