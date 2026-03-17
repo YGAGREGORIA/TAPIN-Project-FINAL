@@ -52,9 +52,9 @@ Rails.application.configure do
   # Use async queue adapter (SolidQueue tables not available on Heroku)
   config.active_job.queue_adapter = :async
 
-  # Ignore bad email addresses and do not raise email delivery errors.
-  # Set this to true and configure the email server for immediate delivery to raise delivery errors.
-  # config.action_mailer.raise_delivery_errors = false
+  # Suppress email delivery errors until a real SMTP provider is configured.
+  config.action_mailer.raise_delivery_errors = false
+  config.action_mailer.delivery_method = :test
 
   # Set host to be used by links generated in mailer templates.
   config.action_mailer.default_url_options = { host: "lewagon-tapin.xyz" }
