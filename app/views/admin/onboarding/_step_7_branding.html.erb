@@ -102,7 +102,7 @@
     Share your studio's online presence and personality. Claude will analyse your content and create a custom brand for your app — colours, fonts, and tone.
   </p>
 
-  <%= form_with url: save_branding_admin_onboarding_path, method: :post, multipart: true, data: { turbo: false } do |f| %>
+  <%= form_with url: save_branding_admin_onboarding_path, method: :post, multipart: true, id: "branding-form", data: { turbo: false } do |f| %>
 
     <%# URLs %>
     <div class="onboarding-card mb-4">
@@ -175,14 +175,15 @@
       </div>
     </div>
 
-    <div class="onboarding-actions">
-      <%= render "admin/onboarding/back_button" %>
-      <button type="submit" class="btn onboarding-btn-primary">
-        Generate brand proposals <i class="fa fa-wand-magic-sparkles ms-1"></i>
-      </button>
-    </div>
-
   <% end %>
+
+  <%# Actions are OUTSIDE the form to avoid nesting button_to forms inside form_with %>
+  <div class="onboarding-actions">
+    <%= render "admin/onboarding/back_button" %>
+    <button type="submit" form="branding-form" class="btn onboarding-btn-primary">
+      Generate brand proposals <i class="fa fa-wand-magic-sparkles ms-1"></i>
+    </button>
+  </div>
 
   <div class="text-center mt-3">
     <%= button_to "Skip branding for now", advance_admin_onboarding_path,
