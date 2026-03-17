@@ -5,12 +5,6 @@
     <h1 class="admin-page-title mb-1">Dashboard</h1>
     <p class="text-muted mb-0">Welcome back. Here is the latest view of your studio activity.</p>
   </div>
-  <% if @studio %>
-    <div class="d-flex gap-2">
-      <%= link_to "Analytics", admin_analytics_path, class: "btn btn-sm btn-admin-outline" %>
-      <%= link_to "Members", admin_members_path, class: "btn btn-sm btn-admin-outline" %>
-    </div>
-  <% end %>
 </div>
 
 <div class="admin-section-title mb-3">
@@ -18,42 +12,64 @@
   <span class="admin-section-subtitle">The most important performance numbers for your studio.</span>
 </div>
 
-<div class="admin-card mb-4">
-  <div class="row g-3 p-3">
-    <div class="col-6 col-md-3">
-      <div class="admin-stat-card">
-        <div class="admin-stat-icon"><i class="fa fa-users"></i></div>
-        <div class="admin-stat-value"><%= @total_members %></div>
-        <div class="admin-stat-label">Total Members</div>
-        <div class="admin-stat-delta">
+<div class="row g-3 mb-4">
+  <div class="col-6 col-xl-3">
+    <div class="admin-card h-100">
+      <div class="p-3">
+        <div class="d-flex align-items-start justify-content-between gap-3 mb-3">
+          <div class="text-muted small text-uppercase">Total Members</div>
+          <div class="d-flex align-items-center justify-content-center rounded-3 bg-light" style="width: 42px; height: 42px;">
+            <div class="admin-stat-icon mb-0"><i class="fa fa-users"></i></div>
+          </div>
+        </div>
+        <div class="admin-stat-value mb-2" style="font-size: 2.25rem;"><%= @total_members %></div>
+        <div class="small" style="color: rgba(180, 140, 60, 0.95);">
           <%= @new_members_this_week.positive? ? "+#{@new_members_this_week} this week" : "No new members this week" %>
         </div>
       </div>
     </div>
-    <div class="col-6 col-md-3">
-      <div class="admin-stat-card">
-        <div class="admin-stat-icon"><i class="fa fa-check-circle"></i></div>
-        <div class="admin-stat-value"><%= @total_visits %></div>
-        <div class="admin-stat-label">Total Check-ins</div>
-        <div class="admin-stat-delta">
+  </div>
+  <div class="col-6 col-xl-3">
+    <div class="admin-card h-100">
+      <div class="p-3">
+        <div class="d-flex align-items-start justify-content-between gap-3 mb-3">
+          <div class="text-muted small text-uppercase">Total Check-ins</div>
+          <div class="d-flex align-items-center justify-content-center rounded-3 bg-light" style="width: 42px; height: 42px;">
+            <div class="admin-stat-icon mb-0"><i class="fa fa-check-circle"></i></div>
+          </div>
+        </div>
+        <div class="admin-stat-value mb-2" style="font-size: 2.25rem;"><%= @total_visits %></div>
+        <div class="small" style="color: rgba(180, 140, 60, 0.95);">
           <%= @visits_this_week.positive? ? "+#{@visits_this_week} this week" : "No check-ins this week" %>
         </div>
       </div>
     </div>
-    <div class="col-6 col-md-3">
-      <div class="admin-stat-card">
-        <div class="admin-stat-icon"><i class="fa fa-tag"></i></div>
-        <div class="admin-stat-value"><%= @active_deals %></div>
-        <div class="admin-stat-label">Active Deals</div>
-        <div class="admin-stat-delta"><%= @total_deal_claims %> claimed</div>
+  </div>
+  <div class="col-6 col-xl-3">
+    <div class="admin-card h-100">
+      <div class="p-3">
+        <div class="d-flex align-items-start justify-content-between gap-3 mb-3">
+          <div class="text-muted small text-uppercase">Active Deals</div>
+          <div class="d-flex align-items-center justify-content-center rounded-3 bg-light" style="width: 42px; height: 42px;">
+            <div class="admin-stat-icon mb-0"><i class="fa fa-tag"></i></div>
+          </div>
+        </div>
+        <div class="admin-stat-value mb-2" style="font-size: 2.25rem;"><%= @active_deals %></div>
+        <div class="small" style="color: rgba(180, 140, 60, 0.95);"><%= @total_deal_claims %> claimed</div>
       </div>
     </div>
-    <div class="col-6 col-md-3">
-      <div class="admin-stat-card">
-        <div class="admin-stat-icon"><i class="fa fa-gift"></i></div>
-        <div class="admin-stat-value"><%= @active_rewards %></div>
-        <div class="admin-stat-label">Active Rewards</div>
-        <div class="admin-stat-delta"><%= @total_redemptions %> redeemed</div>
+  </div>
+  <div class="col-6 col-xl-3">
+    <div class="admin-card h-100">
+      <div class="p-3">
+        <div class="d-flex align-items-start justify-content-between gap-3 mb-3">
+          <div class="text-muted small text-uppercase">Active Rewards</div>
+          <div class="d-flex align-items-center justify-content-center rounded-3 bg-light" style="width: 42px; height: 42px;">
+            <div class="admin-stat-icon mb-0"><i class="fa fa-gift"></i></div>
+          </div>
+        </div>
+        <div class="admin-stat-value mb-2" style="font-size: 2.25rem;"><%= @active_rewards %></div>
+        <div class="small" style="color: rgba(180, 140, 60, 0.95);"><%= @total_redemptions %> redeemed</div>
       </div>
     </div>
   </div>
@@ -64,154 +80,188 @@
   <span class="admin-section-subtitle">Active rewards and deals, using only the data already available in your studio.</span>
 </div>
 
+<% loyalty_tab = params[:loyalty_tab] == "deals" ? "deals" : "rewards" %>
+
 <div class="admin-card mb-4">
   <div class="admin-card-header">
     <span>Rewards & Deals</span>
-    <div class="d-flex gap-3">
-      <%= link_to "Rewards", admin_rewards_path, class: "admin-card-link" %>
-      <%= link_to "Deals", admin_deals_path, class: "admin-card-link" %>
+    <span class="text-muted fw-normal">A compact view of your active loyalty offers.</span>
+  </div>
+
+  <div class="px-3 pt-3">
+    <div class="d-inline-flex p-1 rounded-3 border bg-light gap-1">
+      <%= link_to admin_dashboard_path(loyalty_tab: "rewards"), class: "btn #{loyalty_tab == "rewards" ? "btn-primary" : "btn-light"} btn-sm px-3" do %>
+        <i class="fa fa-gift me-2"></i>Rewards
+      <% end %>
+      <%= link_to admin_dashboard_path(loyalty_tab: "deals"), class: "btn #{loyalty_tab == "deals" ? "btn-primary" : "btn-light"} btn-sm px-3" do %>
+        <i class="fa fa-tag me-2"></i>Deals
+      <% end %>
     </div>
   </div>
 
-  <div class="row g-3 p-3">
-    <div class="col-lg-6">
-      <div class="h-100 border rounded-3 p-3">
-        <div class="d-flex align-items-center justify-content-between gap-3 mb-3">
-          <div>
-            <div class="fw-semibold">Active Rewards</div>
-            <div class="text-muted small"><%= @active_rewards %> active rewards currently available</div>
-          </div>
-        </div>
-
-        <% if @featured_rewards.any? %>
-          <% @featured_rewards.each do |reward| %>
-            <div class="admin-activity-row px-0">
-              <div class="admin-activity-avatar">
-                <i class="fa fa-gift"></i>
-              </div>
-              <div class="admin-activity-details">
-                <div class="admin-activity-name"><%= reward.name %></div>
-                <div class="admin-activity-meta">
-                  <%= reward.description.presence || reward.reward_type.humanize %>
-                  <% reward_redemption_count = reward.reward_redemptions.count %>
-                  &middot; used <%= reward_redemption_count %> times
-                  <% if reward.points_cost.present? %>
-                    &middot; <%= reward.points_cost %> pts
-                  <% end %>
+  <% if loyalty_tab == "rewards" %>
+    <div class="row g-2 p-3">
+      <% if @featured_rewards.any? %>
+        <% @featured_rewards.each do |reward| %>
+          <% reward_redemption_count = reward.reward_redemptions.count %>
+          <div class="col-lg-6">
+            <div class="border rounded-4 p-3 h-100">
+              <div class="d-flex align-items-start gap-3 mb-3">
+                <div class="border rounded-3 bg-light d-flex align-items-center justify-content-center flex-shrink-0" style="width: 48px; height: 48px;">
+                  <i class="fa fa-gift fs-5 text-warning"></i>
+                </div>
+                <div class="min-w-0">
+                  <div class="fs-6 fw-semibold"><%= reward.name %></div>
+                  <div class="text-muted mt-1 small"><%= reward.description.presence || reward.reward_type.humanize %></div>
                 </div>
               </div>
-              <%= link_to "Edit", edit_admin_reward_path(reward), class: "admin-activity-link" %>
-            </div>
-          <% end %>
-        <% else %>
-          <div class="admin-empty-state px-0">No active rewards yet.</div>
-        <% end %>
-      </div>
-    </div>
 
-    <div class="col-lg-6">
-      <div class="h-100 border rounded-3 p-3">
-        <div class="d-flex align-items-center justify-content-between gap-3 mb-3">
-          <div>
-            <div class="fw-semibold">Active Deals</div>
-            <div class="text-muted small"><%= @active_deals %> active deals currently available</div>
-          </div>
-        </div>
-
-        <% if @featured_deals.any? %>
-          <% @featured_deals.each do |deal| %>
-            <div class="admin-activity-row px-0">
-              <div class="admin-activity-avatar">
-                <i class="fa fa-tag"></i>
+              <div class="border-top pt-3">
+                <div class="row g-2 align-items-end">
+                  <div class="col-8">
+                    <div class="text-muted mb-1 small">Points Cost</div>
+                    <div class="border rounded-2 px-3 py-2 bg-white">
+                      <span class="fw-semibold fs-5"><%= reward.points_cost.present? ? reward.points_cost : "-" %></span>
+                      <% if reward.points_cost.present? %>
+                        <span class="text-muted ms-1 small">pts</span>
+                      <% end %>
+                    </div>
+                  </div>
+                  <div class="col-4">
+                    <div class="text-muted mb-1 text-end small">Used</div>
+                    <div class="border rounded-2 px-2 py-2 bg-light text-center">
+                      <span class="fw-semibold fs-5"><%= reward_redemption_count %></span>
+                      <span class="text-muted ms-1">x</span>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div class="admin-activity-details">
-                <div class="admin-activity-name"><%= deal.name %></div>
-                <div class="admin-activity-meta">
+
+              <div class="text-center text-muted mt-3 small">
+                <%= reward.reward_type.humanize %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      <% else %>
+        <div class="col-12">
+          <div class="admin-empty-state">No active rewards yet.</div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="row g-2 p-3">
+      <% if @featured_deals.any? %>
+        <% @featured_deals.each do |deal| %>
+          <% deal_claim_count = deal.deal_claims.count %>
+          <div class="col-lg-6">
+            <div class="border rounded-4 p-3 h-100">
+              <div class="d-flex align-items-start gap-3 mb-3">
+                <div class="border rounded-3 bg-light d-flex align-items-center justify-content-center flex-shrink-0" style="width: 48px; height: 48px;">
+                  <i class="fa fa-tag fs-5 text-secondary"></i>
+                </div>
+                <div class="min-w-0">
+                  <div class="fs-6 fw-semibold"><%= deal.name %></div>
+                  <div class="text-muted mt-1 small">
+                    <%= deal.trigger_condition.present? ? deal.trigger_condition.humanize : deal.deal_type.humanize %>
+                  </div>
+                </div>
+              </div>
+
+              <div class="border-top pt-3">
+                <div class="row g-2 align-items-end">
+                  <div class="col-8">
+                    <div class="text-muted mb-1 small">Discount</div>
+                    <div class="border rounded-2 px-3 py-2 bg-white">
+                      <% if deal.discount_percent.present? && deal.discount_percent.positive? %>
+                        <span class="fw-semibold fs-5"><%= deal.discount_percent %>%</span>
+                        <span class="text-muted ms-1 small">off</span>
+                      <% else %>
+                        <span class="fw-semibold">Active deal</span>
+                      <% end %>
+                    </div>
+                  </div>
+                  <div class="col-4">
+                    <div class="text-muted mb-1 text-end small">Used</div>
+                    <div class="border rounded-2 px-2 py-2 bg-light text-center">
+                      <span class="fw-semibold fs-5"><%= deal_claim_count %></span>
+                      <span class="text-muted ms-1">x</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="text-center text-muted mt-3 small">
+                <% if deal.expiry_days.present? && deal.expiry_days.positive? %>
+                  Expires after <%= deal.expiry_days %> days
+                <% else %>
                   <%= deal.deal_type.humanize %>
-                  <% if deal.trigger_condition.present? %>
-                    &middot; <%= deal.trigger_condition.humanize %>
-                  <% end %>
-                  <% deal_claim_count = deal.deal_claims.count %>
-                  &middot; used <%= deal_claim_count %> times
-                  <% if deal.discount_percent.present? && deal.discount_percent.positive? %>
-                    &middot; <%= deal.discount_percent %>% off
-                  <% end %>
-                </div>
+                <% end %>
               </div>
-              <%= link_to "Edit", edit_admin_deal_path(deal), class: "admin-activity-link" %>
             </div>
-          <% end %>
-        <% else %>
-          <div class="admin-empty-state px-0">No active deals yet.</div>
+          </div>
         <% end %>
-      </div>
+      <% else %>
+        <div class="col-12">
+          <div class="admin-empty-state">No active deals yet.</div>
+        </div>
+      <% end %>
     </div>
-  </div>
+  <% end %>
 </div>
 
 <div class="admin-section-title mb-3">
   <span>Recent Visits</span>
-  <span class="admin-section-subtitle">A quieter, list-based view of the latest member visits and signups.</span>
+  <span class="admin-section-subtitle">A quieter, list-based view of the latest studio check-ins.</span>
 </div>
 
-<div class="row g-3 mb-4">
-  <div class="col-lg-6">
-    <div class="admin-card h-100">
-      <div class="admin-card-header">
-        <span>Recent Check-ins</span>
-        <%= link_to "View Analytics", admin_analytics_path, class: "admin-card-link" %>
-      </div>
-      <% if @recent_visits.any? %>
-        <% @recent_visits.each do |visit| %>
-          <div class="admin-activity-row">
-            <div class="admin-activity-avatar">
-              <%= visit.user.first_name.to_s.first&.upcase || visit.user.email.to_s.first&.upcase || "?" %>
-            </div>
-            <div class="admin-activity-details">
-              <div class="admin-activity-name"><%= [visit.user.first_name, visit.user.last_name].compact.join(" ").presence || visit.user.email %></div>
-              <div class="admin-activity-meta">
-                <%= visit.class_config&.class_name || "Class visit" %>
-                &middot;
-                <%= visit.visited_at.strftime("%b %-d, %H:%M") %>
-              </div>
-            </div>
-            <% if visit.points_earned.to_i.positive? %>
-              <div class="admin-activity-points">+<%= visit.points_earned %> pts</div>
-            <% end %>
-          </div>
-        <% end %>
-      <% else %>
-        <div class="admin-empty-state">No check-ins yet.</div>
-      <% end %>
+<div class="admin-card">
+  <div class="admin-card-header">
+    <span>Recent Check-ins</span>
+    <span class="text-muted fw-normal"><%= @visits_this_week %> this week</span>
+  </div>
+  <div class="px-3 pt-2 pb-2 border-bottom">
+    <div class="d-flex align-items-center justify-content-between gap-3 flex-wrap">
+      <div class="text-muted small">Latest studio visits, ordered from newest to oldest.</div>
+      <div class="text-muted small">Showing <%= @recent_visits.size %> recent check-ins</div>
     </div>
   </div>
-
-  <div class="col-lg-6">
-    <div class="admin-card h-100">
-      <div class="admin-card-header">
-        <span>New Members</span>
-        <%= link_to "View All", admin_members_path, class: "admin-card-link" %>
+  <% if @recent_visits.any? %>
+    <div class="px-3 pt-1">
+      <div class="d-none d-md-flex text-muted small px-1 pb-1">
+        <div class="flex-grow-1">Member</div>
+        <div class="text-end" style="width: 180px;">Time</div>
+        <div class="text-end" style="width: 110px;">Points</div>
       </div>
-      <% if @recent_members.any? %>
-        <% @recent_members.each do |member| %>
-          <div class="admin-activity-row">
-            <div class="admin-activity-avatar">
-              <%= member.first_name.to_s.first&.upcase || member.email.to_s.first&.upcase || "?" %>
-            </div>
-            <div class="admin-activity-details">
-              <div class="admin-activity-name"><%= [member.first_name, member.last_name].compact.join(" ").presence || member.email %></div>
-              <div class="admin-activity-meta">
-                <%= member.email %>
-                &middot;
-                joined <%= member.created_at.strftime("%b %-d") %>
+      <% @recent_visits.each do |visit| %>
+        <div class="d-flex align-items-center justify-content-between gap-3 py-2 px-1 border-bottom">
+          <div class="d-flex align-items-center min-w-0 flex-grow-1">
+            <div class="min-w-0">
+              <div class="admin-activity-name"><%= [visit.user.first_name, visit.user.last_name].compact.join(" ").presence || visit.user.email %></div>
+              <div class="text-muted small mt-1 ps-2 border-start">
+                <span><%= visit.class_config&.class_name || "Class visit" %></span>
               </div>
             </div>
-            <%= link_to "View", admin_member_path(member), class: "admin-activity-link" %>
           </div>
-        <% end %>
-      <% else %>
-        <div class="admin-empty-state">No members yet.</div>
+          <div class="text-end flex-shrink-0 d-none d-md-block" style="width: 180px;">
+            <div class="text-muted small"><%= visit.visited_at.strftime("%b %-d, %Y") %></div>
+            <div class="text-muted small"><%= visit.visited_at.strftime("%H:%M") %></div>
+          </div>
+          <div class="text-end flex-shrink-0" style="width: 110px;">
+            <% if visit.points_earned.to_i.positive? %>
+              <div class="admin-activity-points">+<%= visit.points_earned %> pts</div>
+            <% else %>
+              <div class="text-muted small">No points</div>
+            <% end %>
+            <div class="text-muted small d-md-none"><%= visit.visited_at.strftime("%b %-d, %H:%M") %></div>
+          </div>
+        </div>
       <% end %>
     </div>
+  <% else %>
+    <div class="admin-empty-state">No check-ins yet.</div>
+  <% end %>
+  <div class="px-3 pt-1 pb-2">
+    <div class="text-muted small">Visits reflect the most recent studio activity for your members.</div>
   </div>
 </div>

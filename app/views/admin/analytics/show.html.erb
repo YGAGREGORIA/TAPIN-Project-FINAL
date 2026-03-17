@@ -23,44 +23,74 @@
   </div>
 
   <div class="row g-3 p-3">
-    <div class="col-6 col-md-4 col-xl">
-      <div class="admin-stat-card">
-        <div class="admin-stat-icon"><i class="fa fa-users"></i></div>
-        <div class="admin-stat-value"><%= @total_members %></div>
-        <div class="admin-stat-label">Total Members</div>
-        <div class="admin-stat-delta">All time</div>
+    <div class="col-6 col-xl">
+      <div class="admin-card h-100">
+        <div class="p-3">
+          <div class="d-flex align-items-start justify-content-between gap-3 mb-3">
+            <div class="text-muted small text-uppercase">Total Members</div>
+            <div class="d-flex align-items-center justify-content-center rounded-3 bg-light" style="width: 42px; height: 42px;">
+              <div class="admin-stat-icon mb-0"><i class="fa fa-users"></i></div>
+            </div>
+          </div>
+          <div class="admin-stat-value mb-2" style="font-size: 2.25rem;"><%= @total_members %></div>
+          <div class="small" style="color: rgba(180, 140, 60, 0.95);">All time</div>
+        </div>
       </div>
     </div>
-    <div class="col-6 col-md-4 col-xl">
-      <div class="admin-stat-card">
-        <div class="admin-stat-icon"><i class="fa fa-user"></i></div>
-        <div class="admin-stat-value"><%= @active_members %></div>
-        <div class="admin-stat-label">Active Members</div>
-        <div class="admin-stat-delta">Selected period</div>
+    <div class="col-6 col-xl">
+      <div class="admin-card h-100">
+        <div class="p-3">
+          <div class="d-flex align-items-start justify-content-between gap-3 mb-3">
+            <div class="text-muted small text-uppercase">Active Members</div>
+            <div class="d-flex align-items-center justify-content-center rounded-3 bg-light" style="width: 42px; height: 42px;">
+              <div class="admin-stat-icon mb-0"><i class="fa fa-user"></i></div>
+            </div>
+          </div>
+          <div class="admin-stat-value mb-2" style="font-size: 2.25rem;"><%= @active_members %></div>
+          <div class="small" style="color: rgba(180, 140, 60, 0.95);">Selected period</div>
+        </div>
       </div>
     </div>
-    <div class="col-6 col-md-4 col-xl">
-      <div class="admin-stat-card">
-        <div class="admin-stat-icon"><i class="fa fa-check-circle"></i></div>
-        <div class="admin-stat-value"><%= @total_check_ins %></div>
-        <div class="admin-stat-label">Total Check-ins</div>
-        <div class="admin-stat-delta">All time</div>
+    <div class="col-6 col-xl">
+      <div class="admin-card h-100">
+        <div class="p-3">
+          <div class="d-flex align-items-start justify-content-between gap-3 mb-3">
+            <div class="text-muted small text-uppercase">Total Check-ins</div>
+            <div class="d-flex align-items-center justify-content-center rounded-3 bg-light" style="width: 42px; height: 42px;">
+              <div class="admin-stat-icon mb-0"><i class="fa fa-check-circle"></i></div>
+            </div>
+          </div>
+          <div class="admin-stat-value mb-2" style="font-size: 2.25rem;"><%= @total_check_ins %></div>
+          <div class="small" style="color: rgba(180, 140, 60, 0.95);">All time</div>
+        </div>
       </div>
     </div>
-    <div class="col-6 col-md-6 col-xl">
-      <div class="admin-stat-card">
-        <div class="admin-stat-icon"><i class="fa fa-calendar"></i></div>
-        <div class="admin-stat-value"><%= @check_ins_in_range %></div>
-        <div class="admin-stat-label">Check-ins</div>
-        <div class="admin-stat-delta">Selected period</div>
+    <div class="col-6 col-xl">
+      <div class="admin-card h-100">
+        <div class="p-3">
+          <div class="d-flex align-items-start justify-content-between gap-3 mb-3">
+            <div class="text-muted small text-uppercase">Check-ins</div>
+            <div class="d-flex align-items-center justify-content-center rounded-3 bg-light" style="width: 42px; height: 42px;">
+              <div class="admin-stat-icon mb-0"><i class="fa fa-calendar"></i></div>
+            </div>
+          </div>
+          <div class="admin-stat-value mb-2" style="font-size: 2.25rem;"><%= @check_ins_in_range %></div>
+          <div class="small" style="color: rgba(180, 140, 60, 0.95);">Selected period</div>
+        </div>
       </div>
     </div>
-    <div class="col-6 col-md-6 col-xl">
-      <div class="admin-stat-card">
-        <div class="admin-stat-icon"><i class="fa fa-star"></i></div>
-        <div class="admin-stat-value"><%= number_with_delimiter(@in_circulation) %></div>
-        <div class="admin-stat-label">Points in Circulation</div>
-        <div class="admin-stat-delta">Current total</div>
+    <div class="col-6 col-xl">
+      <div class="admin-card h-100">
+        <div class="p-3">
+          <div class="d-flex align-items-start justify-content-between gap-3 mb-3">
+            <div class="text-muted small text-uppercase">Points in Circulation</div>
+            <div class="d-flex align-items-center justify-content-center rounded-3 bg-light" style="width: 42px; height: 42px;">
+              <div class="admin-stat-icon mb-0"><i class="fa fa-star"></i></div>
+            </div>
+          </div>
+          <div class="admin-stat-value mb-2" style="font-size: 2.25rem;"><%= number_with_delimiter(@in_circulation) %></div>
+          <div class="small" style="color: rgba(180, 140, 60, 0.95);">Current total</div>
+        </div>
       </div>
     </div>
   </div>
