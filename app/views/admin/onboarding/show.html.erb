@@ -1,4 +1,4 @@
-<div class="onboarding-shell" data-controller="onboarding">
+<div class="onboarding-shell">
 
   <%# ── Left sidebar: step progress ── %>
   <aside class="onboarding-sidebar">
@@ -14,16 +14,21 @@
       <div class="onboarding-steps-line"></div>
 
       <% Admin::OnboardingHelper::STEPS.each do |step| %>
-        <div class="onboarding-step-item <%= step_css_class(step[:number], @current_step) %>">
-          <div class="onboarding-step-indicator">
-            <% if step[:number] < @current_step %>
+        <% if step[:number] < @current_step %>
+          <%= button_to goto_admin_onboarding_path, params: { step: step[:number] }, method: :post, class: "onboarding-step-item completed onboarding-step-link", data: { turbo: false } do %>
+            <div class="onboarding-step-indicator">
               <i class="fa fa-check"></i>
-            <% else %>
+            </div>
+            <div class="onboarding-step-label"><%= step[:title] %></div>
+          <% end %>
+        <% else %>
+          <div class="onboarding-step-item <%= step_css_class(step[:number], @current_step) %>">
+            <div class="onboarding-step-indicator">
               <span><%= step[:number] %></span>
-            <% end %>
+            </div>
+            <div class="onboarding-step-label"><%= step[:title] %></div>
           </div>
-          <div class="onboarding-step-label"><%= step[:title] %></div>
-        </div>
+        <% end %>
       <% end %>
     </nav>
 

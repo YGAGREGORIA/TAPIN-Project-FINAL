@@ -1,22 +1,193 @@
-<h1><%= @member.first_name %> <%= @member.last_name %></h1>
+<% content_for :title, "Member" %>
 
-<dl>
-  <dt>Email</dt>
-  <dd><%= @member.email %></dd>
-  <dt>Phone</dt>
-  <dd><%= @member.phone %></dd>
-  <dt>Points</dt>
-  <dd><%= @member.available_points || 0 %></dd>
-  <dt>Total Visits</dt>
-  <dd><%= @member.total_visits || 0 %></dd>
-  <dt>Joined</dt>
-  <dd><%= @member.created_at.strftime("%b %-d, %Y") %></dd>
-</dl>
+<% full_name = [@member.first_name, @member.last_name].compact.join(" ").presence || @member.email %>
+<% initials = [@member.first_name, @member.last_name].filter_map { |value| value.to_s.strip.first&.upcase }.join.first(2).presence || @member.email.to_s.first&.upcase || "?" %>
+<% phone = @member.phone_number.presence || @member.phone.presence || "No phone" %>
 
-<h3>Add Points</h3>
-<%= form_with url: points_admin_member_path(@member), method: :post, class: "d-flex gap-2 mb-4" do |f| %>
-  <%= f.number_field :points, value: 10, min: 1, class: "form-control", style: "max-width: 120px" %>
-  <%= f.submit "Add Points", class: "btn btn-primary btn-sm" %>
-<% end %>
+<div class="admin-card mb-4">
+  <div class="p-4">
+    <div class="d-flex align-items-start justify-content-between gap-3 flex-wrap mb-4">
+      <div class="d-flex align-items-center gap-3 flex-wrap flex-grow-1">
+        <div class="admin-activity-avatar" style="width: 64px; height: 64px; font-size: 1.2rem;"><%= initials %></div>
+        <div class="flex-grow-1">
+          <h1 class="admin-page-title mb-1"><%= full_name %></h1>
+          <div class="d-flex align-items-center gap-2 flex-wrap text-muted small">
+            <span><%= @member.email %></span>
+            <span>&middot;</span>
+            <span><%= phone %></span>
+            <span>&middot;</span>
+            <span>Joined <%= @member.created_at.strftime("%b %-d, %Y") %></span>
+          </div>
+        </div>
+      </div>
 
-<p><%= link_to "Back to Members", admin_members_path %></p>
+      <%= link_to "Back to Members", admin_members_path, class: "btn btn-sm btn-admin-outline" %>
+    </div>
+
+    <div class="row g-3">
+      <div class="col-6 col-xl-3">
+        <div class="admin-stat-card">
+          <div class="admin-stat-icon"><i class="fa fa-check-circle"></i></div>
+          <div class="admin-stat-value"><%= @member.total_visits || 0 %></div>
+          <div class="admin-stat-label">Visits</div>
+        </div>
+      </div>
+      <div class="col-6 col-xl-3">
+        <div class="admin-stat-card">
+          <div class="admin-stat-icon"><i class="fa fa-star"></i></div>
+          <div class="admin-stat-value"><%= @member.available_points || 0 %></div>
+          <div class="admin-stat-label">Available Points</div>
+        </div>
+      </div>
+      <div class="col-6 col-xl-3">
+        <div class="admin-stat-card">
+          <div class="admin-stat-icon"><i class="fa fa-gift"></i></div>
+          <div class="admin-stat-value"><%= @member.reward_redemptions.count %></div>
+          <div class="admin-stat-label">Rewards</div>
+        </div>
+      </div>
+      <div class="col-6 col-xl-3">
+        <div class="admin-stat-card">
+          <div class="admin-stat-icon"><i class="fa fa-tag"></i></div>
+          <div class="admin-stat-value"><%= @member.deal_claims.count %></div>
+          <div class="admin-stat-label">Deals</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="admin-card mb-3">
+  <div class="admin-card-header">
+    <span>Member Details</span>
+    <span class="text-muted fw-normal">Last visit: <%= @member.last_visit_at&.strftime("%b %-d, %Y") || "No visit yet" %></span>
+  </div>
+
+  <div class="p-3">
+    <div class="row g-3">
+      <div class="col-md-6 col-xl-3">
+        <div class="text-muted small mb-1">Email</div>
+        <div class="fw-semibold"><%= @member.email %></div>
+      </div>
+      <div class="col-md-6 col-xl-3">
+        <div class="text-muted small mb-1">Phone</div>
+        <div class="fw-semibold"><%= phone %></div>
+      </div>
+      <div class="col-md-6 col-xl-3">
+        <div class="text-muted small mb-1">Joined</div>
+        <div class="fw-semibold"><%= @member.created_at.strftime("%b %-d, %Y") %></div>
+      </div>
+      <div class="col-md-6 col-xl-3">
+        <div class="text-muted small mb-1">Last Visit</div>
+        <div class="fw-semibold"><%= @member.last_visit_at&.strftime("%b %-d, %Y") || "No visit yet" %></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="admin-card mb-3">
+  <div class="admin-card-header">
+    <span>Recent Visits</span>
+    <span class="text-muted fw-normal"><%= @member.total_visits || 0 %> total</span>
+  </div>
+
+  <% if @recent_visits.any? %>
+    <% @recent_visits.each do |visit| %>
+      <div class="admin-activity-row">
+        <div class="admin-activity-avatar"><i class="fa fa-check-circle"></i></div>
+        <div class="admin-activity-details">
+          <div class="admin-activity-name"><%= visit.class_config&.class_name || "Class visit" %></div>
+          <div class="admin-activity-meta">Visited <%= visit.visited_at&.strftime("%b %-d, %Y") || "No date" %></div>
+        </div>
+        <div class="admin-activity-points">+<%= visit.points_earned.to_i %> pts</div>
+      </div>
+    <% end %>
+  <% else %>
+    <div class="admin-empty-state">No visits recorded yet.</div>
+  <% end %>
+</div>
+
+<div class="admin-card mb-3">
+  <div class="admin-card-header">
+    <span>Manage Member</span>
+    <span class="text-muted fw-normal">Points and rewards</span>
+  </div>
+
+  <div class="p-3">
+    <div class="row g-4">
+      <div class="col-lg-6">
+        <div class="text-muted small mb-2">Add Points</div>
+        <p class="text-muted small mb-3">Adjust this member's balance manually.</p>
+        <%= form_with url: points_admin_member_path(@member), method: :post, class: "d-flex gap-2 flex-wrap align-items-center" do |f| %>
+          <%= f.number_field :points, value: 10, min: 1, class: "form-control", style: "max-width: 120px" %>
+          <%= f.submit "Add Points", class: "btn btn-dark" %>
+        <% end %>
+      </div>
+
+      <div class="col-lg-6">
+        <div class="text-muted small mb-2">Grant Reward</div>
+        <p class="text-muted small mb-3">Assign an active studio reward directly to this member.</p>
+        <% if @available_rewards.any? %>
+          <%= form_with url: rewards_admin_member_path(@member), method: :post, class: "d-flex gap-2 flex-wrap align-items-center" do %>
+            <%= select_tag :reward_id, options_from_collection_for_select(@available_rewards, :id, :name), class: "form-select", style: "max-width: 240px" %>
+            <%= submit_tag "Grant", class: "btn btn-admin-outline" %>
+          <% end %>
+        <% else %>
+          <div class="text-muted small">No active rewards available.</div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="admin-card mb-3">
+  <div class="admin-card-header">
+    <span>Reward History</span>
+    <span class="text-muted fw-normal"><%= @member.reward_redemptions.count %> entries</span>
+  </div>
+
+  <% if @recent_reward_redemptions.any? %>
+    <% @recent_reward_redemptions.each do |redemption| %>
+      <div class="admin-activity-row">
+        <div class="admin-activity-avatar"><i class="fa fa-gift"></i></div>
+        <div class="admin-activity-details">
+          <div class="admin-activity-name"><%= redemption.reward&.name || "Reward" %></div>
+          <div class="admin-activity-meta">
+            Code <%= redemption.code %>
+            <span class="mx-1">&middot;</span>
+            Redeemed <%= redemption.redeemed_at&.strftime("%b %-d, %Y") || "No date" %>
+          </div>
+        </div>
+        <span class="badge <%= redemption.status ? "bg-success" : "bg-secondary" %>"><%= redemption.status ? "Active" : "Inactive" %></span>
+      </div>
+    <% end %>
+  <% else %>
+    <div class="admin-empty-state">No rewards granted yet.</div>
+  <% end %>
+</div>
+
+<div class="admin-card">
+  <div class="admin-card-header">
+    <span>Deal History</span>
+    <span class="text-muted fw-normal"><%= @member.deal_claims.count %> entries</span>
+  </div>
+
+  <% if @recent_deal_claims.any? %>
+    <% @recent_deal_claims.each do |claim| %>
+      <div class="admin-activity-row">
+        <div class="admin-activity-avatar"><i class="fa fa-tag"></i></div>
+        <div class="admin-activity-details">
+          <div class="admin-activity-name"><%= claim.deal&.name || "Deal" %></div>
+          <div class="admin-activity-meta">
+            Code <%= claim.code %>
+            <span class="mx-1">&middot;</span>
+            Claimed <%= claim.claimed_at&.strftime("%b %-d, %Y") || "No date" %>
+          </div>
+        </div>
+        <span class="badge <%= claim.active ? "bg-success" : "bg-secondary" %>"><%= claim.active ? "Active" : "Inactive" %></span>
+      </div>
+    <% end %>
+  <% else %>
+    <div class="admin-empty-state">No deals claimed yet.</div>
+  <% end %>
+</div>

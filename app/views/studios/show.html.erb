@@ -22,24 +22,49 @@
 
   <section class="dashboard-section" style="max-width: 400px; margin: 0 auto;">
     <div class="dashboard-card" style="text-align: center; padding: 1.5rem;">
-      <p style="font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 1.0625rem; margin-bottom: 1rem;">
-        Welcome! Enter your phone number to check in.
-      </p>
+      <% if user_signed_in? %>
+        <p style="font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 1.0625rem; margin-bottom: 1rem;">
+          Welcome back, <%= current_user.first_name.presence || "there" %>!
+        </p>
 
-      <%= form_with url: studio_checkin_path(studio_slug: @studio.slug), method: :post do |f| %>
-        <div style="display: flex; gap: 0.5rem;">
-          <%= f.telephone_field :phone, class: "studio-landing__input", placeholder: "e.g. 612345678", autofocus: true, inputmode: "tel" %>
-          <%= f.submit "Check In", class: "btn-book" %>
-        </div>
+        <%= button_to "Check In", studio_checkin_path(studio_slug: @studio.slug),
+              method: :post,
+              class: "btn-book",
+              style: "width: 100%; padding: 0.85rem; font-size: 1.1rem;",
+              data: { turbo: false } %>
+
+        <p style="font-size: 0.8125rem; opacity: 0.5; margin-top: 1rem;">
+          Tap to record your visit and earn rewards.
+        </p>
+
+        <%= link_to rewards_path(studio_slug: @studio.slug), style: "display: block; margin-top: 0.75rem; font-size: 0.875rem; color: var(--accent-gold, #E1B84A);" do %>
+          View your rewards &rarr;
+        <% end %>
+      <% else %>
+        <p style="font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 1.0625rem; margin-bottom: 1rem;">
+          Welcome! Enter your phone number to check in.
+        </p>
+
+        <%= form_with url: studio_checkin_path(studio_slug: @studio.slug), method: :post do |f| %>
+          <div style="display: flex; gap: 0.5rem;">
+            <%= f.telephone_field :phone, class: "studio-landing__input", placeholder: "e.g. 612345678", autofocus: true, inputmode: "tel" %>
+            <%= f.submit "Check In", class: "btn-book" %>
+          </div>
+        <% end %>
+
+        <p style="font-size: 0.8125rem; opacity: 0.5; margin-top: 1rem;">
+          Tap your phone on the NFC tag or scan the QR code at reception.
+        </p>
+
+        <p style="font-size: 0.8125rem; margin-top: 0.75rem; opacity: 0.6;">
+          First time? Just enter your phone number — we'll set you up automatically.
+        </p>
+
+        <p style="font-size: 0.8125rem; margin-top: 0.75rem;">
+          Already have an account?
+          <%= link_to "Log in", new_user_session_path, style: "color: var(--accent-gold, #E1B84A);" %>
+        </p>
       <% end %>
-
-      <p style="font-size: 0.8125rem; opacity: 0.5; margin-top: 1rem;">
-        Tap your phone on the NFC tag or scan the QR code at reception.
-      </p>
-
-      <p style="font-size: 0.8125rem; margin-top: 0.75rem; opacity: 0.6;">
-        First time? Just enter your phone number — we'll set you up automatically.
-      </p>
     </div>
   </section>
 

@@ -1,10 +1,7 @@
-<% content_for :title, "Edit Reward" %>
+<h1>Edit Reward</h1>
 
-<div class="d-flex align-items-start justify-content-between gap-3 flex-wrap mb-4">
-  <div>
-    <h1 class="admin-page-title mb-1">Edit Reward</h1>
-    <p class="text-muted mb-0">Update this reward and keep member benefits aligned.</p>
+<div class="card shadow-sm border-0 mt-3">
+  <div class="card-body">
+    <%= render "form" %>
   </div>
 </div>
-
-<%= render "form", reward: @reward %>

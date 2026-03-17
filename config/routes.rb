@@ -1,8 +1,14 @@
 Rails.application.routes.draw do
-  devise_for :users, controllers: { omniauth_callbacks: "users/omniauth_callbacks" }
+  devise_for :users, controllers: {
+    omniauth_callbacks: "users/omniauth_callbacks",
+    registrations: "users/registrations"
+  }
   root to: "pages#home"
 
   scope "/s/:studio_slug" do
+    get "/", to: "studios#show", as: :studio_landing
+    post "checkin", to: "studios#checkin", as: :studio_checkin
+
     resources :rewards, only: [ :index ] do
       post :redeem, to: "reward_redemptions#create", on: :member
     end
@@ -50,6 +56,7 @@ Rails.application.routes.draw do
     end
     resource :onboarding, only: [ :show ], controller: "onboarding" do
       post :advance
+      post :goto
     end
     resources :rewards
     resources :class_configs, only: [ :index, :update ]
