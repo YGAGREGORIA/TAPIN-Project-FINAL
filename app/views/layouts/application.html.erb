@@ -19,6 +19,30 @@
 
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+
+    <% if @studio_brand&.primary_color.present? %>
+      <% fonts = [@studio_brand.font_heading, @studio_brand.font_body].compact.uniq %>
+      <% if fonts.any? %>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?<%= fonts.map { |f| "family=#{f.gsub(' ', '+')}:wght@400;600;700" }.join('&') %>&display=swap" rel="stylesheet">
+      <% end %>
+      <style>
+        :root {
+          --brand-primary:    <%= @studio_brand.primary_color %>;
+          --brand-secondary:  <%= @studio_brand.secondary_color %>;
+          --brand-background: <%= @studio_brand.background_color %>;
+          --brand-text:       <%= @studio_brand.text_color %>;
+          <% if @studio_brand.font_heading.present? %>
+          --brand-font-heading: '<%= @studio_brand.font_heading %>', sans-serif;
+          <% end %>
+          <% if @studio_brand.font_body.present? %>
+          --brand-font-body: '<%= @studio_brand.font_body %>', sans-serif;
+          <% end %>
+        }
+      </style>
+    <% end %>
+
     <%= javascript_importmap_tags %>
   </head>
 
