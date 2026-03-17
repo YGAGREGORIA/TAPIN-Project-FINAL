@@ -109,7 +109,8 @@ class StudioBrandingProposalService
 
     return [nil, nil] unless response.is_a?(Net::HTTPSuccess)
 
-    html = response.body
+    # Net::HTTP returns ASCII-8BIT — force to UTF-8 before any string operations
+    html = response.body.dup.force_encoding("UTF-8").encode("UTF-8", invalid: :replace, undef: :replace, replace: "")
 
     # Extract high-signal meta tags first
     meta_lines = []
