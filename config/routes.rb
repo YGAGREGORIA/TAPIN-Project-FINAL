@@ -106,6 +106,8 @@ Rails.application.routes.draw do
     resources :broadcasts, only: [ :index, :create ]
     resource :assistant, only: [ :show ], controller: "assistant" do
       post :respond
+      get :chats, defaults: { format: :json }
+      get :chat_messages, defaults: { format: :json }
     end
     resource :analytics, only: [ :show ], controller: "analytics" do
       get :points

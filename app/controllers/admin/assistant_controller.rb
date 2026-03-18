@@ -1,4 +1,6 @@
 class Admin::AssistantController < Admin::BaseController
+  include ActionView::Helpers::DateHelper
+
   def show
     @chats = current_user.chats.where(studio: current_studio).order(updated_at: :desc)
     @current_chat = if params[:chat_id]
@@ -7,6 +9,20 @@ class Admin::AssistantController < Admin::BaseController
       @chats.first
     end
     @messages = @current_chat&.messages&.order(:created_at) || []
+  end
+
+  def chats
+    chats = current_user.chats.where(studio: current_studio)
+              .order(updated_at: :desc).limit(20)
+              .map { |c| { id: c.id, title: c.title || "Conversation", updated_at: time_ago_in_words(c.updated_at) + " ago" } }
+    render json: { chats: chats }
+  end
+
+  def chat_messages
+    chat = current_user.chats.find(params[:chat_id])
+    messages = chat.messages.order(:created_at)
+                .map { |m| { role: m.role, content: m.content } }
+    render json: { messages: messages, chat_id: chat.id }
   end
 
   def respond

@@ -188,23 +188,41 @@
 
     <div id="assistant-popup" class="d-none">
       <div class="assistant-popup-header">
+        <button onclick="showAssistantHistory()" class="assistant-header-btn" title="Chat history">
+          <i class="fa fa-clock-o"></i>
+        </button>
         <span class="assistant-popup-title"><i class="fa fa-robot"></i> Studio Assistant</span>
         <button onclick="toggleAssistant()" class="assistant-popup-close">&times;</button>
       </div>
 
-      <div class="assistant-popup-messages" id="assistant-messages">
-        <div class="assistant-msg assistant-msg--bot">
-          <div class="assistant-msg-bubble">
-            Hi! I'm your studio assistant. Ask me about members, rewards, visits, or deals.
-          </div>
+      <%# History panel (hidden by default) %>
+      <div id="assistant-history-panel" class="d-none">
+        <div class="assistant-history-header">
+          <button onclick="hideAssistantHistory()" class="assistant-history-back"><i class="fa fa-arrow-left"></i></button>
+          <span class="fw-semibold" style="font-size:0.85rem;">Conversations</span>
+          <button onclick="startNewChat()" class="assistant-history-new" title="New chat"><i class="fa fa-plus"></i></button>
+        </div>
+        <div id="assistant-history-list" class="assistant-history-list">
+          <div class="text-center text-muted p-3" style="font-size:0.8rem;">Loading...</div>
         </div>
       </div>
 
-      <div class="assistant-popup-suggestions" id="assistant-suggestions">
-        <button class="assistant-suggestion" onclick="sendAssistant('Who is close to a reward?')">Close to reward?</button>
-        <button class="assistant-suggestion" onclick="sendAssistant('Suggest deals for my studio')">Deal ideas</button>
-        <button class="assistant-suggestion" onclick="sendAssistant('How can I improve retention?')">Retention tips</button>
-        <button class="assistant-suggestion" onclick="sendAssistant('Show me visit stats')">Visit stats</button>
+      <%# Chat panel %>
+      <div id="assistant-chat-panel">
+        <div class="assistant-popup-messages" id="assistant-messages">
+          <div class="assistant-msg assistant-msg--bot">
+            <div class="assistant-msg-bubble">
+              Hi! I'm your studio assistant. Ask me about members, rewards, visits, or deals.
+            </div>
+          </div>
+        </div>
+
+        <div class="assistant-popup-suggestions" id="assistant-suggestions">
+          <button class="assistant-suggestion" onclick="sendAssistant('Who is close to a reward?')">Close to reward?</button>
+          <button class="assistant-suggestion" onclick="sendAssistant('Suggest deals for my studio')">Deal ideas</button>
+          <button class="assistant-suggestion" onclick="sendAssistant('How can I improve retention?')">Retention tips</button>
+          <button class="assistant-suggestion" onclick="sendAssistant('Show me visit stats')">Visit stats</button>
+        </div>
       </div>
 
       <form class="assistant-popup-input" onsubmit="return handleAssistantSubmit(event)">
@@ -326,12 +344,55 @@
 
       .assistant-typing { opacity: 0.6; font-style: italic; }
 
+      .assistant-header-btn {
+        background: none; border: none; color: #fff;
+        font-size: 1rem; cursor: pointer; padding: 0; line-height: 1;
+        opacity: 0.85;
+      }
+      .assistant-header-btn:hover { opacity: 1; }
+
+      #assistant-history-panel {
+        display: flex; flex-direction: column;
+        flex: 1; overflow: hidden;
+      }
+      .assistant-history-header {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 0.5rem 0.75rem; border-bottom: 1px solid #eee;
+        background: #fafaf6;
+      }
+      .assistant-history-back, .assistant-history-new {
+        background: none; border: none; cursor: pointer;
+        color: #87A878; font-size: 0.9rem; padding: 0.2rem;
+      }
+      .assistant-history-back:hover, .assistant-history-new:hover { color: #6f8f62; }
+      .assistant-history-list {
+        flex: 1; overflow-y: auto; max-height: 360px;
+      }
+      .assistant-history-item {
+        display: block; width: 100%; text-align: left;
+        padding: 0.625rem 0.875rem; border: none; background: none;
+        border-bottom: 1px solid #f0f0ec; cursor: pointer;
+        transition: background 0.15s;
+      }
+      .assistant-history-item:hover { background: #f3f3f0; }
+      .assistant-history-item.active { background: #eef3eb; }
+      .assistant-history-item-title {
+        font-size: 0.825rem; font-weight: 600; color: #333;
+        white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      }
+      .assistant-history-item-time {
+        font-size: 0.7rem; color: #999; margin-top: 0.1rem;
+      }
+
       @media (max-width: 480px) {
         #assistant-popup { width: calc(100vw - 2rem); right: 1rem; bottom: 5rem; }
       }
     </style>
 
     <script>
+      var assistantChatId = null;
+      var assistantLoaded = false;
+
       function toggleAssistant() {
         var popup = document.getElementById('assistant-popup');
         var iconOpen = document.getElementById('assistant-icon-open');
@@ -340,6 +401,93 @@
         popup.classList.toggle('d-none');
         iconOpen.classList.toggle('d-none', !isOpen);
         iconClose.classList.toggle('d-none', isOpen);
+
+        // Load most recent chat on first open
+        if (!isOpen && !assistantLoaded) {
+          assistantLoaded = true;
+          loadLatestChat();
+        }
+      }
+
+      function loadLatestChat() {
+        fetch('<%= chats_admin_assistant_path %>', { headers: { 'Accept': 'application/json' } })
+          .then(function(r) { return r.json(); })
+          .then(function(data) {
+            if (data.chats && data.chats.length > 0) {
+              loadChat(data.chats[0].id);
+            }
+          })
+          .catch(function() {});
+      }
+
+      function loadChat(chatId) {
+        assistantChatId = chatId;
+        var messages = document.getElementById('assistant-messages');
+        messages.innerHTML = '<div class="text-center text-muted p-3" style="font-size:0.8rem;">Loading...</div>';
+
+        fetch('<%= chat_messages_admin_assistant_path %>?chat_id=' + chatId, { headers: { 'Accept': 'application/json' } })
+          .then(function(r) { return r.json(); })
+          .then(function(data) {
+            messages.innerHTML = '';
+            if (data.messages.length === 0) {
+              messages.innerHTML = '<div class="assistant-msg assistant-msg--bot"><div class="assistant-msg-bubble">Hi! I\'m your studio assistant. Ask me about members, rewards, visits, or deals.</div></div>';
+            } else {
+              data.messages.forEach(function(m) {
+                var cls = m.role === 'user' ? 'assistant-msg--user' : 'assistant-msg--bot';
+                var content = m.role === 'user' ? escapeHtml(m.content) : formatMarkdown(m.content);
+                messages.innerHTML += '<div class="assistant-msg ' + cls + '"><div class="assistant-msg-bubble">' + content + '</div></div>';
+              });
+            }
+            messages.scrollTop = messages.scrollHeight;
+            document.getElementById('assistant-suggestions').style.display = data.messages.length > 0 ? 'none' : 'flex';
+            hideAssistantHistory();
+          })
+          .catch(function() {
+            messages.innerHTML = '<div class="assistant-msg assistant-msg--bot"><div class="assistant-msg-bubble">Hi! I\'m your studio assistant. Ask me about members, rewards, visits, or deals.</div></div>';
+          });
+      }
+
+      function showAssistantHistory() {
+        var historyPanel = document.getElementById('assistant-history-panel');
+        var chatPanel = document.getElementById('assistant-chat-panel');
+        historyPanel.classList.remove('d-none');
+        chatPanel.classList.add('d-none');
+
+        var list = document.getElementById('assistant-history-list');
+        list.innerHTML = '<div class="text-center text-muted p-3" style="font-size:0.8rem;">Loading...</div>';
+
+        fetch('<%= chats_admin_assistant_path %>', { headers: { 'Accept': 'application/json' } })
+          .then(function(r) { return r.json(); })
+          .then(function(data) {
+            if (data.chats.length === 0) {
+              list.innerHTML = '<div class="text-center text-muted p-3" style="font-size:0.8rem;">No conversations yet</div>';
+              return;
+            }
+            list.innerHTML = '';
+            data.chats.forEach(function(chat) {
+              var active = chat.id === assistantChatId ? ' active' : '';
+              list.innerHTML += '<button class="assistant-history-item' + active + '" onclick="loadChat(' + chat.id + ')">' +
+                '<div class="assistant-history-item-title">' + escapeHtml(chat.title) + '</div>' +
+                '<div class="assistant-history-item-time">' + escapeHtml(chat.updated_at) + '</div>' +
+                '</button>';
+            });
+          })
+          .catch(function() {
+            list.innerHTML = '<div class="text-center text-muted p-3" style="font-size:0.8rem;">Could not load history</div>';
+          });
+      }
+
+      function hideAssistantHistory() {
+        document.getElementById('assistant-history-panel').classList.add('d-none');
+        document.getElementById('assistant-chat-panel').classList.remove('d-none');
+      }
+
+      function startNewChat() {
+        assistantChatId = null;
+        var messages = document.getElementById('assistant-messages');
+        messages.innerHTML = '<div class="assistant-msg assistant-msg--bot"><div class="assistant-msg-bubble">Hi! I\'m your studio assistant. Ask me about members, rewards, visits, or deals.</div></div>';
+        document.getElementById('assistant-suggestions').style.display = 'flex';
+        hideAssistantHistory();
       }
 
       function handleAssistantSubmit(e) {
@@ -356,26 +504,29 @@
         var messages = document.getElementById('assistant-messages');
         var suggestions = document.getElementById('assistant-suggestions');
 
-        // Show user message
+        // Make sure we're showing the chat panel
+        hideAssistantHistory();
+
         messages.innerHTML += '<div class="assistant-msg assistant-msg--user"><div class="assistant-msg-bubble">' + escapeHtml(msg) + '</div></div>';
-        // Show typing indicator
         messages.innerHTML += '<div class="assistant-msg assistant-msg--bot" id="typing-indicator"><div class="assistant-msg-bubble assistant-typing">Thinking...</div></div>';
         messages.scrollTop = messages.scrollHeight;
         suggestions.style.display = 'none';
 
-        // Make sure popup is open
         var popup = document.getElementById('assistant-popup');
         if (popup.classList.contains('d-none')) toggleAssistant();
 
-        // Send to server
         var token = document.querySelector('meta[name="csrf-token"]').content;
+        var payload = { message: msg };
+        if (assistantChatId) payload.chat_id = assistantChatId;
+
         fetch('<%= respond_admin_assistant_path %>', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': token, 'Accept': 'application/json' },
-          body: JSON.stringify({ message: msg })
+          body: JSON.stringify(payload)
         })
         .then(function(r) { return r.json(); })
         .then(function(data) {
+          assistantChatId = data.chat_id;
           var typing = document.getElementById('typing-indicator');
           if (typing) typing.remove();
           messages.innerHTML += '<div class="assistant-msg assistant-msg--bot"><div class="assistant-msg-bubble">' + formatMarkdown(data.reply) + '</div></div>';
