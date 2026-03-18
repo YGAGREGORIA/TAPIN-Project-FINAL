@@ -55,9 +55,7 @@
               <span>Check-in Setup</span>
             <% end %>
 
-            <%= link_to admin_assistant_path, class: "nav-link admin-nav-link" do %>
-              <span>Studio Assistant</span>
-            <% end %>
+            <%# Assistant is now a floating bubble — see bottom of layout %>
           </div>
 
           <% if current_user.present? %>
@@ -180,6 +178,228 @@
 
       document.addEventListener("DOMContentLoaded", initAdminAccountMenus);
       document.addEventListener("turbo:load", initAdminAccountMenus);
+    </script>
+
+    <%# ── Floating AI Assistant Bubble ── %>
+    <div id="assistant-bubble" onclick="toggleAssistant()" title="Studio Assistant">
+      <i class="fa fa-comments" id="assistant-icon-open"></i>
+      <i class="fa fa-times d-none" id="assistant-icon-close"></i>
+    </div>
+
+    <div id="assistant-popup" class="d-none">
+      <div class="assistant-popup-header">
+        <span class="assistant-popup-title"><i class="fa fa-robot"></i> Studio Assistant</span>
+        <button onclick="toggleAssistant()" class="assistant-popup-close">&times;</button>
+      </div>
+
+      <div class="assistant-popup-messages" id="assistant-messages">
+        <div class="assistant-msg assistant-msg--bot">
+          <div class="assistant-msg-bubble">
+            Hi! I'm your studio assistant. Ask me about members, rewards, visits, or deals.
+          </div>
+        </div>
+      </div>
+
+      <div class="assistant-popup-suggestions" id="assistant-suggestions">
+        <button class="assistant-suggestion" onclick="sendAssistant('Who is close to a reward?')">Close to reward?</button>
+        <button class="assistant-suggestion" onclick="sendAssistant('Suggest deals for my studio')">Deal ideas</button>
+        <button class="assistant-suggestion" onclick="sendAssistant('How can I improve retention?')">Retention tips</button>
+        <button class="assistant-suggestion" onclick="sendAssistant('Show me visit stats')">Visit stats</button>
+      </div>
+
+      <form class="assistant-popup-input" onsubmit="return handleAssistantSubmit(event)">
+        <input type="text" id="assistant-input" placeholder="Ask about your studio..." autocomplete="off" />
+        <button type="submit"><i class="fa fa-paper-plane"></i></button>
+      </form>
+    </div>
+
+    <style>
+      #assistant-bubble {
+        position: fixed;
+        bottom: 1.5rem;
+        right: 1.5rem;
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: #87A878;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        cursor: pointer;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+        z-index: 9999;
+        transition: transform 0.2s, background 0.2s;
+      }
+      #assistant-bubble:hover { transform: scale(1.08); background: #6f8f62; }
+
+      #assistant-popup {
+        position: fixed;
+        bottom: 5.5rem;
+        right: 1.5rem;
+        width: 380px;
+        max-height: 520px;
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+        z-index: 9998;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+      .assistant-popup-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.875rem 1rem;
+        background: #87A878;
+        color: #fff;
+      }
+      .assistant-popup-title { font-weight: 600; font-size: 0.95rem; }
+      .assistant-popup-title i { margin-right: 0.4rem; }
+      .assistant-popup-close {
+        background: none; border: none; color: #fff;
+        font-size: 1.3rem; cursor: pointer; line-height: 1; padding: 0;
+      }
+
+      .assistant-popup-messages {
+        flex: 1;
+        overflow-y: auto;
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        max-height: 320px;
+        min-height: 160px;
+      }
+      .assistant-msg { display: flex; }
+      .assistant-msg--user { justify-content: flex-end; }
+      .assistant-msg--bot { justify-content: flex-start; }
+      .assistant-msg-bubble {
+        max-width: 80%;
+        padding: 0.625rem 0.875rem;
+        border-radius: 12px;
+        font-size: 0.875rem;
+        line-height: 1.45;
+        white-space: pre-wrap;
+      }
+      .assistant-msg--user .assistant-msg-bubble {
+        background: #87A878; color: #fff;
+        border-bottom-right-radius: 4px;
+      }
+      .assistant-msg--bot .assistant-msg-bubble {
+        background: #f3f3f0; color: #333;
+        border-bottom-left-radius: 4px;
+      }
+
+      .assistant-popup-suggestions {
+        display: flex;
+        gap: 0.375rem;
+        padding: 0.5rem 1rem;
+        flex-wrap: wrap;
+        border-top: 1px solid #eee;
+      }
+      .assistant-suggestion {
+        background: #f3f3f0; border: 1px solid #ddd; border-radius: 20px;
+        padding: 0.3rem 0.75rem; font-size: 0.75rem; cursor: pointer;
+        color: #555; transition: background 0.15s;
+      }
+      .assistant-suggestion:hover { background: #e8e8e4; }
+
+      .assistant-popup-input {
+        display: flex;
+        border-top: 1px solid #eee;
+        padding: 0.5rem;
+        gap: 0.5rem;
+      }
+      .assistant-popup-input input {
+        flex: 1; border: 1px solid #ddd; border-radius: 8px;
+        padding: 0.5rem 0.75rem; font-size: 0.875rem; outline: none;
+      }
+      .assistant-popup-input input:focus { border-color: #87A878; }
+      .assistant-popup-input button {
+        background: #87A878; color: #fff; border: none; border-radius: 8px;
+        width: 38px; cursor: pointer; font-size: 0.875rem;
+      }
+      .assistant-popup-input button:hover { background: #6f8f62; }
+
+      .assistant-typing { opacity: 0.6; font-style: italic; }
+
+      @media (max-width: 480px) {
+        #assistant-popup { width: calc(100vw - 2rem); right: 1rem; bottom: 5rem; }
+      }
+    </style>
+
+    <script>
+      function toggleAssistant() {
+        var popup = document.getElementById('assistant-popup');
+        var iconOpen = document.getElementById('assistant-icon-open');
+        var iconClose = document.getElementById('assistant-icon-close');
+        var isOpen = !popup.classList.contains('d-none');
+        popup.classList.toggle('d-none');
+        iconOpen.classList.toggle('d-none', !isOpen);
+        iconClose.classList.toggle('d-none', isOpen);
+      }
+
+      function handleAssistantSubmit(e) {
+        e.preventDefault();
+        var input = document.getElementById('assistant-input');
+        var msg = input.value.trim();
+        if (!msg) return false;
+        input.value = '';
+        sendAssistant(msg);
+        return false;
+      }
+
+      function sendAssistant(msg) {
+        var messages = document.getElementById('assistant-messages');
+        var suggestions = document.getElementById('assistant-suggestions');
+
+        // Show user message
+        messages.innerHTML += '<div class="assistant-msg assistant-msg--user"><div class="assistant-msg-bubble">' + escapeHtml(msg) + '</div></div>';
+        // Show typing indicator
+        messages.innerHTML += '<div class="assistant-msg assistant-msg--bot" id="typing-indicator"><div class="assistant-msg-bubble assistant-typing">Thinking...</div></div>';
+        messages.scrollTop = messages.scrollHeight;
+        suggestions.style.display = 'none';
+
+        // Make sure popup is open
+        var popup = document.getElementById('assistant-popup');
+        if (popup.classList.contains('d-none')) toggleAssistant();
+
+        // Send to server
+        var token = document.querySelector('meta[name="csrf-token"]').content;
+        fetch('<%= respond_admin_assistant_path %>', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': token, 'Accept': 'application/json' },
+          body: JSON.stringify({ message: msg })
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          var typing = document.getElementById('typing-indicator');
+          if (typing) typing.remove();
+          messages.innerHTML += '<div class="assistant-msg assistant-msg--bot"><div class="assistant-msg-bubble">' + formatMarkdown(data.reply) + '</div></div>';
+          messages.scrollTop = messages.scrollHeight;
+        })
+        .catch(function() {
+          var typing = document.getElementById('typing-indicator');
+          if (typing) typing.remove();
+          messages.innerHTML += '<div class="assistant-msg assistant-msg--bot"><div class="assistant-msg-bubble">Sorry, something went wrong. Please try again.</div></div>';
+          messages.scrollTop = messages.scrollHeight;
+        });
+      }
+
+      function escapeHtml(str) {
+        var div = document.createElement('div');
+        div.appendChild(document.createTextNode(str));
+        return div.innerHTML;
+      }
+
+      function formatMarkdown(text) {
+        return escapeHtml(text)
+          .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+          .replace(/\n/g, '<br>');
+      }
     </script>
   </body>
 </html>

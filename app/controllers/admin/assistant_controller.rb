@@ -10,25 +10,23 @@ class Admin::AssistantController < Admin::BaseController
   end
 
   def respond
-    @chat = if params[:chat_id].present?
-      current_user.chats.find(params[:chat_id])
+    body = request.content_type&.include?("json") ? JSON.parse(request.body.read) : params
+    message_text = body["message"]
+
+    @chat = if body["chat_id"].present?
+      current_user.chats.find(body["chat_id"])
     else
       current_user.chats.create!(studio: current_studio, status: true, title: "New conversation")
     end
 
-    user_message = @chat.messages.create!(
-      content: params[:message],
-      role: "user"
-    )
+    @chat.messages.create!(content: message_text, role: "user")
+    response = generate_admin_response(message_text)
+    @chat.messages.create!(content: response, role: "assistant")
 
-    response = generate_admin_response(params[:message])
-
-    @chat.messages.create!(
-      content: response,
-      role: "assistant"
-    )
-
-    redirect_to admin_assistant_path(chat_id: @chat.id)
+    respond_to do |format|
+      format.json { render json: { reply: response, chat_id: @chat.id } }
+      format.html { redirect_to admin_assistant_path(chat_id: @chat.id) }
+    end
   end
 
   private
