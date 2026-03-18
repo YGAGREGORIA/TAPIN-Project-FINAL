@@ -9,7 +9,17 @@ class Admin::OnboardingController < Admin::BaseController
     load_step_data
   end
 
+  VALID_ACTIVATION_CODE = "1234"
+
   def advance
+    # Step 1 requires a valid Mindbody activation code
+    if current_step == 1
+      if params[:activation_code].to_s.strip != VALID_ACTIVATION_CODE
+        redirect_to admin_onboarding_path, alert: "Invalid activation code. Please check your Mindbody account and try again."
+        return
+      end
+    end
+
     session[:onboarding_step] = [current_step + 1, TOTAL_STEPS].min
     redirect_to admin_onboarding_path
   end

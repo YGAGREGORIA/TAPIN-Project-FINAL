@@ -1,33 +1,49 @@
 <h1 class="onboarding-title">Connect your Mindbody account</h1>
 <p class="onboarding-desc">
-  Connect your Mindbody account to automatically sync your studio data.
+  Enter your Mindbody activation code to sync your studio data.
+  You can find this code in your Mindbody account under
+  <strong>Settings &rarr; API Integrations &rarr; TapIn</strong>.
 </p>
 
 <div class="onboarding-card mb-4">
-  <h3 class="onboarding-card-heading">The following data will be automatically imported:</h3>
-  <div class="onboarding-import-grid">
-    <div class="onboarding-import-item">
-      <span class="onboarding-bullet"></span>
-      <span>Studio Information</span>
+  <%= form_with url: advance_admin_onboarding_path, method: :post, data: { turbo: false }, local: true do |f| %>
+    <h3 class="onboarding-card-heading">Activation Code</h3>
+    <div style="display: flex; gap: 0.75rem; align-items: flex-start; margin-bottom: 1.5rem;">
+      <input type="text" name="activation_code" id="activation_code"
+             placeholder="Enter your code"
+             class="form-control"
+             style="max-width: 280px; font-size: 1.1rem; letter-spacing: 0.15em; text-align: center;"
+             required autofocus />
     </div>
-    <div class="onboarding-import-item">
-      <span class="onboarding-bullet"></span>
-      <span>Teachers</span>
-    </div>
-    <div class="onboarding-import-item">
-      <span class="onboarding-bullet"></span>
-      <span>Classes</span>
-    </div>
-    <div class="onboarding-import-item">
-      <span class="onboarding-bullet"></span>
-      <span>Members</span>
-    </div>
-  </div>
-</div>
+    <% if flash[:alert]&.include?("activation") %>
+      <p style="color: var(--danger, #dc3545); font-size: 0.875rem; margin-bottom: 1rem;">
+        <%= flash[:alert] %>
+      </p>
+    <% end %>
 
-<div class="onboarding-actions">
-  <%= button_to "Connect with Mindbody", advance_admin_onboarding_path,
-        method: :post,
-        class: "btn onboarding-btn-primary",
-        data: { turbo: false } %>
+    <h3 class="onboarding-card-heading" style="margin-top: 1rem;">The following data will be automatically imported:</h3>
+    <div class="onboarding-import-grid">
+      <div class="onboarding-import-item">
+        <span class="onboarding-bullet"></span>
+        <span>Studio Information</span>
+      </div>
+      <div class="onboarding-import-item">
+        <span class="onboarding-bullet"></span>
+        <span>Teachers</span>
+      </div>
+      <div class="onboarding-import-item">
+        <span class="onboarding-bullet"></span>
+        <span>Classes</span>
+      </div>
+      <div class="onboarding-import-item">
+        <span class="onboarding-bullet"></span>
+        <span>Members</span>
+      </div>
+    </div>
+
+    <div class="onboarding-actions">
+      <%= f.submit "Connect with Mindbody",
+            class: "btn onboarding-btn-primary" %>
+    </div>
+  <% end %>
 </div>
