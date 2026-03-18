@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_17_150000) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_18_000001) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -413,7 +413,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_17_150000) do
     t.string "mindbody_api_key"
     t.string "mindbody_site_id"
     t.string "name"
-    t.integer "onboarding_step", default: 0, null: false
     t.string "slug"
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
