@@ -55,36 +55,51 @@
           </div>
 
           <div class="profile-field">
-            <%= f.label :email, "Email Address", class: "profile-label" %>
-            <%= f.email_field :email, class: "profile-input", autocomplete: "email" %>
-            <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
-              <p class="profile-field-hint">Pending confirmation for: <%= resource.unconfirmed_email %></p>
-            <% end %>
+            <label class="profile-label">Email Address</label>
+            <p class="profile-input" style="background:#f8f9fa;color:#6c757d;cursor:default;"><%= resource.email %></p>
           </div>
 
-          <div class="profile-field">
-            <%= f.label :password, "New Password", class: "profile-label" %>
-            <div class="profile-input-wrap">
-              <%= f.password_field :password, class: "profile-input profile-input--padded-r",
-                    autocomplete: "new-password",
-                    placeholder: "Leave blank to keep current" %>
-              <button type="button" class="profile-pw-toggle" aria-label="Toggle password">
-                <i class="fa fa-eye-slash"></i>
-              </button>
+          <%# ── Change password section (only required when changing email/password) ── %>
+          <div class="profile-field" id="change-password-toggle">
+            <button type="button" class="btn btn-link p-0 profile-label" id="show-password-fields">
+              Change password or email?
+            </button>
+          </div>
+
+          <div id="password-fields" style="display:none;">
+            <div class="profile-field">
+              <%= f.label :email, "New Email Address", class: "profile-label" %>
+              <%= f.email_field :email, class: "profile-input", autocomplete: "email",
+                    value: resource.unconfirmed_email.presence || resource.email %>
+              <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+                <p class="profile-field-hint">Pending confirmation for: <%= resource.unconfirmed_email %></p>
+              <% end %>
             </div>
-            <p class="profile-field-hint">Must be at least <%= @minimum_password_length || 8 %> characters</p>
-          </div>
 
-          <div class="profile-field">
-            <%= f.label :password_confirmation, "Confirm New Password", class: "profile-label" %>
-            <%= f.password_field :password_confirmation, class: "profile-input",
-                  autocomplete: "new-password", placeholder: "Repeat new password" %>
-          </div>
+            <div class="profile-field">
+              <%= f.label :password, "New Password", class: "profile-label" %>
+              <div class="profile-input-wrap">
+                <%= f.password_field :password, class: "profile-input profile-input--padded-r",
+                      autocomplete: "new-password",
+                      placeholder: "Leave blank to keep current" %>
+                <button type="button" class="profile-pw-toggle" aria-label="Toggle password">
+                  <i class="fa fa-eye-slash"></i>
+                </button>
+              </div>
+              <p class="profile-field-hint">Must be at least <%= @minimum_password_length || 8 %> characters with uppercase, lowercase, and a number</p>
+            </div>
 
-          <div class="profile-field">
-            <%= f.label :current_password, "Current Password", class: "profile-label" %>
-            <%= f.password_field :current_password, class: "profile-input",
-                  autocomplete: "current-password", placeholder: "Required to save changes" %>
+            <div class="profile-field">
+              <%= f.label :password_confirmation, "Confirm New Password", class: "profile-label" %>
+              <%= f.password_field :password_confirmation, class: "profile-input",
+                    autocomplete: "new-password", placeholder: "Repeat new password" %>
+            </div>
+
+            <div class="profile-field">
+              <%= f.label :current_password, "Current Password", class: "profile-label" %>
+              <%= f.password_field :current_password, class: "profile-input",
+                    autocomplete: "current-password", placeholder: "Required to confirm changes" %>
+            </div>
           </div>
         </div>
       </div>
@@ -151,4 +166,18 @@
       }
     });
   });
+
+  const toggleBtn = document.getElementById('show-password-fields');
+  const passwordFields = document.getElementById('password-fields');
+  if (toggleBtn && passwordFields) {
+    toggleBtn.addEventListener('click', () => {
+      passwordFields.style.display = passwordFields.style.display === 'none' ? 'block' : 'none';
+      toggleBtn.textContent = passwordFields.style.display === 'none' ? 'Change password or email?' : 'Hide';
+    });
+  }
+
+  <% if resource.errors.any? && (resource.errors[:password].any? || resource.errors[:email].any? || resource.errors[:current_password].any?) %>
+    if (passwordFields) passwordFields.style.display = 'block';
+    if (toggleBtn) toggleBtn.textContent = 'Hide';
+  <% end %>
 </script>
