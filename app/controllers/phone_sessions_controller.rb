@@ -76,11 +76,11 @@ class PhoneSessionsController < ApplicationController
 
     if visit.save
       user.recalculate_points! if user.respond_to?(:recalculate_points!)
-      redirect_to rewards_path(studio_slug: @studio.slug),
+      redirect_to studio_landing_path(studio_slug: @studio.slug),
         notice: "You're checked in! Your visit was counted."
     else
       # 12-hour dedup or other validation — still log them in, just skip the visit
-      redirect_to rewards_path(studio_slug: @studio.slug),
+      redirect_to studio_landing_path(studio_slug: @studio.slug),
         notice: "Welcome back, #{user.display_name}! (Visit already counted today)"
     end
   end
