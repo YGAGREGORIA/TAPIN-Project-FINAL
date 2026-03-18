@@ -1,0 +1,125 @@
+<% content_for :title, "Classes" %>
+
+<div class="d-flex align-items-start justify-content-between gap-3 flex-wrap mb-4">
+  <div>
+    <h1 class="admin-page-title mb-1">Classes</h1>
+    <p class="text-muted mb-0">View all classes synced from Mindbody.</p>
+  </div>
+  <div class="d-flex gap-2">
+    <span class="badge bg-dark px-3 py-2"><%= @total_classes %> total</span>
+    <span class="badge bg-success px-3 py-2"><%= @total_upcoming %> upcoming</span>
+  </div>
+</div>
+
+<%# ── Class Types ── %>
+<div class="admin-card mb-4">
+  <div class="admin-card-header">
+    <span>Class Types</span>
+    <span class="text-muted fw-normal"><%= @class_descriptions.size %> types</span>
+  </div>
+
+  <% if @class_descriptions.any? %>
+    <% @class_descriptions.each do |cd| %>
+      <div class="admin-activity-row justify-content-between flex-wrap flex-md-nowrap">
+        <div class="admin-activity-avatar"><i class="fa fa-heartbeat"></i></div>
+        <div class="admin-activity-details flex-grow-1">
+          <div class="admin-activity-name"><%= cd.name %></div>
+          <div class="admin-activity-meta">
+            <% if cd.category.present? %>
+              <span><%= cd.category %></span>
+              <span class="mx-1">&middot;</span>
+            <% end %>
+            <% if cd.duration_minutes.present? %>
+              <span><%= cd.duration_minutes %> min</span>
+              <span class="mx-1">&middot;</span>
+            <% end %>
+            <span><%= cd.klasses.count %> scheduled sessions</span>
+          </div>
+          <% if cd.description.present? %>
+            <div class="text-muted small mt-1"><%= truncate(cd.description, length: 120) %></div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  <% else %>
+    <div class="admin-empty-state">No class types found.</div>
+  <% end %>
+</div>
+
+<%# ── Upcoming Classes ── %>
+<div class="admin-card mb-4">
+  <div class="admin-card-header">
+    <span>Upcoming Classes</span>
+    <span class="text-muted fw-normal"><%= @total_upcoming %> scheduled</span>
+  </div>
+
+  <% if @upcoming_classes.any? %>
+    <% @upcoming_classes.each do |klass| %>
+      <div class="admin-activity-row justify-content-between flex-wrap flex-md-nowrap">
+        <div class="admin-activity-avatar"><i class="fa fa-calendar"></i></div>
+        <div class="admin-activity-details flex-grow-1">
+          <div class="admin-activity-name"><%= klass.class_description&.name || "Unknown Class" %></div>
+          <div class="admin-activity-meta">
+            <span><%= klass.start_datetime.strftime("%a, %b %-d at %-I:%M %p") %></span>
+            <span class="mx-1">&middot;</span>
+            <span><%= klass.staff&.first_name %> <%= klass.staff&.last_name %></span>
+          </div>
+        </div>
+
+        <div class="d-flex align-items-center gap-2 ms-md-auto mt-2 mt-md-0">
+          <div class="badge bg-light text-dark d-inline-flex align-items-center gap-2 px-3 py-2">
+            <i class="fa fa-users"></i>
+            <span><%= klass.total_booked || 0 %> / <%= klass.max_capacity || "∞" %></span>
+          </div>
+          <% if klass.location.present? %>
+            <div class="badge bg-light text-dark px-3 py-2">
+              <i class="fa fa-map-marker"></i> <%= klass.location %>
+            </div>
+          <% end %>
+        </div>
+
+        <%= link_to "Details", admin_class_path(klass), class: "admin-activity-link ms-md-3 mt-2 mt-md-0" %>
+      </div>
+    <% end %>
+  <% else %>
+    <div class="admin-empty-state">No upcoming classes.</div>
+  <% end %>
+</div>
+
+<%# ── Past Classes ── %>
+<div class="admin-card">
+  <div class="admin-card-header">
+    <span>Past Classes</span>
+  </div>
+
+  <% if @past_classes.any? %>
+    <% @past_classes.each do |klass| %>
+      <div class="admin-activity-row justify-content-between flex-wrap flex-md-nowrap">
+        <div class="admin-activity-avatar" style="opacity: 0.5;"><i class="fa fa-calendar-check-o"></i></div>
+        <div class="admin-activity-details flex-grow-1">
+          <div class="admin-activity-name text-muted"><%= klass.class_description&.name || "Unknown Class" %></div>
+          <div class="admin-activity-meta">
+            <span><%= klass.start_datetime.strftime("%a, %b %-d at %-I:%M %p") %></span>
+            <span class="mx-1">&middot;</span>
+            <span><%= klass.staff&.first_name %> <%= klass.staff&.last_name %></span>
+            <% if klass.is_canceled %>
+              <span class="mx-1">&middot;</span>
+              <span class="text-danger">Canceled</span>
+            <% end %>
+          </div>
+        </div>
+
+        <div class="d-flex align-items-center gap-2 ms-md-auto mt-2 mt-md-0">
+          <div class="badge bg-light text-dark d-inline-flex align-items-center gap-2 px-3 py-2">
+            <i class="fa fa-users"></i>
+            <span><%= klass.total_booked || 0 %> attended</span>
+          </div>
+        </div>
+
+        <%= link_to "Details", admin_class_path(klass), class: "admin-activity-link ms-md-3 mt-2 mt-md-0" %>
+      </div>
+    <% end %>
+  <% else %>
+    <div class="admin-empty-state">No past classes yet.</div>
+  <% end %>
+</div>

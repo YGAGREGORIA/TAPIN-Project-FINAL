@@ -78,6 +78,7 @@ Rails.application.routes.draw do
       get :regenerate_branding, to: redirect("/admin/onboarding")
     end
     resources :rewards
+    resources :classes, only: [ :index, :show ], controller: "classes"
     resources :class_configs, only: [ :index, :update ]
     resources :deals do
       get :confirm_delete, on: :member
