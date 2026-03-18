@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_17_125632) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_17_143034) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -348,7 +348,24 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_17_125632) do
     t.integer "reward_type", default: 0, null: false
     t.bigint "studio_id", null: false
     t.datetime "updated_at", null: false
+    t.integer "visits_required", default: 10, null: false
     t.index ["studio_id"], name: "index_rewards_on_studio_id"
+  end
+
+  create_table "stamp_cards", force: :cascade do |t|
+    t.datetime "completed_at"
+    t.datetime "created_at", null: false
+    t.datetime "redeemed_at"
+    t.bigint "reward_id", null: false
+    t.integer "stamps_collected", default: 0, null: false
+    t.datetime "started_at"
+    t.string "status", default: "active", null: false
+    t.bigint "studio_id", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["reward_id"], name: "index_stamp_cards_on_reward_id"
+    t.index ["studio_id"], name: "index_stamp_cards_on_studio_id"
+    t.index ["user_id"], name: "index_stamp_cards_on_user_id"
   end
 
   create_table "studio_brands", force: :cascade do |t|
@@ -478,6 +495,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_17_125632) do
   add_foreign_key "reward_redemptions", "studios"
   add_foreign_key "reward_redemptions", "users"
   add_foreign_key "rewards", "studios"
+  add_foreign_key "stamp_cards", "rewards"
+  add_foreign_key "stamp_cards", "studios"
+  add_foreign_key "stamp_cards", "users"
   add_foreign_key "studio_brands", "studios"
   add_foreign_key "studio_classes", "class_configs"
   add_foreign_key "studio_classes", "studios"

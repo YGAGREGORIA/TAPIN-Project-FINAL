@@ -22,6 +22,7 @@ class User < ApplicationRecord
   has_many :referrals, foreign_key: :referrer_id, dependent: :destroy
   has_many :mindbody_links, dependent: :destroy
   has_many :rewards, through: :reward_redemptions
+  has_many :stamp_cards, dependent: :destroy
 
   before_validation :normalize_email
   before_validation :generate_placeholder_email, if: :phone_user?
@@ -83,6 +84,21 @@ class User < ApplicationRecord
 
     remainder = count % 10
     remainder.zero? ? 10 : 10 - remainder
+  end
+
+  # Per-reward progress: how many visits into the current cycle for a specific reward
+  def visit_progress_for_reward(reward)
+    visits_count_for(reward.studio) % (reward.visits_required || 10)
+  end
+
+  # Per-reward: how many more visits until this reward unlocks again
+  def visits_remaining_for_reward(reward)
+    threshold = reward.visits_required || 10
+    count = visits_count_for(reward.studio)
+    return threshold if count.zero?
+
+    remainder = count % threshold
+    remainder.zero? ? threshold : threshold - remainder
   end
 
   def has_claimed_deal?(deal)

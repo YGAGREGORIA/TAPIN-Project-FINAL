@@ -11,6 +11,7 @@ class Studio < ApplicationRecord
 
   has_many :rewards, dependent: :destroy
   has_many :reward_redemptions, dependent: :destroy
+  has_many :stamp_cards, dependent: :destroy
 
   has_many :class_configs, dependent: :destroy
   has_many :studio_classes, dependent: :destroy

@@ -88,8 +88,8 @@
                 <div class="text-muted small mb-1">Valid for</div>
                 <div class="fw-semibold"><%= item.expiry_days.present? ? "#{item.expiry_days} days" : "No expiry" %></div>
               <% else %>
-                <div class="text-muted small mb-1">Points Cost</div>
-                <div class="fw-semibold"><%= item.points_cost || 0 %> pts</div>
+                <div class="text-muted small mb-1">Visits Required</div>
+                <div class="fw-semibold"><%= item.visits_required || 10 %> visits</div>
               <% end %>
             </div>
           </div>

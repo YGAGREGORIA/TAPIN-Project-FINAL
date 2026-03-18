@@ -29,6 +29,14 @@ class DashboardsController < ApplicationController
       studio.rewards.active.select { |reward| reward.redeemable_by?(current_user) }
     end
 
+    @all_rewards = @studios_visited.flat_map do |studio|
+      studio.rewards.active.to_a
+    end
+
+    @stamp_cards = current_user.stamp_cards
+                               .where(status: %w[active completed])
+                               .includes(:reward, :studio)
+
     @available_deals = @studios_visited.flat_map do |studio|
       claimed_deal_ids = current_user.deal_claims.where(studio: studio).pluck(:deal_id)
       studio.deals.active.reject { |deal| claimed_deal_ids.include?(deal.id) }
