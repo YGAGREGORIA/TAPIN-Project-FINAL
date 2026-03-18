@@ -1,41 +1,112 @@
 <% content_for :title, "Redemption — #{@reward_redemption.reward.name}" %>
 
-<div class="schedule-page">
+<div class="dashboard">
 
-  <%# ── Header ── %>
-  <div class="schedule-header">
-    <p class="schedule-studio-name"><%= @studio.name %></p>
-    <h1 class="schedule-title"><%= @reward_redemption.reward.name %></h1>
+  <%# ── Hero ── %>
+  <div class="dashboard-hero">
+    <div class="hero-inner">
+      <div>
+        <h3 class="hero-greeting"><%= @studio.name %></h3>
+        <p class="hero-points">
+          <span class="hero-points-value">Reward Unlocked</span>
+        </p>
+      </div>
+    </div>
   </div>
 
-  <section class="dashboard-section">
-    <p class="section-title">Redemption Details</p>
+  <div class="dashboard-content">
 
-    <div class="reward-card">
-      <div class="reward-name" style="font-size: 1.5rem;"><%= @reward_redemption.code %></div>
-      <p class="reward-description">Show this code at reception to claim your reward.</p>
+    <%# ── Celebration Card ── %>
+    <section class="dashboard-section animate-fade-up">
+      <div class="redemption-celebration">
+        <div class="redemption-celebration-icon anim-sparkle-in">
+          <i class="fa fa-gift"></i>
+        </div>
+        <h3 class="redemption-celebration-title">
+          <%= @reward_redemption.reward.name %>
+        </h3>
+        <p class="redemption-celebration-subtitle">
+          You've earned this reward — congratulations!
+        </p>
+      </div>
+    </section>
 
-      <div style="margin-top: 1rem; font-size: 0.875rem; opacity: 0.8;">
-        <p>Redeemed: <%= @reward_redemption.redeemed_at&.strftime("%b %-d, %Y at %-I:%M %p") %></p>
+    <%# ── Code Card ── %>
+    <section class="dashboard-section animate-fade-up" style="--delay: 0.1s;">
+      <p class="section-title">Your Redemption Code</p>
+      <div class="redemption-code-card">
+        <div class="redemption-code-value"><%= @reward_redemption.code %></div>
+        <p class="redemption-code-hint">
+          <i class="fa fa-info-circle"></i>
+          Show this code to the front desk to claim your reward
+        </p>
+      </div>
+    </section>
+
+    <%# ── Details ── %>
+    <section class="dashboard-section animate-fade-up" style="--delay: 0.2s;">
+      <p class="section-title">Details</p>
+      <div class="dashboard-card">
+        <div class="reward-row">
+          <div class="reward-row-icon">
+            <i class="fa fa-calendar-check-o"></i>
+          </div>
+          <div class="reward-row-details">
+            <p class="reward-row-name">Redeemed</p>
+            <p class="reward-row-meta"><%= @reward_redemption.redeemed_at&.strftime("%b %-d, %Y at %-I:%M %p") %></p>
+          </div>
+        </div>
         <% if @reward_redemption.expires_at.present? %>
-          <p>Expires: <%= @reward_redemption.expires_at.strftime("%b %-d, %Y") %></p>
+          <div class="reward-row reward-row--divider">
+            <div class="reward-row-icon">
+              <i class="fa fa-clock-o"></i>
+            </div>
+            <div class="reward-row-details">
+              <p class="reward-row-name">Expires</p>
+              <p class="reward-row-meta">
+                <%= @reward_redemption.expires_at.strftime("%b %-d, %Y") %>
+                <% if @reward_redemption.expired? %>
+                  <span style="color: var(--destructive); font-weight: 600;"> — Expired</span>
+                <% end %>
+              </p>
+            </div>
+          </div>
         <% end %>
       </div>
+    </section>
 
-      <% if @reward_redemption.expired? %>
-        <div class="visits-remaining-text" style="margin-top: 0.75rem;">
-          This reward has expired.
+    <%# ── How to Use ── %>
+    <section class="dashboard-section animate-fade-up" style="--delay: 0.3s;">
+      <p class="section-title">How to Use</p>
+      <div class="dashboard-card">
+        <div class="redemption-steps">
+          <div class="redemption-step">
+            <div class="redemption-step-number">1</div>
+            <p>Visit <strong><%= @studio.name %></strong> for your next class</p>
+          </div>
+          <div class="redemption-step">
+            <div class="redemption-step-number">2</div>
+            <p>Show the code <strong><%= @reward_redemption.code %></strong> at the front desk</p>
+          </div>
+          <div class="redemption-step">
+            <div class="redemption-step-number">3</div>
+            <p>Enjoy your <strong><%= @reward_redemption.reward.name.downcase %></strong>!</p>
+          </div>
         </div>
-      <% end %>
-    </div>
-  </section>
+      </div>
+    </section>
 
-  <section class="dashboard-section pb-5">
-    <div class="dashboard-card" style="text-align: center;">
-      <%= link_to reward_redemptions_path(studio_slug: @studio.slug), class: "btn-secondary-action" do %>
-        <i class="fa fa-arrow-left"></i> Back to History
-      <% end %>
-    </div>
-  </section>
+    <%# ── Navigation ── %>
+    <section class="dashboard-section dashboard-section--last animate-fade-up" style="--delay: 0.4s;">
+      <div class="d-flex gap-2 justify-content-center">
+        <%= link_to reward_redemptions_path(studio_slug: @studio.slug), class: "btn-secondary-action" do %>
+          <i class="fa fa-history"></i> View All Redemptions
+        <% end %>
+        <%= link_to rewards_path(studio_slug: @studio.slug), class: "btn-secondary-action" do %>
+          <i class="fa fa-gift"></i> Back to Rewards
+        <% end %>
+      </div>
+    </section>
 
+  </div>
 </div>

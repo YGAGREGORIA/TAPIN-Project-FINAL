@@ -58,11 +58,17 @@
             </p>
 
             <% if card.completed? %>
-              <div style="text-align: center; margin-top: 0.5rem;">
-                <%= button_to "Redeem",
-                      redeem_stamp_card_path(studio_slug: card.studio.slug, id: card.id),
+              <div class="redeem-cta anim-glow-pulse">
+                <div class="redeem-cta-icon anim-sparkle-in">
+                  <i class="fa fa-gift"></i>
+                </div>
+                <p class="redeem-cta-text">You've earned a <strong><%= card.reward.name %></strong>!</p>
+                <p class="redeem-cta-hint">Tap below to get your redemption code</p>
+                <%= button_to redeem_stamp_card_path(studio_slug: card.studio.slug, id: card.id),
                       method: :post,
-                      class: "btn-redeem" %>
+                      class: "btn-redeem btn-redeem--lg" do %>
+                  <i class="fa fa-gift"></i> Redeem My Reward
+                <% end %>
               </div>
             <% else %>
               <% remaining = threshold - stamps %>

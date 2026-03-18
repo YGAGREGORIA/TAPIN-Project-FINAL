@@ -300,6 +300,168 @@
   }
 }
 
+// ── Redeem CTA (completed stamp card) ───────────────────────────────
+.redeem-cta {
+  text-align: center;
+  margin-top: 0.75rem;
+  padding: 1rem;
+  background: rgba($terracotta, 0.06);
+  border-radius: 0.75rem;
+  border: 1px dashed rgba($terracotta, 0.25);
+}
+
+.redeem-cta-icon {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--accent-foreground);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.redeem-cta-text {
+  font-size: 0.9375rem;
+  color: var(--foreground);
+  margin: 0 0 0.25rem;
+}
+
+.redeem-cta-hint {
+  font-size: 0.75rem;
+  color: var(--muted-foreground);
+  margin: 0 0 0.75rem;
+}
+
+.btn-redeem--lg {
+  font-size: 1rem;
+  padding: 0.625rem 1.5rem;
+  border-radius: 0.625rem;
+  gap: 0.5rem;
+}
+
+// ── Redemption celebration page ─────────────────────────────────────
+.redemption-celebration {
+  text-align: center;
+  padding: 1.5rem 1rem;
+}
+
+.redemption-celebration-icon {
+  width: 4.5rem;
+  height: 4.5rem;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--accent-foreground);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 6px 20px rgba($terracotta, 0.35);
+}
+
+.redemption-celebration-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--foreground);
+  margin: 0 0 0.5rem;
+}
+
+.redemption-celebration-subtitle {
+  font-size: 0.9375rem;
+  color: var(--muted-foreground);
+  margin: 0;
+}
+
+.redemption-code-card {
+  background: var(--card);
+  border-radius: 0.875rem;
+  border: 2px dashed var(--accent);
+  padding: 1.5rem 1rem;
+  text-align: center;
+}
+
+.redemption-code-value {
+  font-family: 'Space Grotesk', monospace;
+  font-size: 1.75rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  margin-bottom: 0.75rem;
+}
+
+.redemption-code-hint {
+  font-size: 0.8125rem;
+  color: var(--muted-foreground);
+  margin: 0;
+
+  i {
+    margin-right: 0.3rem;
+    color: var(--primary);
+  }
+}
+
+.redemption-steps {
+  padding: 0.5rem 1rem;
+}
+
+.redemption-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.875rem;
+  padding: 0.75rem 0;
+
+  &:not(:last-child) {
+    border-bottom: 1px solid var(--border);
+  }
+
+  p {
+    font-size: 0.875rem;
+    color: var(--foreground);
+    margin: 0;
+    padding-top: 0.15rem;
+  }
+}
+
+.redemption-step-number {
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 50%;
+  background: var(--primary);
+  color: var(--primary-foreground);
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 0.8125rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.btn-secondary-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: var(--card);
+  color: var(--foreground);
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-size: 0.8125rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--border);
+  text-decoration: none;
+  transition: background 0.15s;
+
+  &:hover {
+    background: var(--background);
+    color: var(--foreground);
+  }
+}
+
 // ── Deal row ──────────────────────────────────────────────────────
 .deal-row {
   display: flex;
