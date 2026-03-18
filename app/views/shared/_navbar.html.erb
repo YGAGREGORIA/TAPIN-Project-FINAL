@@ -3,9 +3,13 @@
   <nav class="navbar navbar-tapin">
     <div class="container position-relative d-flex align-items-center justify-content-center">
 
-      <%# Logo — centered %>
+      <%# Logo — centered: studio logo if available, otherwise TapIn wordmark %>
       <%= link_to root_path, class: "navbar-brand mx-auto" do %>
-        <span class="tapin-logo">TAPIN<span>.</span></span>
+        <% if @studio_brand&.logo&.attached? %>
+          <%= image_tag url_for(@studio_brand.logo), style: "max-height:36px;width:auto;", alt: "Studio logo" %>
+        <% else %>
+          <span class="tapin-logo">TAPIN<span>.</span></span>
+        <% end %>
       <% end %>
 
       <%# Hamburger — absolute right, desktop only %>

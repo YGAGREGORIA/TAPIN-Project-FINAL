@@ -1,0 +1,21 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  reward: one
+  studio: one
+  stamps_collected: 1
+  status: MyString
+  started_at: 2026-03-17 15:30:34
+  completed_at: 2026-03-17 15:30:34
+  redeemed_at: 2026-03-17 15:30:34
+
+two:
+  user: two
+  reward: two
+  studio: two
+  stamps_collected: 1
+  status: MyString
+  started_at: 2026-03-17 15:30:34
+  completed_at: 2026-03-17 15:30:34
+  redeemed_at: 2026-03-17 15:30:34

@@ -6,7 +6,8 @@ module Admin::OnboardingHelper
     { number: 4, title: "Import Classes", partial: "classes" },
     { number: 5, title: "Import Members", partial: "members" },
     { number: 6, title: "Check-in Setup", partial: "checkin" },
-    { number: 7, title: "Final Setup", partial: "complete" }
+    { number: 7, title: "Studio Branding", partial: "branding" },
+    { number: 8, title: "Final Setup", partial: "complete" }
   ].freeze
 
   STUDIO_INFO = {
