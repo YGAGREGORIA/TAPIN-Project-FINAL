@@ -12,7 +12,7 @@ class RewardRedemptionsController < ApplicationController
     @reward_redemption = current_user.reward_redemptions
                                      .where(studio: @studio)
                                      .find(params[:id])
-    scan_url = scan_reward_redemptions_url(studio_slug: @studio.slug, code: @reward_redemption.code)
+    scan_url = "#{request.base_url}#{scan_reward_redemptions_path(studio_slug: @studio.slug, code: @reward_redemption.code)}"
     qr = RQRCode::QRCode.new(scan_url)
     @qr_svg = qr.as_svg(
       color: "000",
