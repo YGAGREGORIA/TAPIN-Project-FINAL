@@ -13,7 +13,7 @@ class RewardRedemptionsController < ApplicationController
                                      .where(studio: @studio)
                                      .find(params[:id])
     @scan_url = "#{request.base_url}#{scan_reward_redemptions_path(studio_slug: @studio.slug, code: @reward_redemption.code)}"
-    @qr_image_url = "https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl=#{CGI.escape(@scan_url)}&choe=UTF-8"
+    @qr_image_url = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=#{CGI.escape(@scan_url)}"
   end
 
   def create
