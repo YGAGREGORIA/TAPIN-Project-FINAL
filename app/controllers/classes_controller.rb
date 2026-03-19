@@ -10,6 +10,7 @@ class ClassesController < ApplicationController
 
     @class_types = @studio.studio_classes.upcoming.reorder(nil).distinct.pluck(:class_type).compact.sort
     @teachers    = @studio.studio_classes.upcoming.reorder(nil).distinct.pluck(:teacher_name).compact.sort
+    @booked_class_ids = current_user.bookings.active.where(studio: @studio).pluck(:studio_class_id).to_set
   end
 
   def show
