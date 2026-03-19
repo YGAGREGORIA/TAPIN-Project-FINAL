@@ -26,7 +26,7 @@
 
     <%# ── Stamp Card Progress ── %>
     <% if @stamp_cards.any? %>
-      <section class="dashboard-section animate-fade-up">
+      <section class="dashboard-section animate-fade-up" style="animation-delay: 0.1s">
         <p class="section-title">Your Progress</p>
         <% @stamp_cards.each do |card| %>
           <% threshold = card.reward.visits_required || 10 %>
@@ -39,13 +39,14 @@
               <% end %>
             </div>
 
-            <%# Stamp grid: rows of 5 %>
+            <%# Stamp grid: rows of 5 with staggered pop animation %>
             <div class="stamp-rows">
               <% threshold.times.each_slice(5) do |row| %>
                 <div class="stamp-row">
                   <% row.each do |i| %>
                     <% done = card.completed? || i < stamps %>
-                    <div class="stamp-circle <%= done ? 'stamp-circle--done' : '' %>">
+                    <div class="stamp-circle <%= done ? 'stamp-circle--done' : '' %>"
+                         <% if done %>style="animation-delay: <%= i * 0.08 %>s"<% end %>>
                       <i class="fa <%= done ? 'fa-star' : 'fa-star-o' %>"></i>
                     </div>
                   <% end %>
@@ -84,7 +85,7 @@
     <% end %>
 
     <%# ── Available Rewards ── %>
-    <section class="dashboard-section animate-fade-up">
+    <section class="dashboard-section animate-fade-up" style="animation-delay: 0.2s">
       <div class="section-header">
         <p class="section-title">Your Rewards</p>
         <% if @studios_visited.any? %>
@@ -130,7 +131,7 @@
     </section>
 
     <%# ── Deals (claimed + available) ── %>
-    <section class="dashboard-section animate-fade-up">
+    <section class="dashboard-section animate-fade-up" style="animation-delay: 0.3s">
       <div class="section-header">
         <p class="section-title">Your Deals</p>
         <% if @studios_visited.any? %>
@@ -182,7 +183,7 @@
     </section>
 
     <%# ── Upcoming Classes ── %>
-    <section class="dashboard-section animate-fade-up">
+    <section class="dashboard-section animate-fade-up" style="animation-delay: 0.4s">
       <div class="section-header">
         <p class="section-title">Upcoming Classes</p>
         <% if @studios_visited.any? %>
@@ -214,7 +215,7 @@
     </section>
 
     <%# ── Recent Activity ── %>
-    <section class="dashboard-section dashboard-section--last animate-fade-up">
+    <section class="dashboard-section dashboard-section--last animate-fade-up" style="animation-delay: 0.5s">
       <p class="section-title">Recent Activity</p>
       <div class="dashboard-card">
         <% if @recent_visits.any? %>
