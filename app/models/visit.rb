@@ -8,7 +8,7 @@ class Visit < ApplicationRecord
   belongs_to :class_config, optional: true
 
   validates :visited_at, presence: true
-  validate :must_wait_12_hours_between_visits, on: :create
+  # validate :must_wait_12_hours_between_visits, on: :create
 
   after_create :auto_start_free_class_card
   after_create :increment_stamp_cards
