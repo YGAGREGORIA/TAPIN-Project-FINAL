@@ -12,15 +12,8 @@ class RewardRedemptionsController < ApplicationController
     @reward_redemption = current_user.reward_redemptions
                                      .where(studio: @studio)
                                      .find(params[:id])
-    scan_url = "#{request.base_url}#{scan_reward_redemptions_path(studio_slug: @studio.slug, code: @reward_redemption.code)}"
-    qr = RQRCode::QRCode.new(scan_url)
-    @qr_svg = qr.as_svg(
-      color: "000",
-      shape_rendering: "crispEdges",
-      module_size: 4,
-      standalone: true,
-      use_path: true
-    )
+    @scan_url = "#{request.base_url}#{scan_reward_redemptions_path(studio_slug: @studio.slug, code: @reward_redemption.code)}"
+    @qr_image_url = "https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl=#{CGI.escape(@scan_url)}&choe=UTF-8"
   end
 
   def create

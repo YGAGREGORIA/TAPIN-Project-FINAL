@@ -49,7 +49,7 @@
       <div class="redemption-code-card">
         <div class="redemption-code-value"><%= @reward_redemption.code %></div>
         <div class="redemption-qr-code">
-          <%= raw @qr_svg %>
+          <img src="<%= @qr_image_url %>" alt="QR code to redeem reward" width="200" height="200" />
         </div>
         <p class="redemption-qr-label">
           <i class="fa fa-qrcode"></i> Scan to redeem
