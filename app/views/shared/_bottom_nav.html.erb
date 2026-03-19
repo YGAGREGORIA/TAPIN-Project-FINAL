@@ -24,7 +24,8 @@
     <span>Profile</span>
   <% end %>
 
-  <%= button_to destroy_user_session_path, method: :delete,
+  <%= link_to destroy_user_session_path, method: :delete,
+        data: { turbo_method: :delete },
         class: "bottom-nav-item bottom-nav-logout" do %>
     <i class="fa fa-sign-out"></i>
     <span>Log Out</span>

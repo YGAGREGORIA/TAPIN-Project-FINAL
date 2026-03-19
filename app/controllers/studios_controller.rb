@@ -9,7 +9,9 @@ class StudiosController < ApplicationController
       return
     end
 
-    # Logged-in users see the "Tap In" page with a check-in button
+    # Logged-in users: NFC tap already happened — auto check-in and go to dashboard
+    create_visit_for(current_user, @studio)
+    redirect_to dashboard_path
   end
 
   def checkin
