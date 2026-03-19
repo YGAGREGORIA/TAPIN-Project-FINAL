@@ -649,6 +649,21 @@
   margin-right: 0.5rem;
 }
 
+.onboarding-spinner--dark {
+  border-color: rgba($espresso-brown, 0.18);
+  border-top-color: $sage-green;
+}
+
+.onboarding-loading-hint {
+  margin-top: 1rem;
+  margin-bottom: 0;
+  display: inline-flex;
+  align-items: center;
+  color: rgba($espresso-brown, 0.72);
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
 @keyframes onboarding-spin {
   to { transform: rotate(360deg); }
 }

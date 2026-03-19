@@ -6,7 +6,9 @@
     <p class="text-muted mb-0">Verwalten Sie Ihre Mitglieder und deren Aktivitäten.</p>
   </div>
 
-  <%= link_to(export_admin_members_path(format: :csv), class: "btn btn-sm btn-admin-outline d-inline-flex align-items-center gap-2") do %>
+  <%= link_to(export_admin_members_path(format: :csv),
+              class: "btn btn-sm btn-admin-outline d-inline-flex align-items-center gap-2",
+              data: { turbo: false }) do %>
     <i class="fa fa-download"></i>
     <span>Export CSV</span>
   <% end %>

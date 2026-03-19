@@ -9,7 +9,7 @@ class Admin::OnboardingController < Admin::BaseController
     load_step_data
   end
 
-  VALID_ACTIVATION_CODE = "1234"
+  VALID_ACTIVATION_CODE = "847362915048261"
 
   def advance
     # Step 1 requires a valid Mindbody activation code

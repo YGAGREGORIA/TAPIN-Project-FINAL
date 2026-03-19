@@ -118,7 +118,11 @@
       <div class="col-lg-6">
         <div class="text-muted small mb-2">Add Points</div>
         <p class="text-muted small mb-3">Adjust this member's balance manually.</p>
-        <%= form_with url: points_admin_member_path(@member), method: :post, class: "d-flex gap-2 flex-wrap align-items-center" do |f| %>
+        <%= form_with url: points_admin_member_path(@member),
+                      method: :post,
+                      local: true,
+                      data: { turbo: false },
+                      class: "d-flex gap-2 flex-wrap align-items-center" do |f| %>
           <%= f.number_field :points, value: 10, min: 1, class: "form-control", style: "max-width: 120px" %>
           <%= f.submit "Add Points", class: "btn btn-dark" %>
         <% end %>
@@ -128,7 +132,11 @@
         <div class="text-muted small mb-2">Grant Reward</div>
         <p class="text-muted small mb-3">Assign an active studio reward directly to this member.</p>
         <% if @available_rewards.any? %>
-          <%= form_with url: rewards_admin_member_path(@member), method: :post, class: "d-flex gap-2 flex-wrap align-items-center" do %>
+          <%= form_with url: rewards_admin_member_path(@member),
+                        method: :post,
+                        local: true,
+                        data: { turbo: false },
+                        class: "d-flex gap-2 flex-wrap align-items-center" do %>
             <%= select_tag :reward_id, options_from_collection_for_select(@available_rewards, :id, :name), class: "form-select", style: "max-width: 240px" %>
             <%= submit_tag "Grant", class: "btn btn-admin-outline" %>
           <% end %>

@@ -1,6 +1,6 @@
 class Admin::MemberRewardsController < Admin::BaseController
   def create
-    @member = User.find(params[:member_id])
+    @member = User.find(params[:id])
     @reward = Reward.find(params[:reward_id])
 
     redemption = RewardRedemption.new(

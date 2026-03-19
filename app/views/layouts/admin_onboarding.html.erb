@@ -9,6 +9,22 @@
     <%= javascript_importmap_tags %>
   </head>
   <body class="onboarding-layout">
+    <% if notice.present? || alert.present? %>
+      <div style="position: sticky; top: 0; z-index: 1000; padding: 1rem 1rem 0;">
+        <% if notice.present? %>
+          <div class="alert alert-success alert-dismissible fade show" role="alert" style="max-width: 960px; margin: 0 auto 1rem;">
+            <%= notice %>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+        <% end %>
+        <% if alert.present? %>
+          <div class="alert alert-danger alert-dismissible fade show" role="alert" style="max-width: 960px; margin: 0 auto 1rem;">
+            <%= alert %>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
     <%= yield %>
   </body>
 </html>

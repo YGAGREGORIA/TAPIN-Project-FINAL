@@ -6,13 +6,19 @@
 </p>
 
 <div class="onboarding-card mb-4">
-  <%= form_with url: advance_admin_onboarding_path, method: :post, data: { turbo: false }, local: true do |f| %>
+  <%= form_with url: advance_admin_onboarding_path,
+                method: :post,
+                data: { turbo: false, controller: "onboarding", action: "submit->onboarding#submit" },
+                local: true do |f| %>
     <h3 class="onboarding-card-heading">Activation Code</h3>
-    <div style="display: flex; gap: 0.75rem; align-items: flex-start; margin-bottom: 1.5rem;">
+    <div style="display: flex; gap: 0.75rem; align-items: flex-start; margin-top: 1.5rem; margin-bottom: 1.5rem;">
       <input type="text" name="activation_code" id="activation_code"
-             placeholder="Enter your code"
+             placeholder="Enter your 15-digit code"
              class="form-control"
-             style="max-width: 280px; font-size: 1.1rem; letter-spacing: 0.15em; text-align: center;"
+             style="max-width: 360px; padding-top: 1rem; padding-bottom: 1rem; font-size: 1.1rem; letter-spacing: 0.15em; text-align: center;"
+             pattern="[0-9]{15}"
+             maxlength="15"
+             inputmode="numeric"
              required autofocus />
     </div>
     <% if flash[:alert]&.include?("activation") %>
@@ -43,7 +49,13 @@
 
     <div class="onboarding-actions">
       <%= f.submit "Connect with Mindbody",
-            class: "btn onboarding-btn-primary" %>
+            class: "btn onboarding-btn-primary",
+            data: { onboarding_target: "submitBtn" } %>
     </div>
+
+    <p class="onboarding-loading-hint" data-onboarding-target="loadingHint" hidden>
+      <span class="onboarding-spinner onboarding-spinner--dark"></span>
+      Connecting to Mindbody and syncing your studio data...
+    </p>
   <% end %>
 </div>

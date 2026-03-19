@@ -1,3 +1,5 @@
+require "csv"
+
 class Admin::MembersController < Admin::BaseController
   ITEMS_PER_PAGE = 6
   CUSTOMER_ROLE = 0
@@ -34,8 +36,9 @@ class Admin::MembersController < Admin::BaseController
     @members = User.where(role: CUSTOMER_ROLE).order(:last_name, :first_name)
     respond_to do |format|
       format.csv do
-        headers["Content-Disposition"] = "attachment; filename=members-#{Date.today}.csv"
-        headers["Content-Type"] = "text/csv"
+        send_data generate_members_csv(@members),
+                  filename: "members-#{Date.today}.csv",
+                  type: "text/csv; charset=utf-8"
       end
       format.html { redirect_to admin_members_path }
     end
@@ -76,6 +79,25 @@ class Admin::MembersController < Admin::BaseController
       scope.order(total_visits: :asc, created_at: :desc)
     else
       scope.order(created_at: :desc)
+    end
+  end
+
+  def generate_members_csv(members)
+    CSV.generate(headers: true) do |csv|
+      csv << ["First Name", "Last Name", "Email", "Phone", "Available Points", "Total Points", "Total Visits", "Joined At"]
+
+      members.find_each do |member|
+        csv << [
+          member.first_name,
+          member.last_name,
+          member.email,
+          member.phone,
+          member.available_points.to_i,
+          member.total_points.to_i,
+          member.total_visits.to_i,
+          member.created_at&.iso8601
+        ]
+      end
     end
   end
 end
