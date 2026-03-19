@@ -4,6 +4,8 @@ class Admin::OnboardingController < Admin::BaseController
   TOTAL_STEPS = 8
   SITE_ID = "12345"
 
+  before_action :ensure_studio
+
   def show
     @current_step = current_step
     load_step_data
@@ -85,6 +87,15 @@ class Admin::OnboardingController < Admin::BaseController
   end
 
   private
+
+  def ensure_studio
+    return if current_user.studios.any?
+
+    studio_name = current_user.studio.presence || "My Studio"
+    slug = studio_name.parameterize
+    slug = "#{slug}-#{SecureRandom.hex(3)}" if Studio.exists?(slug: slug)
+    current_user.studios.create!(name: studio_name, slug: slug, active: true)
+  end
 
   def current_step
     step = session[:onboarding_step].to_i
