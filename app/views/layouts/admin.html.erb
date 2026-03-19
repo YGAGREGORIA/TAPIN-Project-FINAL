@@ -51,7 +51,11 @@
           <div class="mx-2 mb-3 border-top"></div>
 
           <div class="nav flex-column gap-1">
-            <%= link_to admin_checkin_settings_path, class: "nav-link admin-nav-link" do %>
+            <%= link_to admin_onboarding_path, class: "nav-link admin-nav-link #{active_link_class(admin_onboarding_path)}" do %>
+              <span>Onboarding</span>
+            <% end %>
+
+            <%= link_to admin_checkin_settings_path, class: "nav-link admin-nav-link #{active_link_class(admin_checkin_settings_path)}" do %>
               <span>Check-in Setup</span>
             <% end %>
 
