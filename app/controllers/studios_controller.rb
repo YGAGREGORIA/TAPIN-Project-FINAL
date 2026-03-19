@@ -9,8 +9,7 @@ class StudiosController < ApplicationController
       return
     end
 
-    # Logged-in users: NFC tap already happened — auto check-in and go to dashboard
-    create_visit_for(current_user, @studio)
+    # Logged-in users → straight to dashboard
     redirect_to dashboard_path
   end
 
