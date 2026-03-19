@@ -39,4 +39,13 @@ class ApplicationController < ActionController::Base
       dashboard_path
     end
   end
+
+  def after_sign_out_path_for(_resource_or_scope)
+    slug = cookies[:last_studio_slug]
+    if slug.present? && Studio.exists?(slug: slug)
+      studio_phone_login_path(studio_slug: slug)
+    else
+      root_path
+    end
+  end
 end

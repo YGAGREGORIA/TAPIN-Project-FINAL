@@ -15,7 +15,7 @@
 
     <%= form_with url: studio_phone_verify_path(studio_slug: @studio.slug), method: :post, class: "phone-auth__form" do |f| %>
       <%= f.text_field :code, class: "phone-auth__input phone-auth__input--code", placeholder: "1234", maxlength: 6, autofocus: true, inputmode: "numeric", autocomplete: "one-time-code", style: "text-align: center; letter-spacing: 0.5em; font-size: 1.5rem;" %>
-      <%= f.submit "Verify & Check In", class: "phone-auth__btn" %>
+      <%= f.submit "Verify & Log In", class: "phone-auth__btn" %>
     <% end %>
 
     <p class="phone-auth__hint">

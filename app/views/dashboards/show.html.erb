@@ -133,6 +133,9 @@
     <section class="dashboard-section animate-fade-up">
       <div class="section-header">
         <p class="section-title">Your Deals</p>
+        <% if @studios_visited.any? %>
+          <%= link_to "See All", deals_path(studio_slug: @studios_visited.first.slug), class: "section-see-all" %>
+        <% end %>
       </div>
       <% if @active_deal_claims.any? || @available_deals.any? %>
         <div class="dashboard-card">

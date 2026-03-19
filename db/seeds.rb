@@ -208,8 +208,11 @@ free_class_reward = Reward.find_or_create_by!(studio: studio, name: "Free Class"
   r.points_cost = 0
   r.image_url = "https://example.com/free-class.png"
   r.description = "Unlock one free class after 10 visits."
+  r.visits_required = 10
   r.active = true
 end
+# Ensure visits_required is correct even if record already existed
+free_class_reward.update!(visits_required: 10) if free_class_reward.visits_required != 10
 
 Reward.find_or_create_by!(studio: studio, name: "Guest Pass") do |r|
   r.reward_type = :free_class

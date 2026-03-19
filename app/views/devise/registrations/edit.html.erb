@@ -59,7 +59,8 @@
             <p class="profile-input" style="background:#f8f9fa;color:#6c757d;cursor:default;"><%= resource.email %></p>
           </div>
 
-          <%# ── Change password section (only required when changing email/password) ── %>
+          <%# ── Change password section (only for admin/email users) ── %>
+          <% unless current_user.phone_user? %>
           <div class="profile-field" id="change-password-toggle">
             <button type="button" class="btn btn-link p-0 profile-label" id="show-password-fields">
               Change password or email?
@@ -101,6 +102,7 @@
                     autocomplete: "current-password", placeholder: "Required to confirm changes" %>
             </div>
           </div>
+          <% end %><%# unless phone_user? %>
         </div>
       </div>
 
