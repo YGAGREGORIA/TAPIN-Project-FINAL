@@ -40,7 +40,7 @@ class RewardRedemptionsController < ApplicationController
   end
 
   def scan
-    @redemption = RewardRedemption.find_by!(code: params[:code])
+    @redemption = RewardRedemption.where(code: params[:code]).first!
     ActionCable.server.broadcast("reward_redemption_#{@redemption.code}", { event: "scanned" })
     render inline: <<~HTML, layout: false
       <!DOCTYPE html>
