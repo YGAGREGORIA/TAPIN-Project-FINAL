@@ -12,6 +12,12 @@ $bottom-nav-height: 62px;
   align-items: stretch;
   z-index: 1000;
 
+  // button_to wraps in a <form> — make it a proper flex child
+  > form, > .button_to {
+    flex: 1;
+    display: flex;
+  }
+
   @include media-breakpoint-up(lg) {
     display: none;
   }
@@ -50,5 +56,6 @@ $bottom-nav-height: 62px;
 }
 
 .bottom-nav-logout {
+  flex: 1;
   &:hover { color: var(--destructive); }
 }

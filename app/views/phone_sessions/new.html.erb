@@ -4,7 +4,8 @@
   <div class="phone-auth__card">
     <div class="phone-auth__header">
       <% if @brand&.logo_url.present? %>
-        <img src="<%= @brand.logo_url %>" alt="<%= @studio.name %>" class="phone-auth__logo">
+        <img src="<%= @brand.logo_url %>" alt="<%= @studio.name %>" class="phone-auth__logo"
+             onerror="this.style.display='none'">
       <% end %>
       <h1 class="phone-auth__title"><%= @studio.name %></h1>
       <p class="phone-auth__subtitle">Enter your phone number to check in</p>
@@ -44,6 +45,10 @@
     <p class="phone-auth__footer">
       Studio owner?
       <%= link_to "Admin login", new_user_session_path, class: "phone-auth__link" %>
+    </p>
+
+    <p class="phone-auth__powered">
+      powered by <span class="phone-auth__powered-logo">TAPIN<span>.</span></span>
     </p>
   </div>
 </div>

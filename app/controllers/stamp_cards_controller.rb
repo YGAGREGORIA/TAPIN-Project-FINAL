@@ -4,7 +4,7 @@ class StampCardsController < ApplicationController
 
   # POST /s/:studio_slug/rewards/:reward_id/start_card
   def create
-    reward = @studio.rewards.active.find(params[:reward_id])
+    reward = @studio.rewards.active.find(params[:id])
 
     # Check if user already has an active card for this reward
     existing = current_user.stamp_cards.active.find_by(reward: reward)

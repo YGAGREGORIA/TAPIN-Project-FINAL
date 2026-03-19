@@ -262,6 +262,13 @@
     color: var(--muted-foreground);
     pointer-events: none;
   }
+
+  &--booked {
+    background: rgba($sage-green, 0.12);
+    color: $sage-green;
+    pointer-events: none;
+    font-weight: 600;
+  }
 }
 
 .premium-badge {

@@ -66,22 +66,26 @@ class PhoneSessionsController < ApplicationController
 
     sign_in(user)
 
-    # Auto check-in: create a visit right after verification
+    # Store last studio slug in cookie so logout can redirect back here
+    # (session is cleared on sign_out, but cookies survive)
+    cookies[:last_studio_slug] = @studio.slug
+
+    # Auto check-in: phone login at a studio = tapping in
     visit = user.visits.new(
       studio: @studio,
       class_config: @studio.class_configs.first,
       visited_at: Time.current,
-      points_earned: @studio.class_configs.first&.point_value || 10
+      points_earned: 1
     )
 
     if visit.save
       user.recalculate_points! if user.respond_to?(:recalculate_points!)
-      redirect_to studio_landing_path(studio_slug: @studio.slug),
-        notice: "You're checked in! Your visit was counted."
+      redirect_to dashboard_path,
+        notice: "Welcome, #{user.display_name}! You're checked in."
     else
-      # 12-hour dedup or other validation — still log them in, just skip the visit
-      redirect_to studio_landing_path(studio_slug: @studio.slug),
-        notice: "Welcome back, #{user.display_name}! (Visit already counted today)"
+      # 12-hour dedup — still go to dashboard
+      redirect_to dashboard_path,
+        notice: "Welcome back, #{user.display_name}!"
     end
   end
 

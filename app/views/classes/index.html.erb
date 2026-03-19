@@ -108,9 +108,13 @@
                   <% end %>
                 </div>
               </div>
-              <%= link_to "Book Class",
-                    class_path(studio_slug: @studio.slug, id: studio_class.id),
-                    class: "btn-book-card #{'btn-book-card--disabled' if studio_class.full?}" %>
+              <% if @booked_class_ids.include?(studio_class.id) %>
+                <span class="btn-book-card btn-book-card--booked">Booked</span>
+              <% else %>
+                <%= link_to "Book Class",
+                      class_path(studio_slug: @studio.slug, id: studio_class.id),
+                      class: "btn-book-card #{'btn-book-card--disabled' if studio_class.full?}" %>
+              <% end %>
             </div>
           <% end %>
         </div>

@@ -67,7 +67,8 @@
               <%= button_to "Claim deal",
                     claim_deal_path(studio_slug: @studio.slug, id: deal.id),
                     method: :post,
-                    class: "btn-claim mt-2" %>
+                    class: "btn-claim mt-2",
+                    data: { turbo: false } %>
             <% elsif status == :not_unlocked_yet %>
               <div class="deal-card-meta mt-2">
                 <i class="fa fa-lock"></i> This deal will unlock after your first visit.

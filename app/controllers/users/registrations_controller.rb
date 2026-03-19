@@ -4,7 +4,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   def update
     self.resource = resource_class.to_adapter.get!(send(:"current_#{resource_name}").to_key)
 
-    if changing_sensitive_fields?
+    if !resource.phone_user? && changing_sensitive_fields?
       super
     else
       resource.assign_attributes(account_update_params.except(:current_password))

@@ -6,7 +6,12 @@ class StudiosController < ApplicationController
     # Guests → phone login flow
     unless user_signed_in?
       redirect_to studio_phone_login_path(studio_slug: @studio.slug)
+      return
     end
+
+    # Logged-in users: NFC tap already happened — auto check-in and go to dashboard
+    create_visit_for(current_user, @studio)
+    redirect_to dashboard_path
   end
 
   def checkin
@@ -17,20 +22,26 @@ class StudiosController < ApplicationController
       return
     end
 
-    visit = current_user.visits.new(
-      studio: @studio,
-      class_config: @studio.class_configs.first,
+    create_visit_for(current_user, @studio)
+    redirect_to dashboard_path
+  end
+
+  private
+
+  def create_visit_for(user, studio)
+    visit = user.visits.new(
+      studio: studio,
+      class_config: studio.class_configs.first,
       visited_at: Time.current,
-      points_earned: @studio.class_configs.first&.point_value || 10
+      points_earned: 1
     )
 
     if visit.save
-      current_user.recalculate_points! if current_user.respond_to?(:recalculate_points!)
-      redirect_to rewards_path(studio_slug: @studio.slug),
-        notice: "You're checked in! Your visit was counted."
+      user.recalculate_points! if user.respond_to?(:recalculate_points!)
+      flash[:notice] = "You're checked in! Visit counted."
     else
-      redirect_to studio_landing_path(studio_slug: @studio.slug),
-        alert: visit.errors.full_messages.to_sentence
+      # 12-hour dedup — visit already counted today
+      flash[:notice] = "Welcome back, #{user.display_name}!"
     end
   end
 end
