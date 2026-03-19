@@ -1,140 +1,206 @@
-<% content_for(:title) { @studio.name } %>
+<% content_for(:title) { "Tap In — #{@studio.name}" } %>
 
-<div class="studio-landing" data-controller="nfc"
-     data-nfc-studio-slug-value="<%= @studio.slug %>">
+<div class="tapin-page">
+  <div class="tapin-page__card">
 
-  <div class="schedule-header studio-landing__header">
-    <% if @brand&.logo_url.present? %>
-      <img src="<%= @brand.logo_url %>" alt="<%= @studio.name %> logo" class="studio-landing__logo">
-    <% end %>
-    <h1 class="schedule-title"><%= @studio.name %></h1>
-    <% if @brand&.tagline.present? %>
-      <p class="schedule-subtitle"><%= @brand.tagline %></p>
-    <% end %>
-  </div>
-
-  <% if notice.present? %>
-    <div class="studio-landing__flash studio-landing__flash--notice"><%= notice %></div>
-  <% end %>
-  <% if alert.present? %>
-    <div class="studio-landing__flash studio-landing__flash--alert"><%= alert %></div>
-  <% end %>
-
-  <section class="dashboard-section" style="max-width: 400px; margin: 0 auto;">
-    <div class="dashboard-card" style="text-align: center; padding: 1.5rem;">
-      <% if user_signed_in? %>
-        <p style="font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 1.0625rem; margin-bottom: 1rem;">
-          Welcome back, <%= current_user.first_name.presence || "there" %>!
-        </p>
-
-        <%= button_to "Check In", studio_checkin_path(studio_slug: @studio.slug),
-              method: :post,
-              class: "btn-book",
-              style: "width: 100%; padding: 0.85rem; font-size: 1.1rem;",
-              data: { turbo: false } %>
-
-        <p style="font-size: 0.8125rem; opacity: 0.5; margin-top: 1rem;">
-          Tap to record your visit and earn rewards.
-        </p>
-
-        <%= link_to rewards_path(studio_slug: @studio.slug), style: "display: block; margin-top: 0.75rem; font-size: 0.875rem; color: var(--accent-gold, #E1B84A);" do %>
-          View your rewards &rarr;
-        <% end %>
-      <% else %>
-        <p style="font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 1.0625rem; margin-bottom: 1rem;">
-          Welcome! Enter your phone number to check in.
-        </p>
-
-        <%= form_with url: studio_checkin_path(studio_slug: @studio.slug), method: :post do |f| %>
-          <div style="display: flex; gap: 0.5rem;">
-            <%= f.telephone_field :phone, class: "studio-landing__input", placeholder: "e.g. 612345678", autofocus: true, inputmode: "tel" %>
-            <%= f.submit "Check In", class: "btn-book" %>
-          </div>
-        <% end %>
-
-        <p style="font-size: 0.8125rem; opacity: 0.5; margin-top: 1rem;">
-          Tap your phone on the NFC tag or scan the QR code at reception.
-        </p>
-
-        <p style="font-size: 0.8125rem; margin-top: 0.75rem; opacity: 0.6;">
-          First time? Just enter your phone number — we'll set you up automatically.
-        </p>
-
-        <p style="font-size: 0.8125rem; margin-top: 0.75rem;">
-          Already have an account?
-          <%= link_to "Log in", new_user_session_path, style: "color: var(--accent-gold, #E1B84A);" %>
-        </p>
+    <%# Studio branding %>
+    <div class="tapin-page__header">
+      <% if @brand&.logo_url.present? %>
+        <img src="<%= @brand.logo_url %>" alt="<%= @studio.name %>" class="tapin-page__logo"
+             onerror="this.style.display='none'">
+      <% end %>
+      <h1 class="tapin-page__studio-name"><%= @studio.name %></h1>
+      <% if @brand&.tagline.present? %>
+        <p class="tapin-page__tagline"><%= @brand.tagline %></p>
       <% end %>
     </div>
-  </section>
 
-  <div class="studio-landing__nfc-status" data-nfc-target="status" style="display: none;">
+    <% if notice.present? %>
+      <div class="tapin-page__flash"><%= notice %></div>
+    <% end %>
+
+    <%# Big tap-in button %>
+    <div class="tapin-page__action">
+      <p class="tapin-page__greeting">Hi, <%= current_user.first_name.presence || "there" %>!</p>
+
+      <%= button_to studio_checkin_path(studio_slug: @studio.slug),
+            method: :post,
+            class: "tapin-page__btn",
+            data: { turbo: false } do %>
+        <span class="tapin-page__btn-icon"><i class="fa fa-hand-pointer-o"></i></span>
+        <span class="tapin-page__btn-text">Tap In</span>
+      <% end %>
+
+      <p class="tapin-page__hint">Tap to record your visit and earn stamps</p>
+    </div>
+
+    <%# Quick links %>
+    <div class="tapin-page__links">
+      <%= link_to dashboard_path, class: "tapin-page__link" do %>
+        <i class="fa fa-home"></i> Dashboard
+      <% end %>
+      <%= link_to rewards_path(studio_slug: @studio.slug), class: "tapin-page__link" do %>
+        <i class="fa fa-gift"></i> Rewards
+      <% end %>
+      <%= link_to deals_path(studio_slug: @studio.slug), class: "tapin-page__link" do %>
+        <i class="fa fa-tag"></i> Deals
+      <% end %>
+    </div>
+
+    <p class="tapin-page__powered">
+      powered by <span class="tapin-page__powered-logo">TAPIN<span>.</span></span>
+    </p>
   </div>
 </div>
 
 <style>
-  .studio-landing {
+  .tapin-page {
     min-height: 100vh;
     display: flex;
-    flex-direction: column;
     align-items: center;
-    padding: 0;
-    background-color: var(--oat, #F6F1EB);
-    color: var(--espresso-brown, #2B2118);
+    justify-content: center;
+    background: var(--oat, #F6F1EB);
+    padding: 1.5rem;
     font-family: 'Inter', system-ui, sans-serif;
   }
 
-  .studio-landing__header {
-    width: 100%;
-  }
-
-  .studio-landing__logo {
-    max-width: 100px;
-    margin-bottom: 0.75rem;
-    border-radius: 0.5rem;
-  }
-
-  .studio-landing__input {
-    flex: 1;
-    padding: 0.75rem 1rem;
-    border: 1.5px solid rgba(43,33,24,0.15);
-    border-radius: 0.75rem;
-    font-size: 1.1rem;
-    text-align: center;
-    outline: none;
-    background: var(--oat, #F6F1EB);
-    font-family: 'Space Grotesk', sans-serif;
-  }
-
-  .studio-landing__input:focus {
-    border-color: var(--accent-gold, #E1B84A);
-    box-shadow: 0 0 0 3px rgba(225,184,74,0.2);
-  }
-
-  .studio-landing__flash {
-    padding: 0.75rem 1rem;
-    border-radius: 0.875rem;
-    margin: 0 1.25rem 1rem;
-    font-size: 0.9rem;
+  .tapin-page__card {
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 1.5rem;
+    padding: 2.5rem 2rem;
     width: 100%;
     max-width: 400px;
     text-align: center;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
   }
 
-  .studio-landing__flash--notice {
-    background: rgba(225,184,74,0.15);
-    color: var(--espresso-brown, #2B2118);
+  .tapin-page__header { margin-bottom: 1.5rem; }
+
+  .tapin-page__logo {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    object-fit: cover;
+    margin-bottom: 0.75rem;
   }
 
-  .studio-landing__flash--alert {
-    background: rgba(180,83,60,0.1);
-    color: var(--clay-red, #B4533C);
+  .tapin-page__studio-name {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 1.4rem;
+    color: #1a1a2e;
+    margin: 0 0 0.25rem;
   }
 
-  .studio-landing__nfc-status {
-    margin-top: 1rem;
-    padding: 0.75rem 1.5rem;
-    border-radius: 0.875rem;
-    font-size: 0.875rem;
+  .tapin-page__tagline {
+    color: rgba(0, 0, 0, 0.45);
+    font-size: 0.85rem;
+    margin: 0;
+  }
+
+  .tapin-page__flash {
+    background: rgba(135, 168, 120, 0.12);
+    color: #4a6741;
+    padding: 0.6rem 1rem;
+    border-radius: 0.75rem;
+    font-size: 0.85rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .tapin-page__greeting {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 1.05rem;
+    color: #1a1a2e;
+    margin: 0 0 1.25rem;
+  }
+
+  .tapin-page__btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 140px;
+    height: 140px;
+    margin: 0 auto 1rem;
+    border-radius: 50%;
+    border: none;
+    background: linear-gradient(145deg, #E07A5F, #c9644b);
+    color: #fff;
+    cursor: pointer;
+    box-shadow: 0 8px 28px rgba(224, 122, 95, 0.4);
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+
+  .tapin-page__btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 12px 36px rgba(224, 122, 95, 0.5);
+  }
+
+  .tapin-page__btn:active {
+    transform: scale(0.97);
+    box-shadow: 0 4px 16px rgba(224, 122, 95, 0.3);
+  }
+
+  .tapin-page__btn-icon {
+    font-size: 2rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .tapin-page__btn-text {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    letter-spacing: 0.02em;
+  }
+
+  .tapin-page__hint {
+    color: rgba(0, 0, 0, 0.4);
+    font-size: 0.8rem;
+    margin: 0 0 1.5rem;
+  }
+
+  .tapin-page__links {
+    display: flex;
+    justify-content: center;
+    gap: 1.25rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+    margin-bottom: 1.25rem;
+  }
+
+  .tapin-page__link {
+    color: rgba(0, 0, 0, 0.45);
+    font-size: 0.8rem;
+    font-weight: 500;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    transition: color 0.15s;
+  }
+
+  .tapin-page__link:hover {
+    color: #E07A5F;
+  }
+
+  .tapin-page__powered {
+    margin: 0;
+    font-size: 0.7rem;
+    color: rgba(0, 0, 0, 0.25);
+    letter-spacing: 0.03em;
+  }
+
+  .tapin-page__powered-logo {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 0.75rem;
+    color: rgba(135, 168, 120, 0.5);
+    letter-spacing: -0.5px;
+  }
+
+  .tapin-page__powered-logo span {
+    color: rgba(224, 122, 95, 0.5);
   }
 </style>
