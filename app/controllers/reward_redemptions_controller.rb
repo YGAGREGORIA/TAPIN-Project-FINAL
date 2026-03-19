@@ -1,6 +1,6 @@
 class RewardRedemptionsController < ApplicationController
   before_action :authenticate_user!, except: [:scan]
-  before_action :set_studio
+  before_action :set_studio, except: [:scan]
 
   def index
     @reward_redemptions = current_user.reward_redemptions
