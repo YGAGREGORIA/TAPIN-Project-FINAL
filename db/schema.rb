@@ -426,6 +426,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_18_000001) do
     t.string "mindbody_api_key"
     t.string "mindbody_site_id"
     t.string "name"
+    t.integer "onboarding_step", default: 0, null: false
     t.string "slug"
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false

@@ -8,7 +8,7 @@
     <meta name="mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-    <% unless user_signed_in? %>
+    <% if !user_signed_in? || @studio_brand&.primary_color.present? %>
       <meta name="turbo-cache-control" content="no-cache">
     <% end %>
 
