@@ -1,6 +1,6 @@
 class Admin::RewardsController < Admin::BaseController
   def index
-    @active_tab = %w[deals rewards].include?(params[:tab]) ? params[:tab] : "deals"
+    @active_tab = %w[deals rewards].include?(params[:tab]) ? params[:tab] : "rewards"
     @deals = current_studio.deals.includes(:deal_claims).order(:name) if current_studio
     @rewards = current_studio.rewards.includes(:reward_redemptions).order(:name) if current_studio
     @deals ||= Deal.none
