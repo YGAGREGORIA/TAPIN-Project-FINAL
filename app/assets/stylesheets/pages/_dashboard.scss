@@ -404,6 +404,99 @@
   }
 }
 
+.redemption-qr-code {
+  margin: 1.25rem auto 0;
+  width: 156px;
+  height: 156px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  svg {
+    width: 100%;
+    height: 100%;
+    border-radius: 0.5rem;
+    padding: 6px;
+    background: #fff;
+  }
+}
+
+.redemption-qr-label {
+  font-size: 0.75rem;
+  color: var(--muted-foreground);
+  margin: 0.5rem 0 1rem;
+
+  i { margin-right: 0.3rem; }
+}
+
+// ── Scanned reward overlay ─────────────────────────────────────────
+.qr-scan-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.88);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+
+  &--visible {
+    opacity: 1;
+    pointer-events: all;
+  }
+}
+
+.qr-scan-overlay-inner {
+  text-align: center;
+  padding: 2.5rem 2rem;
+  position: relative;
+}
+
+.qr-scan-overlay-icon {
+  width: 5.5rem;
+  height: 5.5rem;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--accent-foreground);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 0 32px rgba($terracotta, 0.5);
+  position: relative;
+}
+
+.qr-scan-overlay-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 2rem;
+  font-weight: 800;
+  color: #fff;
+  margin: 0 0 0.5rem;
+}
+
+.qr-scan-overlay-subtitle {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.65);
+  margin: 0;
+}
+
+.qr-scan-dismiss {
+  margin-top: 2rem;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #fff;
+  padding: 0.5rem 1.75rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: background 0.15s;
+
+  &:hover { background: rgba(255, 255, 255, 0.1); }
+}
+
 .redemption-steps {
   padding: 0.5rem 1rem;
 }
