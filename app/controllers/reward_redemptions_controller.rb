@@ -1,5 +1,5 @@
 class RewardRedemptionsController < ApplicationController
-  before_action :authenticate_user!
+  before_action :authenticate_user!, except: [:scan]
   before_action :set_studio
 
   def index
@@ -12,6 +12,15 @@ class RewardRedemptionsController < ApplicationController
     @reward_redemption = current_user.reward_redemptions
                                      .where(studio: @studio)
                                      .find(params[:id])
+    scan_url = scan_reward_redemptions_url(studio_slug: @studio.slug, code: @reward_redemption.code)
+    qr = RQRCode::QRCode.new(scan_url)
+    @qr_svg = qr.as_svg(
+      color: "000",
+      shape_rendering: "crispEdges",
+      module_size: 4,
+      standalone: true,
+      use_path: true
+    )
   end
 
   def create
@@ -35,6 +44,12 @@ class RewardRedemptionsController < ApplicationController
       redirect_to rewards_path(studio_slug: @studio.slug),
                   alert: @reward_redemption.errors.full_messages.to_sentence
     end
+  end
+
+  def scan
+    redemption = RewardRedemption.find_by!(code: params[:code])
+    ActionCable.server.broadcast("reward_redemption_#{redemption.code}", { event: "scanned" })
+    head :ok
   end
 
   private

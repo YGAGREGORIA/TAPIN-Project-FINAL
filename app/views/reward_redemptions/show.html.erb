@@ -1,5 +1,17 @@
 <% content_for :title, "Redemption — #{@reward_redemption.reward.name}" %>
 
+<%# ── Scanned celebration overlay ── %>
+<div class="qr-scan-overlay" data-controller="qr-scan" data-qr-scan-active-value="<%= params[:scanned] == 'true' %>" data-qr-scan-code-value="<%= @reward_redemption.code %>">
+  <div class="qr-scan-overlay-inner">
+    <div class="qr-scan-overlay-icon confetti-container anim-sparkle-in" data-qr-scan-target="confettiContainer">
+      <i class="fa fa-check"></i>
+    </div>
+    <h2 class="qr-scan-overlay-title">Enjoy your reward!</h2>
+    <p class="qr-scan-overlay-subtitle"><%= @reward_redemption.reward.name %></p>
+    <button class="qr-scan-dismiss" data-action="click->qr-scan#dismiss">Done</button>
+  </div>
+</div>
+
 <div class="dashboard">
 
   <%# ── Hero ── %>
@@ -36,9 +48,15 @@
       <p class="section-title">Your Redemption Code</p>
       <div class="redemption-code-card">
         <div class="redemption-code-value"><%= @reward_redemption.code %></div>
+        <div class="redemption-qr-code">
+          <%= raw @qr_svg %>
+        </div>
+        <p class="redemption-qr-label">
+          <i class="fa fa-qrcode"></i> Scan to redeem
+        </p>
         <p class="redemption-code-hint">
           <i class="fa fa-info-circle"></i>
-          Show this code to the front desk to claim your reward
+          Show this code or QR to the front desk to claim your reward
         </p>
       </div>
     </section>

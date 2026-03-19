@@ -81,5 +81,7 @@ gem "web-push", "~> 3.1"
 
 gem "ruby_llm", "~> 1.14"
 
+gem "rqrcode", "~> 2.2"
+
 gem "dotenv-rails", groups: [:development, :test]
 gem "cloudinary", "~> 2.0"
