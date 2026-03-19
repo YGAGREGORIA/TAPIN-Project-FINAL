@@ -1,7 +1,7 @@
 <% content_for :title, "Redemption — #{@reward_redemption.reward.name}" %>
 
 <%# ── Scanned celebration overlay ── %>
-<div class="qr-scan-overlay" data-controller="qr-scan" data-qr-scan-active-value="<%= params[:scanned] == 'true' %>">
+<div class="qr-scan-overlay" data-controller="qr-scan" data-qr-scan-active-value="<%= params[:scanned] == 'true' %>" data-qr-scan-code-value="<%= @reward_redemption.code %>">
   <div class="qr-scan-overlay-inner">
     <div class="qr-scan-overlay-icon confetti-container anim-sparkle-in" data-qr-scan-target="confettiContainer">
       <i class="fa fa-check"></i>

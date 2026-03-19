@@ -25,7 +25,11 @@ Rails.application.routes.draw do
       post :redeem, on: :member
     end
 
-    resources :reward_redemptions, only: [ :index, :show ]
+    resources :reward_redemptions, only: [ :index, :show ] do
+      collection do
+        get "scan/:code", action: :scan, as: :scan
+      end
+    end
 
     resources :deals, only: [ :index ] do
       post :claim, to: "deal_claims#create", on: :member

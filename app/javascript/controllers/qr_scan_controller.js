@@ -1,13 +1,37 @@
 import { Controller } from "@hotwired/stimulus"
+import { cable } from "@hotwired/turbo-rails"
 
 export default class extends Controller {
   static targets = ["confettiContainer"]
-  static values = { active: Boolean }
+  static values = { active: Boolean, code: String }
 
   connect() {
     if (this.activeValue) {
       this.show()
     }
+
+    if (this.codeValue) {
+      this._subscribeToChannel()
+    }
+  }
+
+  disconnect() {
+    if (this._subscription) {
+      this._subscription.unsubscribe()
+    }
+  }
+
+  _subscribeToChannel() {
+    this._subscription = cable.subscribeTo(
+      { channel: "RewardRedemptionChannel", code: this.codeValue },
+      {
+        received: (data) => {
+          if (data.event === "scanned") {
+            this.show()
+          }
+        }
+      }
+    )
   }
 
   show() {
@@ -21,7 +45,6 @@ export default class extends Controller {
 
   _spawnConfetti() {
     const container = this.confettiContainerTarget
-    // Clear any existing dots
     container.querySelectorAll(".confetti-dot").forEach(d => d.remove())
 
     for (let i = 1; i <= 5; i++) {
@@ -30,7 +53,6 @@ export default class extends Controller {
       container.appendChild(dot)
     }
 
-    // Re-trigger for looping feel — spawn a second wave after first finishes
     setTimeout(() => {
       container.querySelectorAll(".confetti-dot").forEach(d => d.remove())
       for (let i = 1; i <= 5; i++) {
